@@ -15,6 +15,7 @@ const productsUrl = _apiBase + '/api/products/public?userId=' + _shopId;
 const reviewsUrl  = _apiBase + '/api/shop-reviews/public?userId=' + _shopId;
 const validateUrl = _apiBase + '/api/public/validate-code';
 const orderUrl    = _apiBase + '/api/public/order';
+const resenaUrl   = _apiBase + '/api/public/resena';
 
 // ── Heart / Wishlist storage ──────────────────────
 

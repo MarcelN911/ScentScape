@@ -67,6 +67,7 @@ function renderFullProductPage(product, allData) {
     renderDescription(product);
     renderSizes(product);
     renderRelated(allData, product);
+    loadProductReviews(product);
     setupProductPage();
     initProductHeart(product._id);
     updatePageMeta(product);
@@ -452,4 +453,68 @@ function handleAddToCart() {
         quantity:     qty
     });
     document.getElementById('pdQtyValue').textContent = '1';
+}
+
+
+// ── Reviews ───────────────────────────────────
+
+const PD_REVIEWS_VISIBLE = 6;
+
+/** Lower-case + trimmed: the same rule NEXOMAR uses to link a review to a product name. */
+function pdReviewKey(text) {
+    return String(text || '').trim().toLowerCase();
+}
+
+/** One review card (same look as the home testimonials). */
+function buildProductReviewHtml(review) {
+    var name    = escapeHtml(review.nombre || '');
+    var initial = name.charAt(0).toUpperCase();
+    return '<article class="pd-review-card">' +
+        '<div class="pd-review-stars">' + createStars(review.calificacion) + '</div>' +
+        '<p class="pd-review-text">"' + escapeHtml(review.texto || '') + '"</p>' +
+        '<div class="pd-review-author"><span class="pd-review-avatar">' + initial + '</span>' +
+        '<div class="pd-review-info"><span class="pd-review-name">' + name + '</span>' +
+        (review.ciudad ? '<span class="pd-review-city">' + escapeHtml(review.ciudad) + '</span>' : '') +
+        '</div></div>' +
+    '</article>';
+}
+
+/** "★ 4.8 · 5 reseñas" */
+function buildReviewsSummary(reviews) {
+    var avg = reviews.reduce(function(sum, r) { return sum + (r.calificacion || 0); }, 0) / reviews.length;
+    var n   = reviews.length;
+    return '<span class="pd-reviews-avg">★ ' + (Math.round(avg * 10) / 10).toFixed(1) + '</span> · ' +
+        n + (n === 1 ? ' reseña' : ' reseñas');
+}
+
+/** Shows the reviews written for this product; the section stays closed without any. */
+async function loadProductReviews(product) {
+    try {
+        var response = await fetch(reviewsUrl);
+        if (!response.ok) return;
+        var all = await response.json();
+        var key = pdReviewKey(product.nombre);
+        var reviews = (Array.isArray(all) ? all : []).filter(function(r) {
+            return r.producto && pdReviewKey(r.producto) === key;
+        });
+        if (!reviews.length) return;
+
+        var grid = document.getElementById('pdReviewsGrid');
+        var more = document.getElementById('pdReviewsMore');
+        grid.innerHTML = reviews.map(buildProductReviewHtml).join('');
+        document.getElementById('pdReviewsSummary').innerHTML = buildReviewsSummary(reviews);
+        document.getElementById('pdReviewsCta').href = 'resenas.html?producto=' + encodeURIComponent(product.nombre);
+
+        if (reviews.length > PD_REVIEWS_VISIBLE) {
+            grid.classList.add('is-collapsed');
+            more.hidden = false;
+            more.addEventListener('click', function() {
+                var collapsed = grid.classList.toggle('is-collapsed');
+                more.textContent = collapsed ? 'Ver todas las reseñas' : 'Ver menos';
+            });
+        }
+        document.getElementById('pdReviews').hidden = false;
+    } catch (e) {
+        console.error('[ScentScape] loadProductReviews error:', e);
+    }
 }

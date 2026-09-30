@@ -203,30 +203,61 @@ function switchFilterTab(category) {
 
 // ── Search ────────────────────────────────────
 
-/** Returns true if a product's name or brand contains the search term. */
-function isProductMatch(index, searchInput) {
-    const name  = (data[index].nombre || '').toLowerCase();
-    const brand = getBrand(data[index]).toLowerCase();
-    return name.includes(searchInput) || brand.includes(searchInput);
+/** Lower-case without accents, so "sauvage" also finds "Sauvagé". */
+function plainText(text) {
+    return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 /**
- * Clears the grid and renders every product that matches the search term.
+ * Returns true if every word of the search term appears in "brand name",
+ * in any order: "dior sauvage", "sauvage dior" and "dior" all find Dior Sauvage.
+ */
+function isProductMatch(index, searchInput) {
+    const text = plainText(getBrand(data[index]) + ' ' + data[index].nombre);
+    return plainText(searchInput).split(/\s+/).every(function(word) {
+        return text.includes(word);
+    });
+}
+
+/**
+ * Updates the grid to the products matching the search term without
+ * re-rendering cards that are already shown: only the cards that dropped out
+ * are removed and only new matches are created.
  * Returns the total number of results found.
  */
 function findMatchingProducts(searchInput) {
-    document.getElementById('productsGrid').innerHTML = '';
-    let count = 0;
+    const grid = document.getElementById('productsGrid');
+    removeOldLoader();
+    grid.querySelectorAll('.no-results').forEach(function(el) { el.remove(); });
+
+    const matches = [];
     for (let i = 0; i < data.length; i++) {
-        if (data[i].disponible === false) {
-            continue;
-        }
-        if (isProductMatch(i, searchInput)) {
-            createProductTemplate(createProductData(data, i));
-            count++;
+        if (data[i].disponible !== false && isProductMatch(i, searchInput)) {
+            matches.push(i);
         }
     }
-    return count;
+
+    const wanted = new Set(matches.map(function(i) { return String(data[i]._id); }));
+    const shown  = {};
+    grid.querySelectorAll('.product-link').forEach(function(link) {
+        if (wanted.has(link.dataset.id) && !shown[link.dataset.id]) {
+            shown[link.dataset.id] = link;
+        } else {
+            link.remove();
+        }
+    });
+
+    matches.forEach(function(i) {
+        const id = String(data[i]._id);
+        if (!shown[id]) {
+            createProductTemplate(createProductData(data, i));
+            shown[id] = grid.lastElementChild;
+        }
+    });
+
+    // Keep catalogue order; moving existing nodes does not reload their images
+    matches.forEach(function(i) { grid.appendChild(shown[String(data[i]._id)]); });
+    return matches.length;
 }
 
 /**
@@ -247,7 +278,7 @@ function validateSearch(searchInput) {
 
 /** Runs the full search: validate → find matches → show results or empty state. */
 function searchProducts() {
-    const input = document.getElementById('searchInput').value.toLowerCase();
+    const input = document.getElementById('searchInput').value.trim().toLowerCase();
     hideSearchHint();
     switchFilterTab('Todos');
 
@@ -312,6 +343,17 @@ if (searchInput && searchClear) {
             searchClear.classList.add('visible');
         } else {
             searchClear.classList.remove('visible');
+        }
+    });
+
+    // Live search while typing (debounced); Enter / the search button still work
+    let searchTimer;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer);
+        hideSearchHint();
+        const term = searchInput.value.trim();
+        if (term.length >= 3 || term.length === 0) {
+            searchTimer = setTimeout(searchProducts, 250);
         }
     });
 

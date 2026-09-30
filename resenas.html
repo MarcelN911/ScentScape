@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScentScape | Medellín, Colombia</title>
-    <meta name="description" content="Rose Noir — Fragancia oscura y seductora inspirada en Tom Ford Black Orchid. Notas de bergamota, rosa negra y patchouli. Desde $65.000 COP.">
-    <meta property="og:title" content="Rose Noir — ScentScape">
-    <meta property="og:description" content="Fragancia inspirada en Tom Ford Black Orchid. Disponible en 30ml, 50ml y 100ml.">
-    <meta property="og:type" content="product">
+    <title>Reseñas — ScentScape | Medellín, Colombia</title>
+    <meta name="description" content="Cuéntanos tu experiencia con tu perfume de ScentScape. Tu reseña ayuda a otras personas a elegir su próxima fragancia.">
+    <meta property="og:title" content="Reseñas — ScentScape">
+    <meta property="og:description" content="Deja tu reseña y cuéntanos cómo te fue con tu fragancia.">
+    <meta property="og:type" content="website">
     <meta property="og:locale" content="es_CO">
     <meta property="og:image" content="https://elixirsb.netlify.app/assets/img/og-banner.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://elixirsb.netlify.app/producto.html">
+    <meta property="og:url" content="https://elixirsb.netlify.app/resenas.html">
 
     <link rel="icon" type="image/png" href="./assets/img/scentscape-favicon.png">
     <link rel="apple-touch-icon" href="./assets/img/scentscape-favicon.png">
-    <link rel="canonical" href="https://elixirsb.netlify.app/producto.html">
+    <link rel="canonical" href="https://elixirsb.netlify.app/resenas.html">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/nav.css">
     <link rel="stylesheet" href="styles/cart.css">
-    <link rel="stylesheet" href="styles/product-card.css">
-    <link rel="stylesheet" href="styles/producto.css">
+    <link rel="stylesheet" href="styles/page.css">
+    <link rel="stylesheet" href="styles/resenas.css">
     <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="stylesheet" href="styles/checkout-modal.css">
@@ -37,19 +37,22 @@
     <script src="scripts/discount-widget.js" defer></script>
     <script src="scripts/templates.js" defer></script>
     <script src="scripts/cart.js" defer></script>
-    <script src="scripts/producto.js" defer></script>
+    <script src="scripts/resenas.js" defer></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="e9f375b0-77a5-4c1d-b8e2-d203af7a43c0"></script>
+
 </head>
 <body>
+
     <header>
         <nav>
             <div class="nav-inner">
                 <div class="nav-left">
                     <ul>
                         <li><a href="index.html">Inicio</a></li>
+                        <li><a href="productos.html">Productos</a></li>
                         <li><a href="nosotros.html">Nosotros</a></li>
-                        <li><a href="resenas.html">Reseñas</a></li>
-                        <li><a href="contacto.html">Contacto</a></li>
+                        <li><a href="resenas.html" class="active">Reseñas</a></li>
+                        
                     </ul>
                 </div>
 
@@ -62,7 +65,7 @@
                 </div>
 
                 <div class="nav-center">
-                    <a href="index.html">
+                    <a href="index.html" aria-label="Ir al inicio">
                         <img src="./assets/img/scentscape-logo.png" alt="ScentScape Logo" class="nav-logo">
                     </a>
                 </div>
@@ -75,14 +78,6 @@
                             </a>
                         </li>
                         <li>
-                            <button class="nav-icon-button elixir-wish-btn" id="wishlistBtn" aria-label="Favoritos">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                                <span class="elixir-wish-nav-badge hidden" id="elixirWishBadge"></span>
-                            </button>
-                        </li>
-                        <li>
                             <button class="nav-icon-button" id="cartButton" aria-label="Carrito">
                                 <img src="./assets/img/shopping-car.svg" class="nav-icon basket-icon" alt="Carrito">
                                 <span class="cart-count">0</span>
@@ -92,16 +87,9 @@
                 </div>
 
                 <div class="mobile-right">
-                    <button class="nav-icon-button elixir-wish-btn" id="wishlistBtnMobile" aria-label="Favoritos">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                        </svg>
-                        <span class="elixir-wish-nav-badge hidden" id="elixirWishBadgeMobile"></span>
-                    </button>
-                    <button class="nav-icon-button" id="cartButtonMobile" aria-label="Carrito">
-                        <img src="./assets/img/shopping-car.svg" class="nav-icon basket-icon" alt="Carrito">
-                        <span class="cart-count" id="cartCountMobile">0</span>
-                    </button>
+                    <a href="https://www.instagram.com/elixirsb__/" target="_blank" rel="noopener noreferrer" class="nav-icon-button" aria-label="Instagram">
+                        <img src="./assets/img/instagram_white.svg" class="nav-icon" alt="Instagram">
+                    </a>
                 </div>
             </div>
         </nav>
@@ -114,154 +102,96 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="productos.html">Productos</a></li>
-                <li><a href="index.html#nosotros">Nosotros</a></li>
-                <li><a href="index.html#contacto">Contacto</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="resenas.html" class="active">Reseñas</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
                 <li><a href="formulario.html">Test Olfativo</a></li>
             </ul>
             <div class="mobile-social">
-                <a href="https://www.instagram.com/elixirsb__/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                    <img src="./assets/img/instagram_white.svg" alt="Instagram">
-                </a>
-                <a href="#" onclick="openWhatsAppContact(); return false;" aria-label="WhatsApp">
-                    <img src="./assets/img/whatsapp_white.svg" alt="WhatsApp">
-                </a>
+                <a href="https://www.instagram.com/elixirsb__/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="./assets/img/instagram_white.svg" alt="Instagram"></a>
+                <a href="#" onclick="openWhatsAppContact(); return false;" aria-label="WhatsApp"><img src="./assets/img/whatsapp_white.svg" alt="WhatsApp"></a>
             </div>
         </div>
         <div class="mobile-overlay" id="mobileOverlay"></div>
     </header>
 
-    <main>
+    <main class="rs-page">
 
-        <!-- Breadcrumb -->
-        <div class="pd-breadcrumb">
-            <div class="pd-breadcrumb-inner">
-                <a href="productos.html" class="pd-breadcrumb-back">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6"/>
-                    </svg>
-                    Productos
-                </a>
-                <span class="pd-breadcrumb-sep">/</span>
-                <span class="pd-breadcrumb-current">Rose Noir</span>
+        <aside class="rs-aside">
+            <p class="rs-eyebrow">ScentScape · Medellín, Colombia</p>
+            <div class="rs-aside-body">
+                <h1 class="rs-headline">¿A qué<br>te <em>huele</em><br>tu perfume?</h1>
+                <p class="rs-lead">Tu reseña ayuda a otras personas a elegir su próximo perfume y nos ayuda a seguir mejorando.</p>
             </div>
-        </div>
+            <p class="rs-privacy">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                Tu teléfono solo sirve para verificar tu reseña. Nunca se muestra públicamente.
+            </p>
+        </aside>
 
-        <!-- Product Section -->
-        <section class="pd-section">
-            <div class="pd-layout">
+        <section class="rs-main">
+            <div class="rs-main-inner">
 
-                <!-- Gallery -->
-                <div class="pd-gallery">
-                    <div class="pd-image-wrap">
-                        <img src="./assets/img/scentscape-logo.png" loading="lazy" alt="Rose Noir" class="pd-image">
-                    </div>
-                </div>
-
-                <!-- Info -->
-                <div class="pd-info">
-                    <p class="pd-eyebrow">Perfume para Dama</p>
-                    <h1 class="pd-title">Rose Noir</h1>
-                    <p class="pd-inspiration"><em>Tom Ford Black Orchid</em></p>
-
-                    <div class="pd-divider"></div>
-
-                    <!-- Price + Quantity -->
-                    <div class="pd-price-row">
-                        <div class="pd-price-group">
-                            <span class="pd-price-old" id="pdPriceOld">$80.000 COP</span>
-                            <span class="pd-price-current" id="pdPrice">$65.000 COP</span>
+                <form class="rs-form" id="resenaForm" novalidate>
+                    <div class="rs-field">
+                        <p class="rs-step" id="resenaStarLabel">01 — Calificación</p>
+                        <div class="rs-rating">
+                            <div class="rs-stars" id="resenaStarPicker" role="radiogroup" aria-labelledby="resenaStarLabel">
+                                <button type="button" class="rs-star" data-val="1" aria-label="1 estrella">★</button>
+                                <button type="button" class="rs-star" data-val="2" aria-label="2 estrellas">★</button>
+                                <button type="button" class="rs-star" data-val="3" aria-label="3 estrellas">★</button>
+                                <button type="button" class="rs-star" data-val="4" aria-label="4 estrellas">★</button>
+                                <button type="button" class="rs-star" data-val="5" aria-label="5 estrellas">★</button>
+                            </div>
+                            <span class="rs-rating-label" id="resenaStarText">Toca una estrella</span>
                         </div>
-                        <div class="pd-qty-control">
-                            <button class="pd-qty-btn" id="pdQtyMinus" aria-label="Reducir cantidad">−</button>
-                            <span class="pd-qty-value" id="pdQtyValue">1</span>
-                            <button class="pd-qty-btn" id="pdQtyPlus" aria-label="Aumentar cantidad">+</button>
-                        </div>
+                        <input type="hidden" id="resenaCalificacion" value="0">
                     </div>
 
-                    <!-- Size selector -->
-                    <div class="pd-size-group">
-                        <div class="pd-size-header">
-                            <span class="pd-label">Tamaño</span>
-                            <span class="pd-size-selected" id="pdSizeLabel">30 ml</span>
+                    <div class="rs-field">
+                        <label class="rs-step" for="resenaProducto">02 — Perfume <span class="rs-opt">(opcional)</span></label>
+                        <div class="rs-combo" id="resenaCombo">
+                            <input type="text" id="resenaProducto" autocomplete="off" placeholder="Busca tu perfume…"
+                                   role="combobox" aria-expanded="false" aria-controls="resenaProductoList">
+                            <button type="button" class="rs-combo-clear" id="resenaProductoClear" aria-label="Quitar perfume" hidden>&times;</button>
+                            <ul class="rs-combo-list" id="resenaProductoList" role="listbox"></ul>
                         </div>
-                        <div class="pd-sizes">
-                            <button class="pd-size-btn active" data-size="30 ml" data-price="65000">30 ml</button>
-                            <button class="pd-size-btn" data-size="50 ml" data-price="95000">50 ml</button>
-                            <button class="pd-size-btn" data-size="100 ml" data-price="160000">100 ml</button>
+                        <input type="hidden" id="resenaProductoValor" value="">
+                    </div>
+
+                    <div class="rs-field">
+                        <label class="rs-step" for="resenaTexto">03 — Tu reseña</label>
+                        <textarea id="resenaTexto" name="texto" rows="1" maxlength="500" required
+                                  placeholder="¿Cómo huele? ¿Cuánto dura? ¿Para qué ocasión lo usas?"></textarea>
+                        <p class="rs-count"><span id="resenaCount">0</span> / 500</p>
+                    </div>
+
+                    <div class="rs-field">
+                        <p class="rs-step">04 — Tú</p>
+                        <div class="rs-row">
+                            <input type="text" id="resenaNombre" name="nombre" placeholder="Nombre" aria-label="Nombre" autocomplete="name" required>
+                            <input type="tel" inputmode="tel" id="resenaTelefono" name="telefono" placeholder="WhatsApp / teléfono" aria-label="WhatsApp / teléfono" autocomplete="tel" required>
                         </div>
                     </div>
 
-                    <!-- CTAs -->
-                    <div class="pd-ctas">
-                        <button class="pd-btn-primary" id="pdAddCart">Añadir al Carrito</button>
-                    </div>
+                    <button type="submit" class="rs-submit" id="resenaSubmit">Enviar reseña <span aria-hidden="true">→</span></button>
+                    <p class="rs-feedback" id="resenaFeedback" role="status"></p>
+                </form>
 
-                    <!-- Description -->
-                    <div class="pd-acc-item open">
-                        <button class="pd-acc-trigger" aria-expanded="true">
-                            <span>Descripción</span>
-                        </button>
-                        <div class="pd-acc-body" id="pdDescription">
-                            <p class="pd-desc-text pd-desc-clamped">Rose Noir es una fragancia oscura y seductora que evoca el misterio de la noche. Su apertura especiada con bergamota y cardamomo da paso a un corazón floral profundo, dominado por la rosa negra y la orquídea, antes de asentarse en una base cálida de maderas oscuras y patchouli. Una fragancia para quienes no temen destacar.</p>
-                            <button type="button" class="pd-desc-toggle hidden" id="pdDescToggle" aria-expanded="false">Ver más</button>
-                        </div>
-                    </div>
+                <div class="rs-thanks" id="resenaThanks" hidden>
+                    <h2 class="rs-thanks-title">Gracias,<br><em id="resenaThanksName"></em></h2>
+                    <p class="rs-lead">Tu reseña quedó registrada. ¡Gracias por ayudar a otras personas a elegir!</p>
+                    <button type="button" class="rs-again" id="resenaAgain">Escribir otra reseña</button>
                 </div>
 
             </div>
         </section>
-
-        <!-- Reseñas de este perfume (generiert von producto.js; ohne Reseñas bleibt der Bereich zu) -->
-        <section class="pd-reviews" id="pdReviews" hidden>
-            <div class="pd-related-inner">
-                <div class="pd-reviews-header">
-                    <div>
-                        <h2 class="pd-related-title">Reseñas</h2>
-                        <p class="pd-reviews-summary" id="pdReviewsSummary"></p>
-                    </div>
-                    <a class="pd-reviews-cta" id="pdReviewsCta" href="resenas.html">Escribir una reseña</a>
-                </div>
-                <div class="pd-reviews-grid" id="pdReviewsGrid"></div>
-                <button type="button" class="pd-reviews-more" id="pdReviewsMore" hidden>Ver todas las reseñas</button>
-            </div>
-        </section>
-
-        <!-- Related Products -->
-        <section class="pd-related">
-            <div class="pd-related-inner">
-                <div class="pd-related-header">
-                    <h2 class="pd-related-title">También te puede gustar</h2>
-                    <div class="pd-related-nav" id="pdRelatedNav">
-                        <button class="pd-related-nav-btn" id="pdRelatedLeft" aria-label="Anterior">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                        </button>
-                        <button class="pd-related-nav-btn" id="pdRelatedRight" aria-label="Siguiente">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="pd-related-carousel" id="pdRelatedCarousel">
-                    <!-- generiert von producto.js -->
-                </div>
-            </div>
-        </section>
-
-        <section class="perfil-cta anim-fade-up">
-            <div class="perfil-cta-inner">
-                <p class="perfil-cta-eyebrow">Test Olfativo · ScentScape</p>
-                <h2 class="perfil-cta-title">¿No sabes qué perfume elegir?</h2>
-                <p class="perfil-cta-text">Completa nuestro test de perfil olfativo y te recomendamos el perfume ideal para ti en minutos.</p>
-                <a href="formulario.html" class="perfil-cta-btn">Descubre tu Aroma Ideal</a>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Cart Panel -->
     <div class="cart-panel" id="cartPanel">
         <div class="cart-panel-header">
             <h2>Tu Carrito</h2>
-            <button class="cart-panel-close" id="cartPanelClose">&times;</button>
+            <button class="cart-panel-close" id="cartPanelClose" onclick="closeBasket()">&times;</button>
         </div>
         <div class="cart-panel-content" id="cartPanelContent">
             <div class="cart-empty">
@@ -315,7 +245,9 @@
                 <span class="cart-bar-total">$<span id="cartTotal">0</span> COP</span>
             </div>
         </div>
-        <button class="cart-bar-button" id="cartBarButton">Ver Carrito</button>
+        <button class="cart-bar-button" id="cartBarButton">
+            Ver Carrito
+        </button>
     </div>
 
     <footer class="site-footer">
@@ -337,9 +269,9 @@
                     <h4>Tienda</h4>
                     <ul>
                         <li><a href="productos.html">Productos</a></li>
-                        <li><a href="index.html#bestsellers">Los Favoritos</a></li>
+                        <li><a href="index.html#searchSection">Los Favoritos</a></li>
                         <li><a href="nosotros.html">Nosotros</a></li>
-                        <li><a href="resenas.html">Reseñas</a></li>
+                        <li><a href="resenas.html" class="active">Reseñas</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -428,7 +360,6 @@
             </form>
         </div>
     </div>
-
 
 </body>
 </html>

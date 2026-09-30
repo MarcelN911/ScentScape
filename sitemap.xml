@@ -35,6 +35,15 @@
         <priority>0.6</priority>
     </url>
 
+    <!-- Reseñas -->
+    <url>
+        <loc>https://elixirsb.netlify.app/resenas.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/resenas.html"/>
+        <lastmod>2026-09-30</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
     <!-- Contacto -->
     <url>
         <loc>https://elixirsb.netlify.app/contacto.html</loc>

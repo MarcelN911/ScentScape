@@ -1,0 +1,427 @@
+/* ============================================
+   RESENAS.CSS — ScentScape
+   Review page: split layout, underline fields,
+   star picker, perfume search combobox
+   ============================================ */
+
+.rs-page {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    min-height: 100vh;
+    padding: 60px max(0px, calc((100% - 1440px) / 2)) 0;
+    /* panel colour runs to the left window edge; content stays within 1440px */
+    background: linear-gradient(to right, rgb(14, 18, 48) max(45.4545%, calc(50% - 65.45px)), transparent 0);
+}
+
+/* ── Aside ────────────────────────────────── */
+
+.rs-aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 56px;
+    background: rgb(14, 18, 48);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rs-eyebrow {
+    margin-top: 28px;
+}
+
+.rs-eyebrow,
+.rs-step {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.rs-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 6.4vw, 96px);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    color: #f3efe8;
+}
+
+.rs-headline em,
+.rs-thanks-title em {
+    color: var(--gold);
+}
+
+.rs-lead {
+    max-width: 380px;
+    margin-top: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.rs-privacy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.rs-privacy svg {
+    flex-shrink: 0;
+}
+
+/* ── Form ─────────────────────────────────── */
+
+.rs-main {
+    display: flex;
+    align-items: center;
+    padding: 72px 64px;
+}
+
+.rs-main-inner {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.rs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+}
+
+.rs-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rs-step {
+    display: block;
+}
+
+.rs-opt {
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.08em;
+    font-weight: 400;
+    text-transform: none;
+}
+
+.rs-field input[type="text"],
+.rs-field input[type="tel"],
+.rs-field textarea {
+    width: 100%;
+    min-width: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    padding: 10px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: #f3efe8;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.rs-field textarea {
+    field-sizing: content;
+    min-height: 40px;
+    max-height: 220px;
+    resize: none;
+    line-height: 1.6;
+}
+
+.rs-field input::placeholder,
+.rs-field textarea::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.rs-field input:focus,
+.rs-field textarea:focus {
+    border-bottom-color: var(--gold);
+}
+
+.rs-count {
+    margin: -2px 0 -12px;
+    text-align: right;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.rs-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+}
+
+/* ── Stars ────────────────────────────────── */
+
+.rs-rating {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-top: 12px;
+}
+
+.rs-stars {
+    display: flex;
+    gap: 4px;
+}
+
+.rs-star {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 46px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.rs-star.is-active {
+    color: var(--gold);
+}
+
+.rs-rating-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 26px;
+    color: var(--gold);
+}
+
+/* ── Perfume combobox ─────────────────────── */
+
+.rs-combo {
+    position: relative;
+}
+
+.rs-combo input {
+    padding-right: 32px !important;
+}
+
+.rs-combo.has-value input {
+    border-bottom-color: var(--gold);
+}
+
+.rs-combo-clear {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+}
+
+.rs-combo-clear:hover {
+    color: white;
+}
+
+.rs-combo-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    margin: 6px 0 0;
+    padding: 6px;
+    max-height: 248px;
+    overflow-y: auto;
+    list-style: none;
+    background: rgb(31, 35, 69);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 125, 0.3) transparent;
+}
+
+.rs-combo-list.is-open {
+    display: block;
+}
+
+.rs-combo-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+}
+
+.rs-combo-option small {
+    order: 2;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.rs-combo-option:hover,
+.rs-combo-option.is-active {
+    background: rgb(45, 50, 96);
+}
+
+.rs-combo-option.is-selected {
+    color: var(--gold);
+}
+
+.rs-combo-empty {
+    padding: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Submit + feedback ────────────────────── */
+
+.rs-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: 56px;
+    background: var(--gold);
+    color: var(--primary-color);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+.rs-submit span {
+    font-size: 16px;
+}
+
+.rs-submit:hover {
+    background: var(--gold-light);
+}
+
+.rs-submit:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.rs-feedback {
+    min-height: 20px;
+    margin: -28px 0 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    text-align: center;
+}
+
+.rs-feedback.is-error { color: #e07070; }
+
+/* ── Thank-you state ──────────────────────── */
+
+.rs-thanks-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 1.05;
+    color: #f3efe8;
+}
+
+.rs-thanks .rs-lead {
+    margin: 20px 0 32px;
+}
+
+.rs-again {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--gold);
+    padding: 0 0 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+    cursor: pointer;
+}
+
+.rs-again:hover {
+    color: #f3efe8;
+}
+
+/* ── Responsive ───────────────────────────── */
+
+@media (max-width: 899px) {
+    .rs-page {
+        grid-template-columns: 1fr;
+        min-height: 0;
+        background: none;
+    }
+
+    .rs-aside {
+        gap: 28px;
+        padding: 40px 24px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .rs-eyebrow,
+    .rs-headline {
+        text-align: center;
+    }
+
+    .rs-lead {
+        margin: 20px auto 0;
+        text-align: center;
+    }
+
+    .rs-privacy {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .rs-main {
+        padding: 44px 24px 64px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rs-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .rs-star {
+        font-size: 38px;
+    }
+
+    .rs-rating {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+.rs-form[hidden],
+.rs-thanks[hidden] {
+    display: none;
+}

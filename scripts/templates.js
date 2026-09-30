@@ -26,7 +26,7 @@ async function elixirToggleHeart(btn) {
 
 function createProductTemplate(product) {
     const container = document.getElementById('productsGrid');
-    container.insertAdjacentHTML('beforeend', `<a href="producto.html?id=${product.id}" class="product-link">
+    container.insertAdjacentHTML('beforeend', `<a href="producto.html?id=${product.id}" class="product-link" data-id="${product.id}">
                                 <article class="product-card fade-hidden">
                                     <div class="product-card-image">
                                         ${createImg(product.image)}

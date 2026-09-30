@@ -866,3 +866,162 @@
         max-width: 900px;
     }
 }
+
+
+/* ── Reseñas del perfume ───────────────────── */
+
+.pd-reviews {
+    border-top: 1px solid rgba(212, 175, 125, 0.08);
+    padding: 55px 0 30px;
+}
+
+.pd-reviews[hidden] {
+    display: none;
+}
+
+.pd-reviews-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+}
+
+.pd-reviews-summary {
+    margin-top: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.pd-reviews-avg {
+    color: var(--gold);
+    font-weight: 500;
+}
+
+.pd-reviews-cta {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    padding: 11px 20px;
+    border: 1px solid rgba(212, 175, 125, 0.4);
+    border-radius: 100px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pd-reviews-cta:hover {
+    background: var(--gold);
+    color: var(--primary-color);
+}
+
+.pd-reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.pd-reviews-grid.is-collapsed .pd-review-card:nth-child(n + 7) {
+    display: none;
+}
+
+.pd-review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 24px 20px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(212, 175, 125, 0.15);
+    border-radius: 16px;
+}
+
+.pd-review-stars {
+    display: flex;
+    gap: 3px;
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.pd-review-text {
+    flex-grow: 1;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pd-review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pd-review-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.pd-review-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pd-review-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+.pd-review-city {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.pd-reviews-more {
+    display: block;
+    margin: 26px auto 0;
+    padding: 12px 28px;
+    background: none;
+    border: 1px solid rgba(212, 175, 125, 0.3);
+    border-radius: 100px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    cursor: pointer;
+}
+
+.pd-reviews-more:hover {
+    background: rgba(212, 175, 125, 0.1);
+}
+
+.pd-reviews-more[hidden] {
+    display: none;
+}
+
+@media (min-width: 700px) {
+    .pd-reviews-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1100px) {
+    .pd-reviews-grid { grid-template-columns: repeat(3, 1fr); }
+}
