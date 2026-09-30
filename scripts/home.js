@@ -451,20 +451,54 @@ function setupMobileCarousel(reels) {
 
 setupReels();
 
-// Lazy-load video sources when the section scrolls into view (200px before)
+// Preload the reel videos in the background once the page itself has loaded,
+// so they are ready by the time the visitor scrolls down to the section.
+// The center video goes first; the others follow once it can play through.
 (function() {
     var section = document.getElementById('socialSection');
     if (!section) return;
-    var loaded = false;
+    var videos = Array.prototype.slice.call(section.querySelectorAll('video[data-src]'));
+    var started = false;
+
+    function loadVideo(video) {
+        if (!video.dataset.src) return;
+        video.preload = 'auto';
+        video.src = video.dataset.src;
+        video.removeAttribute('data-src');
+        video.load();
+    }
+
+    function loadAll() {
+        if (started) return;
+        started = true;
+        var center = section.querySelector('[data-role="center"] video[data-src]');
+        var rest   = videos.filter(function(v) { return v !== center; });
+        var restLoaded = false;
+        function loadRest() {
+            if (restLoaded) return;
+            restLoaded = true;
+            rest.forEach(loadVideo);
+        }
+        if (!center) { loadRest(); return; }
+        center.addEventListener('canplaythrough', loadRest, { once: true });
+        setTimeout(loadRest, 4000); // fallback on slow connections
+        loadVideo(center);
+    }
+
+    function whenIdle() {
+        if ('requestIdleCallback' in window) requestIdleCallback(loadAll, { timeout: 2000 });
+        else setTimeout(loadAll, 500);
+    }
+
+    if (document.readyState === 'complete') whenIdle();
+    else window.addEventListener('load', whenIdle, { once: true });
+
+    // Safety net: if the visitor scrolls there before the preload started, load now
     var lazyObserver = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting && !loaded) {
-            loaded = true;
-            section.querySelectorAll('video[data-src]').forEach(function(video) {
-                video.src = video.dataset.src;
-                video.load();
-            });
+        if (entries[0].isIntersecting) {
+            loadAll();
             lazyObserver.disconnect();
         }
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '600px' });
     lazyObserver.observe(section);
 })();
