@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Claude Code (lokale Einstellungen und Notizen)
+.claude/
+memory/
+
+# Node (falls später Tools dazukommen)
+node_modules/
+npm-debug.log*
+
+# Lokale Umgebungsdateien / Zugangsdaten
+.env
+.env.*
+
+# Logs und temporäre Dateien
+*.log
+*.tmp
+*.bak
+
+# Netlify (lokaler CLI-Ordner)
+.netlify/

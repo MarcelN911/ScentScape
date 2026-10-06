@@ -7,4 +7,4 @@ User-agent: *
 Allow: /
 
 # Apuntar al sitemap
-Sitemap: https://elixirsb.netlify.app/sitemap.xml
+Sitemap: https://scentscape.com.co/sitemap.xml

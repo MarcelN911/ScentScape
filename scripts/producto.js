@@ -79,8 +79,8 @@ function renderFullProductPage(product, allData) {
 function updatePageMeta(product) {
     var name  = product.nombre    || 'Producto';
     var desc  = product.descripcion || (name + ' — Fragancia disponible en ScentScape. Envíos a todo Colombia.');
-    var img   = (product.imagenes && product.imagenes[0]) ? product.imagenes[0] : 'https://elixirsb.netlify.app/assets/img/og-banner.png';
-    var url   = 'https://elixirsb.netlify.app/producto.html?id=' + product._id;
+    var img   = (product.imagenes && product.imagenes[0]) ? product.imagenes[0] : 'https://scentscape.com.co/assets/img/og-banner.png';
+    var url   = 'https://scentscape.com.co/producto.html?id=' + product._id;
 
     document.title = name + ' — ScentScape | Medellín, Colombia';
 

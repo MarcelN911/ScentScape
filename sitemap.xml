@@ -10,8 +10,8 @@
 
     <!-- Inicio / Home -->
     <url>
-        <loc>https://elixirsb.netlify.app/</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/"/>
+        <loc>https://scentscape.com.co/</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -19,8 +19,8 @@
 
     <!-- Catálogo de productos -->
     <url>
-        <loc>https://elixirsb.netlify.app/productos.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/productos.html"/>
+        <loc>https://scentscape.com.co/productos.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/productos.html"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
@@ -28,8 +28,8 @@
 
     <!-- Quiénes somos -->
     <url>
-        <loc>https://elixirsb.netlify.app/nosotros.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/nosotros.html"/>
+        <loc>https://scentscape.com.co/nosotros.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/nosotros.html"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
@@ -37,8 +37,8 @@
 
     <!-- Reseñas -->
     <url>
-        <loc>https://elixirsb.netlify.app/resenas.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/resenas.html"/>
+        <loc>https://scentscape.com.co/resenas.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/resenas.html"/>
         <lastmod>2026-09-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -46,8 +46,8 @@
 
     <!-- Contacto -->
     <url>
-        <loc>https://elixirsb.netlify.app/contacto.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/contacto.html"/>
+        <loc>https://scentscape.com.co/contacto.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/contacto.html"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -55,8 +55,8 @@
 
     <!-- Términos y Condiciones -->
     <url>
-        <loc>https://elixirsb.netlify.app/terminos.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/terminos.html"/>
+        <loc>https://scentscape.com.co/terminos.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/terminos.html"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
@@ -64,8 +64,8 @@
 
     <!-- Política de Privacidad -->
     <url>
-        <loc>https://elixirsb.netlify.app/privacidad.html</loc>
-        <xhtml:link rel="alternate" hreflang="es-CO" href="https://elixirsb.netlify.app/privacidad.html"/>
+        <loc>https://scentscape.com.co/privacidad.html</loc>
+        <xhtml:link rel="alternate" hreflang="es-CO" href="https://scentscape.com.co/privacidad.html"/>
         <lastmod>2026-04-03</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
