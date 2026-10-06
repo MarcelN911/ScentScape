@@ -53,6 +53,7 @@ function buildCurrentProductMeta(product) {
         id:    product._id,
         name:  product.nombre || 'Producto',
         brand: product.marca  || '',
+        category: product.categoria || '',
         image: product.imagenes && product.imagenes.length > 0 ? product.imagenes[0] : './assets/img/scentscape-logo.png'
     };
 }
@@ -446,6 +447,7 @@ function handleAddToCart() {
         productId:    pdCurrentProduct.id,
         name:         pdCurrentProduct.name,
         brand:        pdCurrentProduct.brand,
+        category:     pdCurrentProduct.category,
         size:         sizeData.size,
         image:        pdCurrentProduct.image,
         regularPrice: sizeData.regularPrice,

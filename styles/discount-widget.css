@@ -1,8 +1,7 @@
 /* ============================================================
    NEXOMAR DISCOUNT WIDGET — ScentScape (ElixirS&B) theme
-   Copied from NEXOMAR.co/client/widgets/discount/discount-widget.css.
-   Only the :root variables + the few visual refinements below are
-   site-specific; class names/structure must stay untouched —
+   Announcement bar + offer modal. The :root variables carry the
+   site's look; class names and ids must stay as they are —
    discount-widget.js depends on them.
    ============================================================ */
 
@@ -28,6 +27,12 @@
        or the two visually clash. */
     --nxdw-bar-bg:      rgba(0,0,0,0.94);
     --nxdw-bar-border:  rgba(212,175,125,0.5);
+    --nxdw-radius:      20px;
+    --nxdw-radius-sm:   12px;
+    --nxdw-field-bg:    rgba(255,255,255,0.05);
+    --nxdw-field-line:  rgba(255,255,255,0.14);
+    --nxdw-gold-fill:   linear-gradient(180deg, rgb(232,200,154), rgb(196,159,110));
+    --nxdw-on-gold:     rgb(21,25,50);
 }
 
 .nxdw-hidden { display: none !important; }
@@ -91,7 +96,14 @@
 .nxdw-bar-copy:hover { opacity: 1; color: var(--nxdw-ink); }
 .nxdw-bar-copy--done { opacity: 1; color: var(--nxdw-accent); }
 
-/* ---- Modal overlay ---- */
+/* ---- Modal overlay ----
+   Centering uses the ghost-element technique (an ::before spacer +
+   inline-block + vertical-align:middle) instead of flexbox: flex centering
+   clips BOTH ends of a modal that is taller than the screen in mobile
+   Safari/Chrome, so the close button and the submit button become
+   unreachable. With this, a modal that fits is centered, and one that
+   doesn't simply scrolls from its top. The offer card grows with its
+   conditions, so this applies at every width, not only on phones. */
 
 .nxdw-overlay {
     position: fixed;
@@ -100,148 +112,246 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     z-index: var(--nxdw-modal-z);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 16px;
+    box-sizing: border-box;
+    text-align: center;
+    /* Zeroed out so the whitespace between the ::before spacer and the modal
+       has no width — otherwise it wraps the modal below the spacer. */
+    font-size: 0;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s ease;
 }
+.nxdw-overlay::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
 .nxdw-overlay.nxdw-open { opacity: 1; pointer-events: auto; }
 
 .nxdw-modal {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 16px;
+    font-family: var(--nxdw-font-body);
     background:
-        radial-gradient(ellipse 140% 90% at 50% -10%, rgba(212,175,125,0.14), transparent 55%),
-        linear-gradient(180deg, rgb(24,29,56), rgb(17,20,40));
+        radial-gradient(ellipse 120% 70% at 100% 0%, rgba(212,175,125,0.16), transparent 60%),
+        linear-gradient(180deg, rgb(26,31,60), rgb(16,19,38));
     color: var(--nxdw-ink);
     width: 100%;
-    max-width: 460px;
+    max-width: 440px;
     box-sizing: border-box;
-    border-radius: 2px;
+    border-radius: var(--nxdw-radius);
     border: 1px solid var(--nxdw-border);
     position: relative;
-    /* Visible, not hidden/auto — the modal itself must never scroll (only
-       the country dropdown does); clipping here would also cut off that
-       dropdown whenever it opens near the modal's bottom edge. */
+    /* Visible, not hidden/auto — the modal itself never scrolls (the overlay
+       does); clipping here would cut off the country dropdown whenever it
+       opens near the modal's bottom edge. */
     overflow: visible;
     transform: translateY(20px) scale(0.97);
     transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.65);
 }
 .nxdw-overlay.nxdw-open .nxdw-modal { transform: translateY(0) scale(1); }
 
-/* Inset hairline — the "frame within a frame" look used on the site's
-   certificate/hero mark. */
-.nxdw-modal::before {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border: 1px solid rgba(212,175,125,0.22);
-    pointer-events: none;
-    z-index: 1;
-}
-
 .nxdw-close {
     position: absolute;
-    top: 16px; right: 16px;
-    width: 30px; height: 30px;
+    top: 14px; right: 14px;
+    width: 34px; height: 34px;
     display: flex; align-items: center; justify-content: center;
-    color: var(--nxdw-accent);
-    font-size: 15px;
+    color: var(--nxdw-ink);
+    font-size: 20px;
     font-weight: 300;
     line-height: 1;
     border-radius: 50%;
-    border: 1px solid var(--nxdw-border);
-    background: rgba(6,7,16,0.4);
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(6,7,16,0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     z-index: 3;
     cursor: pointer;
+    padding: 0;
     transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
-.nxdw-close:hover { border-color: var(--nxdw-accent); color: var(--nxdw-accent-2); background: rgba(212,175,125,0.1); }
+.nxdw-close:hover { border-color: var(--nxdw-accent); color: var(--nxdw-accent-2); background: rgba(6,7,16,0.75); }
+.nxdw-close:focus-visible,
+.nxdw-btn:focus-visible,
+.nxdw-done-btn:focus-visible,
+.nxdw-copy-btn:focus-visible { outline: 2px solid var(--nxdw-accent-2); outline-offset: 2px; }
 
-/* Square aspect ratio (not a fixed px height) so a square promo/logo image
-   shows in full on mobile instead of getting cropped through its content —
-   a fixed short height was cutting straight through wordmarks. */
-.nxdw-img-wrap { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; flex-shrink: 0; position: relative; z-index: 1; }
-.nxdw-img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+/* ---- Image ---- */
+
+.nxdw-img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    position: relative;
+    border-radius: calc(var(--nxdw-radius) - 1px) calc(var(--nxdw-radius) - 1px) 0 0;
+}
+/* The promo photos are portrait product shots with the bottle centered:
+   crop on the vertical middle, where the bottle is, not on the top edge. */
+.nxdw-img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .nxdw-img-wrap::after {
     content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 82%, rgba(17,20,40,0.9) 100%);
+    background: linear-gradient(180deg, rgba(16,19,38,0) 55%, rgba(16,19,38,0.92) 100%);
+    pointer-events: none;
 }
 
-.nxdw-body { padding: 34px 30px 32px; text-align: center; position: relative; z-index: 2; }
-
-.nxdw-ornament {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 14px;
+/* The offer's value, repeated on the photo so it reads at a glance. */
+.nxdw-img-badge {
+    position: absolute;
+    left: 18px; bottom: 16px;
+    z-index: 1;
+    background: var(--nxdw-gold-fill);
+    color: var(--nxdw-on-gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px -6px rgba(0,0,0,0.6);
 }
-.nxdw-ornament span { width: 28px; height: 1px; background: linear-gradient(90deg, transparent, var(--nxdw-accent)); }
-.nxdw-ornament span:last-child { background: linear-gradient(90deg, var(--nxdw-accent), transparent); }
-.nxdw-ornament em { font-style: normal; color: var(--nxdw-accent); font-size: 11px; }
+.nxdw-img-badge:empty { display: none; }
+
+/* ---- Body ---- */
+
+.nxdw-body { padding: 28px 26px 26px; position: relative; z-index: 2; }
+.nxdw-no-img .nxdw-body { padding-top: 34px; }
 
 .nxdw-eyebrow {
-    font-family: var(--nxdw-font-body);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.32em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--nxdw-accent);
+    margin: 0 0 12px;
+    /* Keeps the eyebrow clear of the close button when there is no photo. */
+    padding-right: 44px;
+}
+.nxdw-eyebrow-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--nxdw-accent);
+    box-shadow: 0 0 0 4px rgba(212,175,125,0.18);
+    flex-shrink: 0;
+}
+
+/* ---- Hero: what the code is worth ---- */
+
+.nxdw-hero {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
     margin: 0 0 10px;
 }
-
-.nxdw-divider {
-    width: 1px;
-    height: 22px;
-    background: linear-gradient(180deg, transparent, var(--nxdw-accent), transparent);
-    margin: 6px auto 22px;
-}
-
-.nxdw-title {
-    font-family: var(--nxdw-font-disp);
-    font-size: clamp(30px, 8vw, 40px);
-    font-weight: 400;
-    line-height: 1.05;
-    margin: 0 0 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-.nxdw-title em { font-style: italic; color: var(--nxdw-accent); font-size: 1.1em; }
-
-.nxdw-sub {
+.nxdw-hero-value {
     font-family: var(--nxdw-font-disp);
     font-style: italic;
-    font-size: 15px;
-    color: var(--nxdw-muted);
-    margin: 0;
-    line-height: 1.5;
+    font-weight: 500;
+    font-size: clamp(64px, 19vw, 88px);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    background: linear-gradient(180deg, rgb(246,224,190), rgb(204,165,112));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Italic glyphs overhang their box; without this the last one is clipped
+       by the background-clip. */
+    padding-right: 0.08em;
+}
+/* A peso amount or "Envío gratis" is a phrase, not a single number. */
+.nxdw-hero--compact .nxdw-hero-value { font-size: clamp(40px, 12vw, 54px); line-height: 1; }
+.nxdw-hero-label {
+    font-family: var(--nxdw-font-disp);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--nxdw-ink);
+    line-height: 1.1;
 }
 
-.nxdw-fields { display: flex; flex-direction: column; gap: 18px; margin: 0 0 22px; }
+.nxdw-sub {
+    font-size: 13.5px;
+    color: var(--nxdw-muted);
+    margin: 0 0 16px;
+    line-height: 1.55;
+}
+
+/* ---- Conditions ---- */
+
+.nxdw-conds {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+.nxdw-cond {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 100%;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--nxdw-muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 6px 12px 6px 10px;
+}
+.nxdw-cond-icon { flex-shrink: 0; color: var(--nxdw-accent); }
+/* Deadline close, or few coupons left. */
+.nxdw-cond--urgent {
+    color: var(--nxdw-accent-2);
+    background: rgba(212,175,125,0.12);
+    border-color: rgba(212,175,125,0.45);
+    font-weight: 600;
+}
+.nxdw-conds--compact { margin-bottom: 0; }
+
+/* ---- Form ---- */
+
+.nxdw-fields { display: flex; flex-direction: column; gap: 12px; margin: 0 0 14px; }
+
+.nxdw-field { display: flex; flex-direction: column; gap: 6px; }
+.nxdw-field-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+}
 
 .nxdw-input {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.18);
-    border-radius: 0;
-    padding: 8px 2px;
+    background: var(--nxdw-field-bg);
+    border: 1px solid var(--nxdw-field-line);
+    border-radius: var(--nxdw-radius-sm);
+    padding: 13px 14px;
     font-family: var(--nxdw-font-body);
-    font-size: 15px;
+    /* 16px keeps iOS Safari from zooming the page when the field gets focus. */
+    font-size: 16px;
     color: var(--nxdw-ink);
     outline: none;
     box-sizing: border-box;
-    text-align: center;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background 0.2s;
 }
-.nxdw-input::placeholder { color: rgba(255,255,255,0.32); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
-.nxdw-input:focus { border-bottom-color: var(--nxdw-accent); }
+.nxdw-input::placeholder { color: rgba(255,255,255,0.3); }
+.nxdw-input:focus { border-color: var(--nxdw-accent); background: rgba(255,255,255,0.07); }
 
-.nxdw-phone-group { display: flex; align-items: flex-end; gap: 10px; }
+.nxdw-phone-group { display: flex; align-items: stretch; gap: 8px; }
 
 /* ---- Country code dropdown (custom listbox, not a native <select> —
    the native option panel renders as an unstyleable system control, which
@@ -253,13 +363,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    width: auto;
-    max-width: 92px;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.18);
-    border-radius: 0;
-    padding: 8px 2px;
+    height: 100%;
+    background: var(--nxdw-field-bg);
+    border: 1px solid var(--nxdw-field-line);
+    border-radius: var(--nxdw-radius-sm);
+    padding: 0 12px;
     font-family: var(--nxdw-font-body);
     font-size: 15px;
     color: var(--nxdw-ink);
@@ -268,14 +376,13 @@
 }
 .nxdw-country-btn:hover,
 .nxdw-country-btn:focus-visible,
-.nxdw-country-btn[aria-expanded="true"] { border-bottom-color: var(--nxdw-accent); outline: none; }
+.nxdw-country-btn[aria-expanded="true"] { border-color: var(--nxdw-accent); outline: none; }
 
 .nxdw-country-flag { font-size: 16px; line-height: 1; flex-shrink: 0; }
 .nxdw-country-dial { font-size: 14px; white-space: nowrap; }
 .nxdw-country-arrow {
     color: var(--nxdw-accent);
     flex-shrink: 0;
-    margin-left: auto;
     transition: transform 0.2s;
 }
 .nxdw-country-btn[aria-expanded="true"] .nxdw-country-arrow { transform: rotate(180deg); }
@@ -293,7 +400,7 @@
     list-style: none;
     background: rgb(26,31,58);
     border: 1px solid var(--nxdw-border);
-    border-radius: 6px;
+    border-radius: var(--nxdw-radius-sm);
     box-shadow: 0 20px 40px -12px rgba(0,0,0,0.55);
 }
 
@@ -302,7 +409,7 @@
     align-items: center;
     gap: 10px;
     padding: 11px 10px;
-    border-radius: 4px;
+    border-radius: 8px;
     font-family: var(--nxdw-font-body);
     font-size: 14px;
     color: var(--nxdw-ink);
@@ -318,48 +425,52 @@
 .nxdw-country-option-name { flex: 1; white-space: nowrap; }
 .nxdw-country-option-dial { color: var(--nxdw-muted); font-size: 12.5px; flex-shrink: 0; }
 
-/* Centered (not left-aligned) to match .nxdw-input's default — same
-   treatment as the name field above it, instead of chasing an exact pixel
-   match against the country button's width, which never held up once real
-   font rendering (Montserrat webfont, emoji width) came into play. */
 .nxdw-phone-input { flex: 1; min-width: 0; }
 
-/* Phones are narrower than the desktop-tuned 190px list — let it size to the
-   button's own edge instead of always starting flush left, so it doesn't
-   overhang past the modal's padding on small screens. */
 @media (max-width: 420px) {
     .nxdw-country-list { min-width: 170px; }
 }
 
-.nxdw-error { font-size: 12px; color: var(--nxdw-danger); text-align: center; min-height: 15px; margin: -8px 0 4px; }
+.nxdw-error { font-size: 12px; color: var(--nxdw-danger); min-height: 16px; margin: 0 0 8px; }
 
 .nxdw-privacy {
     font-size: 10.5px;
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.42);
     line-height: 1.6;
-    margin-top: 18px;
+    margin: 14px 0 0;
 }
 .nxdw-privacy a { color: var(--nxdw-accent); text-decoration: underline; }
 
+/* ---- Buttons ---- */
+
 .nxdw-btn, .nxdw-done-btn {
     width: 100%;
-    background: linear-gradient(180deg, rgb(226,193,146), rgb(196,159,110));
-    color: rgb(21,25,50);
+    background: var(--nxdw-gold-fill);
+    color: var(--nxdw-on-gold);
     font-family: var(--nxdw-font-body);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     padding: 16px;
-    border-radius: 1px;
-    border: none;
+    border-radius: var(--nxdw-radius-sm);
+    border: 1px solid transparent;
     cursor: pointer;
     position: relative;
-    box-shadow: 0 8px 22px -8px rgba(212,175,125,0.5);
-    transition: opacity 0.15s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 10px 24px -10px rgba(212,175,125,0.6);
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
 }
-.nxdw-btn:hover, .nxdw-done-btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 10px 26px -6px rgba(212,175,125,0.6); }
+.nxdw-btn:hover, .nxdw-done-btn:hover { opacity: 0.94; transform: translateY(-1px); box-shadow: 0 12px 28px -8px rgba(212,175,125,0.65); }
 .nxdw-btn:disabled { opacity: 0.5; pointer-events: none; }
+
+/* Second in line next to "Usar en mi carrito". */
+.nxdw-done-btn--ghost {
+    background: transparent;
+    color: var(--nxdw-ink);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: none;
+}
+.nxdw-done-btn--ghost:hover { border-color: var(--nxdw-accent); box-shadow: none; }
 
 .nxdw-btn-spinner {
     display: none;
@@ -374,129 +485,180 @@
 .nxdw-btn.nxdw-loading .nxdw-btn-spinner { display: block; }
 @keyframes nxdw-spin { to { transform: translateY(-50%) rotate(360deg); } }
 
-/* ---- Success state ---- */
+/* ---- Unlocked: the code as a coupon ---- */
 
-.nxdw-success { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.nxdw-success-title {
+    font-family: var(--nxdw-font-disp);
+    font-size: 30px;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0 0 16px;
+    line-height: 1.1;
+}
 
-.nxdw-success-icon {
-    width: 52px; height: 52px;
+.nxdw-coupon {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--nxdw-border);
+    margin: 0 0 14px;
+    animation: nxdw-coupon-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes nxdw-coupon-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+
+.nxdw-coupon-value {
+    flex: 0 0 36%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 18px 10px;
+    text-align: center;
+    background: var(--nxdw-gold-fill);
+    color: var(--nxdw-on-gold);
+    border-radius: 15px 0 0 15px;
+}
+.nxdw-coupon-amount {
+    font-family: var(--nxdw-font-disp);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(24px, 7.5vw, 34px);
+    line-height: 1;
+}
+.nxdw-coupon-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.nxdw-coupon-code {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 16px 16px 20px;
+    /* The perforation between the two halves of the ticket. */
+    border-left: 2px dashed rgba(212,175,125,0.45);
+    position: relative;
+}
+/* The two punched notches where the perforation meets the edges. Their
+   colour is the overlay showing through, close enough at this size. */
+.nxdw-coupon-code::before,
+.nxdw-coupon-code::after {
+    content: '';
+    position: absolute;
+    left: -9px;
+    width: 16px; height: 16px;
     border-radius: 50%;
-    border: 1px solid var(--nxdw-accent);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--nxdw-accent);
-    background: rgba(212,175,125,0.08);
-    margin-bottom: 2px;
+    background: rgb(20,24,47);
+    border: 1px solid var(--nxdw-border);
 }
+.nxdw-coupon-code::before { top: -9px;    clip-path: inset(50% 0 0 0); }
+.nxdw-coupon-code::after  { bottom: -9px; clip-path: inset(0 0 50% 0); }
 
-.nxdw-success-title { font-family: var(--nxdw-font-disp); font-size: 26px; font-weight: 400; margin: 0; text-transform: uppercase; letter-spacing: 0.02em; }
-.nxdw-success-sub   { font-family: var(--nxdw-font-disp); font-style: italic; font-size: 15px; color: var(--nxdw-muted); margin: 0; }
-.nxdw-success-desc  { font-family: var(--nxdw-font-body); font-size: 12px; color: rgba(255,255,255,0.5); margin: 0; line-height: 1.5; }
-
-.nxdw-code-box {
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px dashed var(--nxdw-border);
-    border-radius: 1px;
-    padding: 16px 22px;
-    width: 100%;
-    box-sizing: border-box;
+.nxdw-coupon-code-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
 }
-.nxdw-code-text { font-family: var(--nxdw-font-body); font-size: 21px; font-weight: 700; letter-spacing: 0.18em; color: var(--nxdw-accent-2); }
+.nxdw-code-text {
+    font-size: clamp(17px, 5.4vw, 22px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--nxdw-accent-2);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    user-select: all;
+}
 
 .nxdw-copy-btn {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--nxdw-muted);
-    background: transparent;
-    border: 1px solid var(--nxdw-border);
-    border-radius: 1px;
-    padding: 7px 10px;
+    font-family: var(--nxdw-font-body);
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--nxdw-ink);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 6px 14px;
     cursor: pointer;
-    flex-shrink: 0;
-    transition: color 0.15s, border-color 0.15s;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.nxdw-copy-btn:hover { color: var(--nxdw-ink); border-color: var(--nxdw-accent); }
-.nxdw-copy-btn.nxdw-copied { color: var(--nxdw-accent); border-color: var(--nxdw-accent); }
+.nxdw-copy-btn:hover { border-color: var(--nxdw-accent); }
+.nxdw-copy-btn.nxdw-copied { color: var(--nxdw-on-gold); background: var(--nxdw-accent-2); border-color: var(--nxdw-accent-2); }
 
-/* ---- Mobile: prevent viewport overflow, always-visible close button ---- */
-
-@media (max-width: 767px) {
-    /* Flexbox centering (align-items:center, or margin:auto with
-       align-items:flex-start) turns out to clip BOTH the top and bottom of
-       an overflowing item in real mobile Safari/Chrome — you can't scroll
-       up far enough to reach content that renders above the container's
-       initial scroll position, so the close button and the submit button
-       both disappear. Flexbox is dropped here in favor of the classic
-       ghost-element technique (an ::before spacer + inline-block +
-       vertical-align:middle): it centers the modal when it fits, and when
-       it doesn't, normal block/inline overflow means scrollTop:0 already
-       shows the top of the modal — nothing is ever unreachable.
-       The country-code dropdown can still escape the modal's bottom edge
-       because .nxdw-modal keeps overflow:visible — only the overlay scrolls. */
-    .nxdw-overlay {
-        display: block;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 16px;
-        text-align: center;
-        /* Zeroed out so the whitespace between the ::before spacer and
-           .nxdw-modal in the markup has zero width — otherwise that
-           whitespace is just wide enough to push the modal onto its own
-           line, wrapping it below the full-height spacer instead of
-           centering it beside it. */
-        font-size: 0;
-    }
-    .nxdw-overlay::before {
-        content: '';
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
-    }
-
-    .nxdw-modal {
-        display: inline-block;
-        vertical-align: middle;
-        text-align: left;
-        font-size: 16px;
-    }
-
-    /* The promo photos this widget is fed are portrait product shots (e.g.
-       the current one is 1024x1536, ~2:3) with the bottle centered in
-       frame and box/flowers/ribbon filling the rest edge-to-edge. Showing
-       the photo at its full natural height keeps the modal so tall that
-       the bottle itself is below the fold until you scroll — reads as
-       "cut off" even though nothing is technically cropped. Keep the
-       compact 16:9 box instead, but use object-fit:cover (not contain, which
-       was shrinking the whole photo down with empty bars on the sides) with
-       object-position:center (not the site-wide default of top center,
-       which pushed the crop window up and cut the bottle's body off) so the
-       crop window sits on the vertical middle of the photo — where the
-       bottle actually is — instead of its top or its full untouched height. */
-    .nxdw-img-wrap {
-        aspect-ratio: 16 / 9;
-    }
-    .nxdw-img-wrap img {
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-    }
-
-    /* Tighten body padding on small screens */
-    .nxdw-body {
-        padding: 24px 20px 24px;
-    }
+.nxdw-success-sub {
+    font-size: 13px;
+    color: var(--nxdw-muted);
+    margin: 0 0 14px;
+    line-height: 1.5;
 }
 
-/* ---- Desktop: two-column layout ---- */
+.nxdw-success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+/* ---- Phones ---- */
+
+@media (max-width: 480px) {
+    .nxdw-overlay { padding: 12px; }
+    .nxdw-body { padding: 22px 20px 22px; }
+    .nxdw-no-img .nxdw-body { padding-top: 30px; }
+    .nxdw-hero-label { font-size: 19px; }
+    .nxdw-img-wrap { aspect-ratio: 2 / 1; }
+
+    /* Five pills rarely fit two to a row on a phone and stack into a tall
+       column — a plain list says the same in half the height. */
+    .nxdw-conds { flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .nxdw-cond {
+        background: none;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        font-size: 12.5px;
+    }
+    .nxdw-cond--urgent { background: none; }
+
+    /* Once the code is unlocked the coupon is the picture: the photo would
+       only push it below the fold. */
+    .nxdw-modal--success .nxdw-img-wrap { display: none; }
+    .nxdw-modal--success .nxdw-body { padding-top: 30px; }
+
+    .nxdw-coupon-value { flex-basis: 32%; padding: 16px 8px; }
+    .nxdw-coupon-code { padding: 14px 12px 14px 16px; }
+    .nxdw-code-text { font-size: clamp(15px, 4.4vw, 18px); letter-spacing: 0.06em; }
+}
+
+/* ---- Desktop: photo beside the offer ---- */
 
 @media (min-width: 900px) {
-    .nxdw-modal { max-width: 800px; display: flex; align-items: stretch; }
-    .nxdw-modal.nxdw-no-img { max-width: 480px; }
-    .nxdw-img-wrap { width: 45%; aspect-ratio: auto; height: auto; flex-shrink: 0; }
-    .nxdw-img-wrap::after { background: linear-gradient(90deg, transparent 70%, rgb(17,20,40)); }
-    .nxdw-body { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: left; padding: 50px 54px; }
-    /* Eyebrow + subtitle (with their ornament/divider) stay centered on
-       desktop even though the rest of the form goes left-aligned. */
-    .nxdw-eyebrow, .nxdw-sub { text-align: center; }
-    .nxdw-success { align-items: flex-start; }
+    .nxdw-modal { max-width: 860px; display: inline-flex; align-items: stretch; }
+    .nxdw-modal.nxdw-no-img { max-width: 480px; display: inline-block; }
+    .nxdw-img-wrap {
+        width: 44%;
+        aspect-ratio: auto;
+        height: auto;
+        flex-shrink: 0;
+        border-radius: calc(var(--nxdw-radius) - 1px) 0 0 calc(var(--nxdw-radius) - 1px);
+    }
+    .nxdw-img-wrap img { position: absolute; inset: 0; }
+    .nxdw-img-wrap::after { background: linear-gradient(90deg, rgba(16,19,38,0) 62%, rgba(18,21,42,0.95) 100%); }
+    .nxdw-img-badge { left: 22px; bottom: 22px; font-size: 13px; padding: 8px 16px; }
+    .nxdw-body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 44px 44px 40px; }
+    .nxdw-hero-value { font-size: 96px; }
+    .nxdw-hero--compact .nxdw-hero-value { font-size: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nxdw-overlay, .nxdw-modal, .nxdw-bar, .nxdw-bar-item { transition: none; }
+    .nxdw-coupon { animation: none; }
 }

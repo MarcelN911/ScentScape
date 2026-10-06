@@ -680,6 +680,22 @@
     color: #ff7070;
 }
 
+.cart-code-remove {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 4px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: inherit;
+    font-size: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.cart-code-remove:hover {
+    color: white;
+}
+
 /* ---- Responsive: Cart ---- */
 
 @media (max-width: 599px) {
