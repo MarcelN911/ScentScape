@@ -26,7 +26,7 @@ async function elixirToggleHeart(btn) {
 
 function createProductTemplate(product) {
     const container = document.getElementById('productsGrid');
-    container.insertAdjacentHTML('beforeend', `<a href="producto.html?id=${product.id}" class="product-link" data-id="${product.id}">
+    container.insertAdjacentHTML('beforeend', `<a href="${productUrl(product.id)}" class="product-link" data-id="${product.id}">
                                 <article class="product-card fade-hidden">
                                     <div class="product-card-image">
                                         ${createImg(product.image)}
@@ -108,7 +108,7 @@ function createReviewTemplate(review) {
 function createBestsellerTemplate(product) {
     const container = document.getElementById('bestsellersCarousel');
     container.insertAdjacentHTML('beforeend', `
-                <a href="producto.html?id=${product.id}" class="product-link">
+                <a href="${productUrl(product.id)}" class="product-link">
                     <article class="product-card">
                         <div class="product-card-image">
                             ${createImg(product.image)}

@@ -41,9 +41,9 @@ async function loadAllProductRows() {
     return await response.json();
 }
 
-/** Reads the ?id= URL parameter and finds the matching product. */
+/** Finds the product: generated pages set window.SS_PRODUCT_ID, producto.html uses ?id=. */
 function findProductById(allData) {
-    var id = new URLSearchParams(window.location.search).get('id');
+    var id = window.SS_PRODUCT_ID || new URLSearchParams(window.location.search).get('id');
     return allData.find(function(row) { return String(row._id) === id; });
 }
 
@@ -80,9 +80,10 @@ function updatePageMeta(product) {
     var name  = product.nombre    || 'Producto';
     var desc  = product.descripcion || (name + ' — Fragancia disponible en ScentScape. Envíos a todo Colombia.');
     var img   = (product.imagenes && product.imagenes[0]) ? product.imagenes[0] : 'https://scentscape.com.co/assets/img/og-banner.png';
-    var url   = 'https://scentscape.com.co/producto.html?id=' + product._id;
+    var url   = new URL(productUrl(product._id), 'https://scentscape.com.co/').href;
 
-    document.title = name + ' — ScentScape | Medellín, Colombia';
+    var catLabel = product.categoria ? 'Perfume para ' + product.categoria : 'Perfume';
+    document.title = name + ' — ' + catLabel + ' | ScentScape Medellín';
 
     setMeta('name',     'description',  desc);
     setMeta('property', 'og:title',     name + ' — ScentScape');
@@ -115,7 +116,8 @@ function injectProductSchema(product, url) {
         'name': product.nombre || '',
         'description': product.descripcion || '',
         'url': url,
-        'brand': { '@type': 'Brand', 'name': getBrand(product) || 'ScentScape' },
+        // Eigene Marke — "marca" enthält bei ScentScape die Duft-Inspiration, nicht den Hersteller
+        'brand': { '@type': 'Brand', 'name': 'ScentScape' },
         'offers': {
             '@type': 'Offer',
             'priceCurrency': 'COP',
@@ -343,7 +345,7 @@ function sortAndLimitRelated(candidates) {
 
 /** Returns the HTML string for a single related product card link. */
 function buildRelatedCardHtml(product) {
-    return `<a href="producto.html?id=${product.id}" class="product-link">
+    return `<a href="${productUrl(product.id)}" class="product-link">
         <article class="product-card">
             <div class="product-card-image">
                 ${createImg(product.image)}

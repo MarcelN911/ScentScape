@@ -1,0 +1,45 @@
+# Erzeugt die Produktseiten (/perfume/<slug>/) aus den Live-Daten von NEXOMAR
+# und committet sie, wenn sich etwas geändert hat.
+#   - jede Nacht automatisch
+#   - manuell über "Run workflow"
+#   - von NEXOMAR aus über einen repository_dispatch "products-updated"
+name: Produktseiten erzeugen
+
+on:
+  schedule:
+    - cron: '17 7 * * *'   # 02:17 Uhr Kolumbien
+  workflow_dispatch:
+  repository_dispatch:
+    types: [products-updated]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: product-pages
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Seiten erzeugen
+        run: node tools/generate-product-pages.mjs
+
+      - name: Änderungen committen
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Keine Änderungen."
+            exit 0
+          fi
+          git config user.name  "scentscape-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add perfume scripts/product-urls.js sitemap.xml
+          git commit -m "chore: Produktseiten aktualisiert"
+          git push
