@@ -17,6 +17,16 @@ const validateUrl = _apiBase + '/api/public/validate-code';
 const orderUrl    = _apiBase + '/api/public/order';
 const resenaUrl   = _apiBase + '/api/public/resena';
 
+// ── Produkt-URLs ──────────────────────────────────
+// Schöne Adressen (/perfume/rose-noir/) kommen aus scripts/product-urls.js, das
+// tools/generate-product-pages.mjs erzeugt. Neue Produkte ohne eigene Seite
+// fallen auf producto.html?id= zurück.
+
+function productUrl(id) {
+    var map = window.SS_PRODUCT_URLS || {};
+    return map[String(id)] || ('producto.html?id=' + id);
+}
+
 // ── Heart / Wishlist storage ──────────────────────
 
 const HEARTS_KEY = 'elixir_hearts';
@@ -106,7 +116,7 @@ function elixirRenderWishItem(p) {
     row.style.cssText = 'display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:1px solid rgba(212,175,125,0.1)';
 
     const link = document.createElement('a');
-    link.href = 'producto.html?id=' + p._id;
+    link.href = productUrl(p._id);
     link.style.cssText = 'display:flex;align-items:center;gap:14px;flex:1;min-width:0;text-decoration:none;color:inherit';
     link.innerHTML =
         (img ? '<img src="' + img + '" style="width:52px;height:65px;object-fit:cover;object-position:center top;flex-shrink:0;border-radius:3px">' : '<div style="width:52px;height:65px;background:#1a1020;flex-shrink:0;border-radius:3px"></div>') +
@@ -261,7 +271,7 @@ function createProductData(data, index) {
         categories:  p.categoria  || '',
         unisex:      p.variantes  ? p.variantes.some(function(v) { return v.nombre === 'Género' && v.opciones.includes('Unisex'); }) : false,
         active:      p.disponible,
-        image:       p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : './assets/img/logo-transparent.png',
+        image:       p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : './assets/img/scentscape-logo.png',
         description: p.descripcion || ''
     };
 }
