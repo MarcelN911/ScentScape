@@ -11,6 +11,7 @@
 //   sitemap.xml                 Produkt-URLs zwischen den PRODUCT-Markern
 
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -136,7 +137,7 @@ function buildPage(template, p, url) {
     h = h.replace(/\s*<meta property="og:image:(width|height)" content="[^"]*">/g, '');
     h = replaceOnce(h, /<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="' + esc(url) + '">', 'og:url');
     h = replaceOnce(h, /<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="' + esc(url) + '">', 'canonical');
-    h = replaceOnce(h, /<script src="scripts\/producto\.js" defer><\/script>/,
+    h = replaceOnce(h, /<script src="scripts\/producto\.js(?:\?v=[\w]+)?" defer><\/script>/,
         '<script>window.SS_PRODUCT_ID = ' + JSON.stringify(String(p._id)) + ';</script>\n' +
         '    <script type="application/ld+json" id="pd-jsonld">' + productSchema(p, url) + '</script>\n' +
         '    <script src="scripts/producto.js" defer></script>', 'producto.js');
@@ -221,3 +222,36 @@ if (sm.includes(START)) {
 fs.writeFileSync(smPath, sm);
 
 console.log(entries.length + ' Produktseiten erzeugt in /' + OUT_DIR + '/');
+
+// ── Cache-Busting ───────────────────────────────────────────────────────────
+// Jede lokale JS/CSS-Datei bekommt ?v=<Inhalts-Hash>. Ändert sich eine Datei,
+// ändert sich die URL — Browser und Hostinger-Cache laden sie dann garantiert neu.
+
+const hashCache = new Map();
+function versionOf(rel) {
+    if (!hashCache.has(rel)) {
+        const file = path.join(ROOT, rel);
+        hashCache.set(rel, fs.existsSync(file)
+            ? crypto.createHash('sha1').update(fs.readFileSync(file)).digest('hex').slice(0, 8)
+            : null);
+    }
+    return hashCache.get(rel);
+}
+
+function stampAssets(html) {
+    return html.replace(/(src|href)="(\.\/)?((?:scripts|styles)\/[\w.-]+\.(?:js|css)|script\.js)(?:\?v=\w+)?"/g,
+        function(m, attr, dot, rel) {
+            const v = versionOf(rel);
+            return v ? attr + '="' + (dot || '') + rel + '?v=' + v + '"' : m;
+        });
+}
+
+const htmlFiles = fs.readdirSync(ROOT).filter(f => f.endsWith('.html')).map(f => path.join(ROOT, f))
+    .concat(entries.map(e => path.join(ROOT, OUT_DIR, e.slug, 'index.html')));
+let stamped = 0;
+for (const file of htmlFiles) {
+    const before = fs.readFileSync(file, 'utf8');
+    const after  = stampAssets(before);
+    if (after !== before) { fs.writeFileSync(file, after); stamped++; }
+}
+console.log(stamped + ' HTML-Dateien mit Asset-Versionen aktualisiert');

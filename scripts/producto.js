@@ -19,17 +19,22 @@ let pdCurrentProduct = null;
  * Redirects to 404 if the product is not found or the request fails.
  */
 async function fetchProduct() {
+    // Erzeugte Seiten (/perfume/<slug>/) haben Titel, Preis und Beschreibung schon im HTML.
+    // Dort nie auf 404 umleiten — schlimmstenfalls bleibt der vorgerenderte Inhalt stehen.
+    var prerendered = !!window.SS_PRODUCT_ID;
     try {
         const allData = await loadAllProductRows();
         const product = findProductById(allData);
         if (!product) {
+            if (prerendered) { console.warn('Producto no encontrado en la API:', window.SS_PRODUCT_ID); return; }
             window.location.replace('404.html');
             return;
         }
         pdCurrentProduct = buildCurrentProductMeta(product);
         renderFullProductPage(product, allData);
     } catch (e) {
-        window.location.replace('404.html');
+        console.error('Error al cargar el producto:', e);
+        if (!prerendered) window.location.replace('404.html');
     }
 }
 
