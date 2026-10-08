@@ -17,6 +17,18 @@ const validateUrl = _apiBase + '/api/public/validate-code';
 const orderUrl    = _apiBase + '/api/public/order';
 const resenaUrl   = _apiBase + '/api/public/resena';
 
+/** "Perfume para Dama", "Perfume unisex" oder einfach "Perfume" — Género-Variante
+ *  zuerst, sonst die Kategorie, aber nur wenn sie wirklich ein Geschlecht ist. */
+function perfumeLabel(p) {
+    var GENEROS = ['dama', 'caballero', 'mujer', 'hombre', 'ella', 'él', 'el', 'unisex'];
+    var v = (p.variantes || []).find(function(x) { return x.nombre === 'Género'; });
+    var opciones = (v && v.opciones) || [];
+    var genero = opciones.length === 1 ? opciones[0] : (opciones.indexOf('Unisex') !== -1 ? 'Unisex' : '');
+    if (!genero && p.categoria && GENEROS.indexOf(String(p.categoria).trim().toLowerCase()) !== -1) genero = p.categoria;
+    if (!genero) return 'Perfume';
+    return genero.toLowerCase() === 'unisex' ? 'Perfume unisex' : 'Perfume para ' + genero;
+}
+
 // ── Produkt-URLs ──────────────────────────────────
 // Schöne Adressen (/perfume/rose-noir/) kommen aus scripts/product-urls.js, das
 // tools/generate-product-pages.mjs erzeugt. Neue Produkte ohne eigene Seite
