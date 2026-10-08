@@ -70,8 +70,15 @@ function replaceOnce(html, pattern, replacement, label) {
     return html.replace(pattern, replacement);
 }
 
+// Gleiche Logik wie perfumeLabel() in script.js
 function categoryLabel(p) {
-    return p.categoria ? 'Perfume para ' + p.categoria : 'Perfume';
+    const GENEROS = ['dama', 'caballero', 'mujer', 'hombre', 'ella', 'él', 'el', 'unisex'];
+    const v = (p.variantes || []).find(x => x.nombre === 'Género');
+    const opciones = (v && v.opciones) || [];
+    let genero = opciones.length === 1 ? opciones[0] : (opciones.includes('Unisex') ? 'Unisex' : '');
+    if (!genero && p.categoria && GENEROS.includes(String(p.categoria).trim().toLowerCase())) genero = p.categoria;
+    if (!genero) return 'Perfume';
+    return genero.toLowerCase() === 'unisex' ? 'Perfume unisex' : 'Perfume para ' + genero;
 }
 
 // ── Google-Daten (schema.org/Product) ──────────────────────────────────────

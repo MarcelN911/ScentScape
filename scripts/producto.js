@@ -82,8 +82,7 @@ function updatePageMeta(product) {
     var img   = (product.imagenes && product.imagenes[0]) ? product.imagenes[0] : 'https://scentscape.com.co/assets/img/og-banner.png';
     var url   = new URL(productUrl(product._id), 'https://scentscape.com.co/').href;
 
-    var catLabel = product.categoria ? 'Perfume para ' + product.categoria : 'Perfume';
-    document.title = name + ' — ' + catLabel + ' | ScentScape Medellín';
+    document.title = name + ' — ' + perfumeLabel(product) + ' | ScentScape Medellín';
 
     setMeta('name',     'description',  desc);
     setMeta('property', 'og:title',     name + ' — ScentScape');
@@ -173,7 +172,7 @@ function initProductHeart(productId) {
 /** Fills in the product name, brand, category eyebrow, and breadcrumb. */
 function renderInfo(product) {
     var name     = product.nombre    || 'Producto Desconocido';
-    var category = product.categoria ? 'Perfume para ' + product.categoria : 'Categoría desconocida';
+    var category = perfumeLabel(product);
     var brand    = getBrand(product);
     document.querySelector('.pd-eyebrow').textContent            = category;
     document.querySelector('.pd-title').textContent              = name;
