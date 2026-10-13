@@ -560,6 +560,48 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://scentscape.com.co/perfume/very-good-girl/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/good-girl-supreme/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/good-girl-blush/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/good-girl-very-glam/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/212-heroes/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/212-vip/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/212-vip-rose/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://scentscape.com.co/perfume/lady-million/</loc>
         <lastmod>2026-07-24</lastmod>
         <changefreq>weekly</changefreq>
@@ -586,6 +628,12 @@
     <url>
         <loc>https://scentscape.com.co/perfume/pure-xs-for-her/</loc>
         <lastmod>2026-07-26</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/212-vip-black-men/</loc>
+        <lastmod>2026-10-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -1018,6 +1066,30 @@
     <url>
         <loc>https://scentscape.com.co/perfume/212-heroes-men/</loc>
         <lastmod>2026-09-30</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-2/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-3/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-4/</loc>
+        <lastmod>2026-10-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
