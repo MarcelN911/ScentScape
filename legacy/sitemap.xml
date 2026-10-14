@@ -1070,7 +1070,7 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://scentscape.com.co/perfume/prueba/</loc>
+        <loc>https://scentscape.com.co/perfume/prueba-6/</loc>
         <lastmod>2026-10-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -1089,6 +1089,24 @@
     </url>
     <url>
         <loc>https://scentscape.com.co/perfume/prueba-4/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-5/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-1/</loc>
+        <lastmod>2026-10-13</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://scentscape.com.co/perfume/prueba-7/</loc>
         <lastmod>2026-10-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
