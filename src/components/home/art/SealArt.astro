@@ -1,0 +1,54 @@
+---
+/** Rotierendes Siegel mit Häkchen (Karte "Original garantizado") */
+---
+
+<div class="seal-art">
+  <svg class="seal-art__ring" viewBox="0 0 200 200" aria-hidden="true">
+    <defs>
+      <path id="discover-seal" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"></path>
+    </defs>
+    <text>
+      <textPath href="#discover-seal">Sellado de fábrica · Lote verificado · Original ·</textPath>
+    </text>
+  </svg>
+  <span class="seal-art__check">✓</span>
+</div>
+
+<style>
+  .seal-art {
+    position: absolute;
+    left: 50%;
+    top: 7%;
+    width: min(56%, 210px);
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+  }
+
+  .seal-art__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: spin 24s linear infinite;
+  }
+
+  .seal-art__ring text {
+    fill: var(--peach);
+    font: 600 12.5px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .seal-art__check {
+    position: absolute;
+    inset: 24%;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--peach-rgb) / 0.5);
+    outline: 1px solid rgb(var(--peach-rgb) / 0.2);
+    outline-offset: -6px;
+    font: italic 400 40px/1 var(--font-serif);
+    color: var(--sand);
+  }
+</style>

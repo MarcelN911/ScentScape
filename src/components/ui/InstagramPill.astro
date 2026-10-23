@@ -1,0 +1,66 @@
+---
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '../../scripts/config.js';
+---
+
+<a class="instagram-pill" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+  <span class="instagram-pill__icon">
+    <img src="/assets/img/instagram_white.svg" alt="" width="20" height="20" />
+  </span>
+  <span class="instagram-pill__text">
+    <span class="instagram-pill__label">Síguenos</span>
+    <span class="instagram-pill__handle">{INSTAGRAM_HANDLE}</span>
+  </span>
+</a>
+
+<style>
+  .instagram-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 22px 0 6px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--white-rgb) / 0.14);
+    background: rgb(var(--white-rgb) / 0.06);
+    backdrop-filter: blur(10px);
+    color: var(--white);
+    transition: all 0.3s;
+  }
+
+  .instagram-pill:hover {
+    border-color: rgb(var(--peach-rgb) / 0.5);
+    background: rgb(var(--white-rgb) / 0.12);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
+
+  .instagram-pill__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 107%,
+      #fdf497 0%,
+      #fd5949 45%,
+      #d6249f 60%,
+      #285aeb 90%
+    );
+  }
+
+  .instagram-pill__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .instagram-pill__label {
+    font: 700 13px/1 var(--font-sans);
+  }
+
+  .instagram-pill__handle {
+    font: 500 11px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+</style>

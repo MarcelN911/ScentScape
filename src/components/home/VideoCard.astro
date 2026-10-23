@@ -1,0 +1,137 @@
+---
+/** @typedef {{ video: { src: string, title: string }, index: number }} Props */
+const { video, index } = Astro.props;
+---
+
+<article class="video-card" data-video-card={index} data-cursor="Ver">
+  <video
+    class="video-card__video"
+    src={`${video.src}#t=0.6`}
+    muted
+    playsinline
+    preload="metadata"
+  ></video>
+  <div class="video-card__shade"></div>
+  <span class="video-card__tag">Reel {String(index + 1).padStart(2, '0')}</span>
+  <div class="video-card__foot">
+    <h3 class="video-card__title">{video.title}</h3>
+    <span class="video-card__play" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 4l13 8-13 8z"></path>
+      </svg>
+    </span>
+  </div>
+</article>
+
+<style>
+  .video-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: var(--layer, 1);
+    width: var(--video-width);
+    max-height: 100%;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--navy-deep);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.3);
+    cursor: pointer;
+    filter: saturate(0.6) brightness(0.6);
+    opacity: calc(var(--dim, 0) * var(--fan, 1));
+    transform: translate(-50%, -50%)
+      translateX(calc(var(--offset, 0) * var(--video-spread) * var(--fan, 1)))
+      scale(calc(1 - var(--shrink, 0) * var(--fan, 1)))
+      rotateY(calc(var(--offset, 0) * -6deg * var(--fan, 1)));
+    transition:
+      transform 0.45s var(--ease),
+      opacity 0.45s var(--ease),
+      filter 0.8s var(--ease);
+  }
+
+  .video-card.is-active {
+    box-shadow: 0 40px 80px rgb(0 0 0 / 0.5);
+    filter: none;
+    opacity: 1;
+  }
+
+  .video-card.is-far {
+    pointer-events: none;
+  }
+
+  .video-card__video {
+    position: absolute;
+    inset: -2px;
+    width: calc(100% + 4px);
+    max-width: none;
+    height: calc(100% + 4px);
+    object-fit: cover;
+    background: var(--navy-deep);
+    transform: scale(1.08);
+  }
+
+  .video-card__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(14 17 36 / 0.3) 0%,
+      transparent 28%,
+      transparent 55%,
+      rgb(14 17 36 / 0.88) 100%
+    );
+    pointer-events: none;
+  }
+
+  .video-card__tag {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    padding: 8px 12px;
+    border-radius: var(--radius-pill);
+    background: rgb(var(--navy-deep-rgb) / 0.5);
+    backdrop-filter: blur(10px);
+    font: 600 10px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .video-card__foot {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s,
+      transform 0.5s;
+  }
+
+  .video-card.is-active .video-card__foot {
+    opacity: 1;
+    transform: none;
+  }
+
+  .video-card__title {
+    margin: 0;
+    font: 500 22px/1.05 var(--font-serif);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .video-card__play {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

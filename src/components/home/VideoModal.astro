@@ -1,0 +1,235 @@
+---
+import { INSTAGRAM_URL } from '../../scripts/config.js';
+
+const HANDLE = 'elixirsb__';
+---
+
+<div class="video-modal" data-video-modal hidden role="dialog" aria-modal="true" aria-label="Video">
+  <button class="video-modal__close" type="button" data-video-close aria-label="Cerrar">
+    ×
+  </button>
+  <button
+    class="video-modal__nav video-modal__nav--prev"
+    type="button"
+    data-video-step="-1"
+    aria-label="Anterior"
+  >
+    ‹
+  </button>
+  <button
+    class="video-modal__nav video-modal__nav--next"
+    type="button"
+    data-video-step="1"
+    aria-label="Siguiente"
+  >
+    ›
+  </button>
+  <div class="video-modal__box">
+    <div class="video-modal__media">
+      <video data-video-player controls loop playsinline></video>
+    </div>
+    <div class="video-modal__side">
+      <div class="video-modal__head">
+        <span class="video-modal__avatar">
+          <img src="/assets/img/scentscape-logo.png" alt="" />
+        </span>
+        <span class="video-modal__handle">{HANDLE}</span>
+        <a class="video-modal__follow" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+          Seguir
+        </a>
+      </div>
+      <div class="video-modal__body">
+        <span class="video-modal__avatar video-modal__avatar--plain">
+          <img src="/assets/img/scentscape-logo.png" alt="" />
+        </span>
+        <p class="video-modal__caption">
+          <strong>{HANDLE}</strong> <span data-video-caption></span>
+          <span class="video-modal__tags">#scentscape #perfumeria #colombia</span>
+        </p>
+      </div>
+      <a class="video-modal__more" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+        Ver más en Instagram →
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-video);
+    display: grid;
+    place-items: center;
+    padding: clamp(12px, 3vw, 40px);
+    background: rgb(0 0 0 / 0.72);
+    animation: fade-in 0.3s var(--ease);
+    --ig-text: #f5f5f5;
+    --ig-muted: #a8a8a8;
+    --ig-line: #262626;
+    --ig-font: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  .video-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    font: 300 34px/1 var(--font-sans);
+  }
+
+  .video-modal__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.9);
+    color: #111;
+    font: 700 16px/1 sans-serif;
+    transform: translateY(-50%);
+  }
+
+  .video-modal__nav--prev {
+    left: clamp(6px, 2vw, 28px);
+  }
+
+  .video-modal__nav--next {
+    right: clamp(6px, 2vw, 28px);
+  }
+
+  .video-modal__box {
+    display: flex;
+    flex-direction: column;
+    width: min(440px, 100%);
+    max-height: 92vh;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--ig-line);
+    background: #000;
+    font-family: var(--ig-font);
+    color: var(--ig-text);
+  }
+
+  .video-modal__media {
+    width: 100%;
+    max-height: 58vh;
+    aspect-ratio: 9 / 16;
+    background: #000;
+  }
+
+  .video-modal__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-modal__side {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .video-modal__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ig-line);
+    font: 600 14px/1 var(--ig-font);
+  }
+
+  .video-modal__avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 107%,
+      #fdf497 0%,
+      #fd5949 45%,
+      #d6249f 60%,
+      #285aeb 90%
+    );
+  }
+
+  .video-modal__avatar img {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background: var(--navy);
+    object-fit: contain;
+  }
+
+  .video-modal__avatar--plain {
+    padding: 0;
+    background: var(--navy);
+  }
+
+  .video-modal__follow {
+    margin-left: auto;
+    color: #0095f6;
+  }
+
+  .video-modal__body {
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    min-height: 0;
+    overflow: auto;
+    padding: 16px;
+  }
+
+  .video-modal__caption {
+    margin: 0;
+    font: 400 14px/1.4 var(--ig-font);
+  }
+
+  .video-modal__caption strong {
+    font-weight: 600;
+  }
+
+  .video-modal__tags {
+    color: #e0f1ff;
+  }
+
+  .video-modal__more {
+    padding: 14px 16px;
+    border-top: 1px solid var(--ig-line);
+    font: 600 14px/1 var(--ig-font);
+    color: #0095f6;
+  }
+
+  @media (min-width: 820px) {
+    .video-modal__box {
+      flex-direction: row;
+      width: auto;
+      max-width: calc(100vw - 120px);
+      height: min(90vh, 860px);
+      border-radius: 6px;
+    }
+
+    .video-modal__media {
+      flex: none;
+      width: auto;
+      height: 100%;
+      max-height: none;
+    }
+
+    .video-modal__side {
+      flex: none;
+      width: clamp(320px, 30vw, 420px);
+    }
+  }
+</style>

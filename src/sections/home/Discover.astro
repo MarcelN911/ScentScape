@@ -1,0 +1,117 @@
+---
+import DiscoverCard from '../../components/home/DiscoverCard.astro';
+import CatalogArt from '../../components/home/art/CatalogArt.astro';
+import GiftArt from '../../components/home/art/GiftArt.astro';
+import QuizArt from '../../components/home/art/QuizArt.astro';
+import ReviewsArt from '../../components/home/art/ReviewsArt.astro';
+import SealArt from '../../components/home/art/SealArt.astro';
+import { DISCOVER_CARDS } from '../../data/home.js';
+import { averageRating } from '../../scripts/catalog/reviews.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+
+/** @typedef {{ products: object[], reviews: object[] }} Props */
+const { products, reviews } = Astro.props;
+const bottles = products.slice(0, 4).map((product) => imageUrl(product.images[0], 700));
+const average = averageRating(reviews);
+const [quiz, gift, catalog, seal, reviewsCard] = DISCOVER_CARDS;
+---
+
+<section class="discover" data-discover>
+  <div class="discover__ghost" aria-hidden="true" data-discover-drift="-30">
+    Descubre · Regala · Comprueba
+  </div>
+  <div class="discover__inner">
+    <div class="discover__head">
+      <h2 class="discover__title">
+        <span class="line-mask">
+          <span data-reveal="mask">Descubre</span>
+        </span>
+        <span class="line-mask">
+          <em data-reveal="mask" style="--reveal-delay:120ms">
+            ScentScape
+          </em>
+        </span>
+      </h2>
+      <p class="discover__lead" data-reveal="up" style="--reveal-delay:200ms">
+        Encuentra tu aroma, regálalo y compruébalo. Todo en un solo lugar.
+      </p>
+    </div>
+    <div class="discover__cards">
+      <DiscoverCard card={quiz}>
+        <QuizArt slot="art" image={bottles[0]} />
+      </DiscoverCard>
+      <DiscoverCard card={gift}>
+        <GiftArt slot="art" />
+      </DiscoverCard>
+      <DiscoverCard card={catalog}>
+        <CatalogArt slot="art" images={bottles.slice(1)} />
+      </DiscoverCard>
+      <DiscoverCard card={seal}>
+        <SealArt slot="art" />
+      </DiscoverCard>
+      <DiscoverCard card={reviewsCard}>
+        <ReviewsArt slot="art" average={average} review={reviews[0]} />
+      </DiscoverCard>
+    </div>
+  </div>
+</section>
+
+<style>
+  .discover {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(80px, 9vw, 140px) var(--gutter);
+    background: var(--navy);
+  }
+
+  .discover__ghost {
+    position: absolute;
+    left: 0;
+    top: clamp(20px, 3vw, 50px);
+    font: 500 clamp(140px, 20vw, 340px) / 1 var(--font-serif);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.1);
+    pointer-events: none;
+  }
+
+  .discover__inner {
+    position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .discover__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: clamp(30px, 4vw, 56px);
+  }
+
+  .discover__title {
+    margin: 0;
+    font: 500 clamp(48px, 7vw, 120px) / 0.9 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .discover__title em {
+    font: italic 400 1em/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .discover__lead {
+    max-width: 360px;
+    margin: 0;
+    font: italic 400 clamp(18px, 1.6vw, 22px) / 1.4 var(--font-serif);
+    color: rgb(var(--white-rgb) / 0.75);
+  }
+
+  .discover__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+</style>

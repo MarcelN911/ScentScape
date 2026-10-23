@@ -1,0 +1,190 @@
+---
+import Marquee from '../../components/ui/Marquee.astro';
+import { HERO_MARQUEE, HERO_VIDEO } from '../../data/home.js';
+
+/** @typedef {{ names: string[] }} Props */
+const { names } = Astro.props;
+---
+
+<section class="hero" data-hero>
+  <video
+    class="hero__video"
+    src={HERO_VIDEO}
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+  ></video>
+  <div class="hero__shade hero__shade--side"></div>
+  <div class="hero__shade hero__shade--bottom"></div>
+  <div class="hero__content" data-hero-text>
+    <p class="hero__eyebrow">ScentScape · Medellín</p>
+    <h1 class="hero__title">
+      Distinción<em>sin límites.</em>
+    </h1>
+    <div class="hero__actions">
+      <a class="btn btn--primary btn--lg" href="/productos/">
+        Ver la colección →
+      </a>
+      <button class="hero__quiz" type="button" data-action="open-quiz">
+        <span class="hero__quiz-icon">›</span>
+        <span>
+          Descubre
+          <br />
+          tu esencia
+        </span>
+      </button>
+    </div>
+  </div>
+  <div class="hero__bands" aria-hidden="true">
+    <Marquee class="hero__band hero__band--peach" items={HERO_MARQUEE} separator="✺" />
+    <Marquee class="hero__band hero__band--wine" items={names} separator="·" reverse />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: max(100vh, 560px);
+    background: var(--navy-deep);
+  }
+
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__shade {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .hero__shade--side {
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgb(14 17 36 / 0.85) 0%,
+      rgb(14 17 36 / 0.5) 45%,
+      rgb(14 17 36 / 0.12) 100%
+    );
+  }
+
+  .hero__shade--bottom {
+    inset: auto 0 0;
+    height: 45%;
+    background: linear-gradient(180deg, transparent 0%, rgb(21 25 50 / 0.7) 60%, var(--navy) 100%);
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 26px;
+    max-width: 1500px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 110px clamp(18px, 5vw, 80px) clamp(170px, 22vh, 230px);
+  }
+
+  .hero__eyebrow {
+    margin: 0;
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--sand);
+  }
+
+  .hero__title {
+    margin: 0;
+    font: 500 clamp(56px, 9vw, 160px) / 0.86 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .hero__title em {
+    display: block;
+    font: italic 400 1.06em/1 var(--font-serif);
+    letter-spacing: -0.01em;
+    color: var(--peach);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .hero__quiz {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: 600 12px/1.6 var(--font-sans);
+    letter-spacing: 3px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .hero__quiz-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--sand-rgb) / 0.6);
+    font-size: 20px;
+    color: var(--sand);
+    transition: background 0.4s;
+  }
+
+  .hero__quiz:hover .hero__quiz-icon {
+    background: rgb(var(--peach-rgb) / 0.18);
+  }
+
+  .hero__bands {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 5;
+    height: 220px;
+    overflow: hidden;
+    transform: translateY(50%);
+    pointer-events: none;
+  }
+
+  .hero__bands :global(.hero__band) {
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    top: 50%;
+  }
+
+  .hero__bands :global(.hero__band--peach) {
+    --marquee-gap: 36px;
+    padding: 18px 0;
+    background: var(--peach);
+    color: var(--navy);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.3);
+    font: 500 clamp(20px, 2.4vw, 34px) / 1 var(--font-serif);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    transform: translateY(-60%) rotate(-2.2deg);
+  }
+
+  .hero__bands :global(.hero__band--wine) {
+    --marquee-gap: 34px;
+    --marquee-duration: 34s;
+    padding: 16px 0;
+    background: var(--wine);
+    color: var(--sand);
+    font: italic 400 clamp(22px, 2.6vw, 38px) / 1 var(--font-serif);
+    transform: translateY(-10%) rotate(1.8deg);
+  }
+</style>

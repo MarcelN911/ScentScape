@@ -1,0 +1,67 @@
+---
+/** @typedef {{ label: string, number: string, count: number, index: number }} Props */
+const { label, number, count, index } = Astro.props;
+---
+
+<button
+  class:list={['faq-tab', { 'is-active': index === 0 }]}
+  type="button"
+  role="tab"
+  aria-selected={String(index === 0)}
+  data-faq-tab={index}
+>
+  <span class="faq-tab__number">{number}</span>
+  <span class="faq-tab__label">{label}</span>
+  <span class="faq-tab__count">{count}</span>
+</button>
+
+<style>
+  .faq-tab {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: rgb(var(--white-rgb) / 0.6);
+    font: 600 15px/1 var(--font-sans);
+    transition: all 0.3s var(--ease);
+  }
+
+  .faq-tab.is-active {
+    background: rgb(var(--peach-rgb) / 0.12);
+    color: var(--white);
+  }
+
+  .faq-tab__number {
+    width: 26px;
+    font: italic 400 17px/1 var(--font-serif);
+    color: rgb(var(--peach-rgb) / 0.5);
+  }
+
+  .faq-tab.is-active .faq-tab__number {
+    color: var(--peach);
+  }
+
+  .faq-tab__label {
+    flex: 1;
+    text-align: left;
+  }
+
+  .faq-tab__count {
+    display: grid;
+    place-items: center;
+    min-width: 24px;
+    height: 24px;
+    border-radius: var(--radius-pill);
+    background: rgb(var(--white-rgb) / 0.08);
+    font: 700 11px/1 var(--font-sans);
+  }
+
+  .faq-tab.is-active .faq-tab__count {
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

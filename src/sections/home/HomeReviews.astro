@@ -1,0 +1,113 @@
+---
+import ReviewNote from '../../components/home/ReviewNote.astro';
+import { averageRating, starsOf } from '../../scripts/catalog/reviews.js';
+
+/** @typedef {{ reviews: object[] }} Props */
+const { reviews } = Astro.props;
+const average = averageRating(reviews);
+---
+
+<section class="home-reviews" id="resenas" data-home-reviews>
+  <div class="home-reviews__inner">
+    <div class="home-reviews__head">
+      <h2 class="home-reviews__title">
+        <span class="line-mask" data-review-drift="-1">
+          <span data-reveal="mask">+100 clientes</span>
+        </span>
+        <span class="line-mask" data-review-drift="1">
+          <em data-reveal="mask">felices en Colombia</em>
+        </span>
+      </h2>
+      <div class="home-reviews__score" data-reveal="up">
+        <span class="home-reviews__average" data-review-score={average.toFixed(1)}>
+          {average.toFixed(1)}
+        </span>
+        <span class="home-reviews__summary">
+          <span class="home-reviews__stars">{starsOf(average)}</span>
+          <span>{reviews.length} calificaciones</span>
+        </span>
+      </div>
+    </div>
+    <div class="home-reviews__grid">
+      {reviews.map((review, index) => (
+        <ReviewNote review={review} index={index} />
+      ))}
+    </div>
+    <a class="home-reviews__more" href="/resenas/">
+      Leer todas las reseñas o escribir la tuya →
+    </a>
+  </div>
+</section>
+
+<style>
+  .home-reviews {
+    overflow: hidden;
+    padding: clamp(60px, 7vw, 100px) var(--gutter) clamp(130px, 14vw, 200px);
+    background: linear-gradient(180deg, var(--wine) 0%, var(--wine) 72%, var(--navy-deep) 100%);
+  }
+
+  .home-reviews__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .home-reviews__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+
+  .home-reviews__title {
+    margin: 0;
+    font: 500 clamp(44px, 6vw, 100px) / 0.9 var(--font-serif);
+    letter-spacing: -0.015em;
+    color: var(--sand);
+  }
+
+  .home-reviews__title em {
+    font: italic 400 1.05em/1 var(--font-serif);
+    letter-spacing: 0;
+    color: var(--white);
+  }
+
+  .home-reviews__score {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .home-reviews__average {
+    font: 500 64px/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .home-reviews__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font: 500 12px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+
+  .home-reviews__stars {
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  .home-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 24px;
+  }
+
+  .home-reviews__more {
+    display: inline-flex;
+    margin-top: 40px;
+    font: 700 14px/1 var(--font-sans);
+    color: var(--sand);
+  }
+</style>

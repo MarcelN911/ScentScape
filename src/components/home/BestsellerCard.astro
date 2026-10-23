@@ -1,0 +1,222 @@
+---
+import ProductStage from '../product/ProductStage.astro';
+import { themeOf, topNotesOf } from '../../scripts/catalog/theme.js';
+import { cartItemJson } from '../../scripts/cart/cart-item.js';
+import { formatCOP, padNumber } from '../../scripts/utils/format.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+import { capitalize } from '../../scripts/utils/text.js';
+
+/** @typedef {{ product: object, index: number }} Props */
+const { product, index } = Astro.props;
+const image = imageUrl(product.images[0], 700);
+const notes = topNotesOf(product).map(capitalize).join(' · ');
+---
+
+<article class="best-card stage-host" data-cursor="Ver" data-best-card>
+  {product.hasCoverPhoto ? (
+    <div class="best-card__photo">
+      <img src={image} alt={product.name} draggable="false" data-best-photo />
+    </div>
+  ) : (
+    <ProductStage image={image} alt={product.name} theme={themeOf(product)} />
+  )}
+  <a class="best-card__link" href={`/producto/${product.slug}/`} aria-label={product.name}></a>
+  <div class="inner-line" aria-hidden="true"></div>
+  <span class="best-card__rank">{padNumber(index + 1)}</span>
+  <span class="best-card__tag">{product.family ?? product.brand}</span>
+  <div class="best-card__bottom">
+    <div class="best-card__text">
+      {notes && (
+        <div class="best-card__notes">
+          <p class="best-card__notes-label">Notas</p>
+          <p class="best-card__notes-text">{notes}</p>
+        </div>
+      )}
+      <h3 class="best-card__name">{product.name.toLowerCase()}</h3>
+      <p class="best-card__price">
+        {formatCOP(product.price)} COP<span class="best-card__cta">Descubrir →</span>
+      </p>
+    </div>
+    <button
+      class="best-card__add"
+      type="button"
+      aria-label={`Añadir ${product.name} al carrito`}
+      data-action="add-to-cart"
+      data-cart-item={cartItemJson(product)}
+    >
+      +
+    </button>
+  </div>
+</article>
+
+<style>
+  .best-card {
+    position: relative;
+    flex: none;
+    width: min(50vh, 380px, 76vw);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--navy-raised);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.35);
+    transition:
+      transform 0.6s var(--ease),
+      opacity 0.5s,
+      filter 0.5s,
+      box-shadow 0.6s;
+  }
+
+  .best-card:hover {
+    box-shadow:
+      0 46px 80px rgb(0 0 0 / 0.55),
+      0 0 0 1px rgb(var(--peach-rgb) / 0.55);
+    transform: translateY(-14px);
+  }
+
+  :global([data-best-track]:has(.best-card:hover)) .best-card:not(:hover) {
+    filter: saturate(0.6);
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+
+  .best-card__photo {
+    position: absolute;
+    inset: 0;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .best-card:hover .best-card__photo {
+    transform: scale(1.07);
+  }
+
+  .best-card__photo img {
+    position: absolute;
+    top: 0;
+    left: -5%;
+    width: 110%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+
+  .best-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .best-card__rank,
+  .best-card__tag,
+  .best-card__bottom {
+    position: absolute;
+    z-index: 3;
+  }
+
+  .best-card__rank {
+    top: 24px;
+    left: 24px;
+    font: italic 400 22px/1 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .best-card__tag {
+    top: 24px;
+    right: 24px;
+    padding: 8px 12px;
+    border-radius: var(--radius-pill);
+    background: rgb(var(--navy-deep-rgb) / 0.45);
+    font: 600 10px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .best-card__bottom {
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+  }
+
+  .best-card__text {
+    min-width: 0;
+  }
+
+  .best-card__notes {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.55s var(--ease);
+  }
+
+  .best-card:hover .best-card__notes {
+    max-height: 70px;
+    opacity: 1;
+    transform: none;
+  }
+
+  .best-card__notes-label {
+    margin: 0 0 6px;
+    font: 600 9px/1 var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .best-card__notes-text {
+    margin: 0 0 14px;
+    font: italic 400 16px/1.3 var(--font-serif);
+  }
+
+  .best-card__name {
+    margin: 0 0 8px;
+    font: 500 clamp(22px, 1.8vw, 28px) / 1 var(--font-serif);
+    letter-spacing: -0.01em;
+    text-transform: capitalize;
+  }
+
+  .best-card__price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font: 600 12px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    color: var(--sand);
+  }
+
+  .best-card__cta {
+    padding-left: 10px;
+    border-left: 1px solid rgb(var(--sand-rgb) / 0.4);
+    color: var(--white);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.45s var(--ease);
+  }
+
+  .best-card:hover .best-card__cta {
+    opacity: 1;
+    transform: none;
+  }
+
+  .best-card__add {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 24px/1 var(--font-sans);
+    pointer-events: auto;
+    transition: transform 0.3s;
+  }
+
+  .best-card__add:hover {
+    transform: rotate(90deg) scale(1.08);
+  }
+</style>

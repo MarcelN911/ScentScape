@@ -1,0 +1,48 @@
+---
+/** Drei Flaschen nebeneinander (Karte "Catálogo digital") */
+/** @typedef {{ images: string[] }} Props */
+const { images } = Astro.props;
+const [left, right, center] = images;
+---
+
+<div class="catalog-art">
+  <img class="catalog-art__bottle catalog-art__bottle--left" src={left} alt="" loading="lazy" />
+  <img class="catalog-art__bottle catalog-art__bottle--right" src={right} alt="" loading="lazy" />
+  <img class="catalog-art__bottle catalog-art__bottle--center" src={center} alt="" loading="lazy" />
+</div>
+
+<style>
+  .catalog-art {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 6%;
+    height: 56%;
+  }
+
+  .catalog-art__bottle {
+    position: absolute;
+    top: 10%;
+    width: auto;
+    height: 80%;
+    filter: drop-shadow(0 20px 26px rgb(0 0 0 / 0.55));
+  }
+
+  .catalog-art__bottle--left {
+    left: 12%;
+    transform: rotate(-14deg);
+  }
+
+  .catalog-art__bottle--right {
+    right: 12%;
+    transform: rotate(14deg);
+  }
+
+  .catalog-art__bottle--center {
+    left: 50%;
+    top: 0;
+    height: 92%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 26px 30px rgb(0 0 0 / 0.6));
+  }
+</style>

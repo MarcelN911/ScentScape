@@ -119,14 +119,14 @@ legacy/          alte Seite, nur als Vorlage
 - [x] SEO pro Produkt (Meta + Schema aus `legacy/scripts/producto.js`)
 - [x] Checkout-Seite (Schritte, Formular, Zusammenfassung), Bestellung an nexomar + Abschluss über WhatsApp
 
-### Phase 5: Startseite
+### Phase 5: Startseite ✅
 
-- [ ] Hero mit Video + zwei schräge Laufbänder
-- [ ] „Los más pedidos“: horizontaler Scroll, Zoom beim Hovern
-- [ ] „Descubre“-Karten mit Kipp- und Parallax-Effekt
-- [ ] „Familias olfativas“: fixierter Bereich, Flaschenwechsel
-- [ ] Video-Karussell mit Auffächern + Video-Modal
-- [ ] Bewertungen (einfliegende Karten, hochzählende Note), FAQ
+- [x] Hero mit Video + zwei schräge Laufbänder
+- [x] „Los más pedidos“: horizontaler Scroll, Zoom beim Hovern
+- [x] „Descubre“-Karten mit Kipp- und Parallax-Effekt
+- [x] „Familias olfativas“: fixierter Bereich, Flaschenwechsel
+- [x] Video-Karussell mit Auffächern + Video-Modal
+- [x] Bewertungen (einfliegende Karten, hochzählende Note), FAQ
 
 ### Phase 6: Weitere Seiten
 

@@ -1,0 +1,145 @@
+---
+import BestsellerCard from '../../components/home/BestsellerCard.astro';
+import { padNumber } from '../../scripts/utils/format.js';
+
+/** @typedef {{ products: object[], moreCount: number }} Props */
+const { products, moreCount } = Astro.props;
+---
+
+<section class="bestsellers" data-bestsellers>
+  <div class="bestsellers__pin">
+    <div class="bestsellers__head">
+      <h2 class="bestsellers__title">
+        Los más
+        <br />
+        <em>pedidos</em>
+      </h2>
+      <div class="bestsellers__progress">
+        <span class="bestsellers__count" data-best-count>
+          01
+        </span>
+        <span class="bestsellers__bar">
+          <span data-best-bar></span>
+        </span>
+        <span class="bestsellers__total">{padNumber(products.length)}</span>
+      </div>
+    </div>
+    <div class="bestsellers__track" data-best-track>
+      {products.map((product, index) => (
+        <BestsellerCard product={product} index={index} />
+      ))}
+      <div class="bestsellers__more frame">
+        <p class="bestsellers__more-text">+{moreCount} fragancias más</p>
+        <a class="btn btn--primary btn--lg" href="/productos/">
+          Ver la colección →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bestsellers {
+    position: relative;
+    height: 400vh;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 60%, rgb(var(--peach-rgb) / 0.08), transparent 70%),
+      var(--navy);
+  }
+
+  .bestsellers__pin {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+  }
+
+  .bestsellers__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    padding: 150px var(--gutter) 26px;
+  }
+
+  .bestsellers__title {
+    margin: 0;
+    font: 500 clamp(44px, 6.4vw, 110px) / 0.9 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .bestsellers__title em {
+    font: italic 400 1.05em/1 var(--font-serif);
+    letter-spacing: 0;
+    color: var(--peach);
+  }
+
+  .bestsellers__progress {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 220px;
+    font: 500 14px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.5);
+  }
+
+  .bestsellers__count {
+    font-weight: 700;
+    color: var(--peach);
+  }
+
+  .bestsellers__bar {
+    flex: 1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .bestsellers__bar span {
+    display: block;
+    height: 100%;
+    background: var(--peach);
+    transform: scaleX(var(--best-progress, 0));
+    transform-origin: 0 50%;
+  }
+
+  .bestsellers__track {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 0 var(--gutter);
+    will-change: transform;
+  }
+
+  .bestsellers__more {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: min(50vh, 380px, 76vw);
+    aspect-ratio: 4 / 5;
+    padding: 30px;
+    border-radius: 24px;
+    background: transparent;
+    text-align: center;
+  }
+
+  .bestsellers__more-text {
+    margin: 0;
+    font: italic 400 40px/1.1 var(--font-serif);
+    color: var(--sand);
+  }
+
+  @media (max-width: 700px) {
+    .bestsellers {
+      height: 340vh;
+    }
+  }
+</style>
