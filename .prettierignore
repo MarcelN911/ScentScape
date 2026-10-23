@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+legacy/
+public/
+package-lock.json
+README.md
