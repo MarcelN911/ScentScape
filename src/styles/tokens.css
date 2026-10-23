@@ -1,0 +1,89 @@
+/*
+ * Design-Grundwerte aus der Vorlage (ScentScape Shop v7).
+ * Farben mit Transparenz werden im CSS so geschrieben:
+ *   rgb(var(--peach-rgb) / 0.35)
+ * Dadurch bleiben die exakten Werte der Vorlage erhalten, ohne für jede Stufe ein Token anzulegen.
+ */
+:root {
+  /* Farben */
+  --navy: #151932;
+  --navy-deep: #0e1124;
+  --navy-raised: #1b1f3d;
+  --navy-curtain: #12152b;
+  --peach: #f0be91;
+  --sand: #f0d2aa;
+  --gold: #d4af7d;
+  --wine: #61031b;
+  --wine-deep: #3a0214;
+  --wine-hover: #7a0a26;
+  --white: #ffffff;
+  --whatsapp: #25d366;
+  --addi: #00b4e6;
+
+  --navy-rgb: 21 25 50;
+  --navy-deep-rgb: 14 17 36;
+  --peach-rgb: 240 190 145;
+  --sand-rgb: 240 210 170;
+  --white-rgb: 255 255 255;
+
+  /* Text auf dunklem Grund */
+  --text: var(--white);
+  --text-soft: rgb(var(--white-rgb) / 0.78);
+  --text-muted: rgb(var(--white-rgb) / 0.6);
+  --text-faint: rgb(var(--white-rgb) / 0.45);
+
+  /* Linien */
+  --line-faint: rgb(var(--peach-rgb) / 0.15);
+  --line: rgb(var(--peach-rgb) / 0.25);
+  --line-strong: rgb(var(--peach-rgb) / 0.4);
+
+  /* Glas-Flächen (Pillen über Bildern) */
+  --glass: rgb(var(--navy-deep-rgb) / 0.55);
+  --glass-light: rgb(var(--navy-deep-rgb) / 0.45);
+
+  /* Schriften */
+  --font-serif: 'Bodoni Moda Variable', 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Abstände */
+  --gutter: clamp(16px, 4vw, 60px);
+  --section-y: clamp(80px, 9vw, 140px);
+  --container: 1500px;
+
+  /* Rundungen */
+  --radius-pill: 999px;
+  --radius-xl: 32px;
+  --radius-lg: 28px;
+  --radius-md: 22px;
+  --radius-sm: 14px;
+  --radius-frame: 8px;
+
+  /* Schatten */
+  --shadow-card: 0 30px 60px rgb(0 0 0 / 0.35);
+  --shadow-float: 0 40px 80px rgb(0 0 0 / 0.45);
+  --shadow-button: 0 14px 34px rgb(37 211 102 / 0.3);
+
+  /* Bewegung */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-back: cubic-bezier(0.2, 0.7, 0.2, 1.4);
+  --ease-curtain: cubic-bezier(0.7, 0, 0.3, 1);
+  --duration-fast: 0.3s;
+  --duration: 0.6s;
+  --duration-slow: 0.9s;
+
+  /* Ebenen */
+  --z-sticky: 40;
+  --z-preview: 90;
+  --z-nav: 120;
+  --z-sticky-buy: 140;
+  --z-whatsapp: 150;
+  --z-cart-overlay: 180;
+  --z-cart: 190;
+  --z-video: 240;
+  --z-toast: 260;
+  --z-progress: 300;
+  --z-menu: 400;
+  --z-quiz: 600;
+  --z-curtain: 900;
+  --z-cursor: 950;
+}

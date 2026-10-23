@@ -84,14 +84,16 @@ legacy/          alte Seite, nur als Vorlage
 - [x] ESLint (14 Zeilen / 400 Zeilen), Prettier, `tools/check-lines.js`
 - [x] Platzhalter-Startseite, Build läuft
 
-### Phase 1: Fundament
+### Phase 1: Fundament ✅
 
-- [ ] `tokens.css`: Farben, Schriften (Bodoni Moda + Helvetica Neue), Abstände, Radien, Easing
-- [ ] `base.css`, `typography.css`: Reset, Eyebrows, Überschriften mit kursiver Zeile
-- [ ] `buttons.css`: Pill, Outline, Icon-Kreis, WhatsApp
-- [ ] Rahmenkarte (doppelte Linie + Schraffur) als wiederverwendbare Klasse
-- [ ] `animations.css`: alle `@keyframes` aus v7, ohne Duplikate
-- [ ] `prefers-reduced-motion` von Anfang an berücksichtigen
+- [x] `tokens.css`: Farben, Schriften (Bodoni Moda + Helvetica Neue), Abstände, Radien, Easing
+- [x] `base.css`, `typography.css`: Reset, Eyebrows, Überschriften mit kursiver Zeile
+- [x] `buttons.css`: Pill, Outline, Icon-Kreis, WhatsApp
+- [x] Rahmenkarte (doppelte Linie + Schraffur) als wiederverwendbare Klasse
+- [x] `animations.css`: alle `@keyframes` aus v7, ohne Duplikate
+- [x] `prefers-reduced-motion` von Anfang an berücksichtigen
+- [x] Schrift Bodoni Moda lokal eingebunden (`@fontsource-variable`), kein Google Fonts
+- [x] Styleguide-Seite `/styleguide/` (noindex) zum Vergleichen mit der Vorlage
 
 ### Phase 2: Was jede Seite hat
 

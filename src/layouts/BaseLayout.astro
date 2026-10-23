@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+
+/**
+ * @typedef {object} Props
+ * @property {string} title
+ * @property {string} description
+ * @property {string} [image]   Pfad zum Vorschaubild für WhatsApp, Facebook usw.
+ * @property {boolean} [noindex] Seite nicht bei Google aufnehmen
+ */
+
+const { title, description, image = '/assets/img/og-banner.png', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/assets/img/scentscape-favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/img/scentscape-favicon.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

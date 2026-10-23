@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const colors = [
+  ['navy', '#151932'],
+  ['navy-deep', '#0e1124'],
+  ['navy-raised', '#1b1f3d'],
+  ['peach', '#f0be91'],
+  ['sand', '#f0d2aa'],
+  ['gold', '#d4af7d'],
+  ['wine', '#61031b'],
+  ['whatsapp', '#25d366'],
+];
+const marqueeWords = ['Envíos a todo Colombia', 'Compra por WhatsApp', 'Hecho en Medellín'];
+---
+
+<BaseLayout title="Styleguide · ScentScape" description="Bausteine des Redesigns" noindex>
+  <main class="container guide">
+    <section class="guide__block">
+      <p class="eyebrow eyebrow--line">Styleguide</p>
+      <h1 class="display display--hero">
+        Distinción<em class="guide__break">sin límites.</em>
+      </h1>
+    </section>
+
+    <section class="guide__block">
+      <p class="eyebrow">Farben</p>
+      <ul class="guide__swatches">
+        {colors.map(([name, hex]) => (
+          <li class="guide__swatch">
+            <span class="guide__chip" style={`background:${hex}`} />
+            <span class="meta">{name}</span>
+            <span class="meta">{hex}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="guide__block">
+      <p class="eyebrow eyebrow--wide">Überschriften</p>
+      <h2 class="display display--lg">
+        Descubre <em>ScentScape</em>
+      </h2>
+      <h2 class="display display--md">
+        Preguntas <em>frecuentes</em>
+      </h2>
+      <h2 class="display display--sm">
+        También te <em>puede gustar</em>
+      </h2>
+      <h3 class="title">Tu aroma en tres toques</h3>
+      <p class="lead">Encuentra tu aroma, regálalo y compruébalo. Todo en un solo lugar.</p>
+      <p class="body">
+        Cada fragancia es cuidadosamente seleccionada, priorizando su calidad, proyección y
+        durabilidad.
+      </p>
+      <p>
+        <span class="numeral numeral--lg">III</span>
+      </p>
+    </section>
+
+    <section class="guide__block guide__row">
+      <a href="#" class="btn btn--primary btn--lg">
+        Ver la colección →
+      </a>
+      <a href="#" class="btn btn--outline btn--lg">
+        +57 321 810 1882
+      </a>
+      <a href="#" class="btn btn--primary btn--sm btn--icon-end">
+        Hacer el test<span class="btn__icon">→</span>
+      </a>
+      <a href="#" class="btn btn--whatsapp btn--lg btn--icon-start">
+        <span class="btn__icon">
+          <img src="/assets/img/whatsapp_white.svg" alt="" width="18" height="18" />
+        </span>
+        Escríbenos ahora
+      </a>
+      <button class="btn btn--dark">Aplicar</button>
+      <button class="icon-btn icon-btn--lg icon-btn--outline" aria-label="Anterior">
+        ←
+      </button>
+      <button class="icon-btn icon-btn--solid" aria-label="Añadir">
+        +
+      </button>
+      <span class="tag">Especiada</span>
+      <span class="tag tag--accent">Más vendido</span>
+    </section>
+
+    <section class="guide__block guide__row">
+      <div class="frame hatch guide__frame">
+        <p class="eyebrow">Rahmenkarte</p>
+        <h3 class="title">Sellado de fábrica</h3>
+      </div>
+      <div class="glass-pill guide__pill">
+        <span class="meta">Glas-Pille</span>
+      </div>
+      <span class="guide__orbit anim-spin" aria-hidden="true">
+        ✦
+      </span>
+    </section>
+  </main>
+
+  <div class="marquee guide__marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[0, 1].map(() => (
+        <span class="marquee__group">
+          {marqueeWords.map((word) => (
+            <>
+              <span>{word}</span>
+              <span>✺</span>
+            </>
+          ))}
+        </span>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .guide {
+    padding-block: var(--section-y);
+  }
+
+  .guide__block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 72px;
+  }
+
+  .guide__break {
+    display: block;
+    font-size: 1.06em;
+  }
+
+  .guide__row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .guide__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .guide__swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .guide__chip {
+    height: 72px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line-faint);
+  }
+
+  .guide__frame {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 36px;
+  }
+
+  .guide__pill {
+    height: 48px;
+    padding-inline: 20px;
+  }
+
+  .guide__orbit {
+    font-size: 40px;
+    color: var(--peach);
+  }
+
+  .guide__marquee {
+    padding: 18px 0;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 clamp(20px, 2.4vw, 34px) / 1 var(--font-serif);
+    text-transform: uppercase;
+  }
+</style>

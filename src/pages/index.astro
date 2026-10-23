@@ -1,14 +1,14 @@
 ---
-const title = 'ScentScape | Medellín, Colombia';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <h1>ScentScape · Redesign en construcción</h1>
-  </body>
-</html>
+<BaseLayout
+  title="ScentScape | Medellín, Colombia"
+  description="Perfumes originales, sellados de fábrica. Envíos a todo Colombia. Compra por WhatsApp."
+>
+  <main class="container">
+    <h1 class="display display--hero">
+      Redesign <em>en construcción</em>
+    </h1>
+  </main>
+</BaseLayout>

@@ -1,0 +1,135 @@
+/* Kleine Großbuchstaben-Zeile über Überschriften */
+.eyebrow {
+  margin: 0;
+  font: 600 11px/1 var(--font-sans);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--peach);
+}
+
+.eyebrow--wide {
+  letter-spacing: 5px;
+  color: var(--sand);
+}
+
+.eyebrow--line,
+.eyebrow--dot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eyebrow--line::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+/* Kleine Meta-Angabe (Familie · Geschlecht, Tags auf Karten) */
+.meta {
+  margin: 0;
+  font: 600 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Große Serifen-Überschrift. Größe über Modifier oder --display-size. */
+.display {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--display-size, clamp(42px, 5.6vw, 92px));
+  line-height: var(--display-leading, 0.92);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.display em,
+.display .accent {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--peach);
+}
+
+.display--hero {
+  --display-size: clamp(56px, 9vw, 160px);
+  --display-leading: 0.86;
+}
+
+.display--xl {
+  --display-size: clamp(64px, 10.5vw, 190px);
+  --display-leading: 0.86;
+}
+
+.display--lg {
+  --display-size: clamp(48px, 7vw, 120px);
+  --display-leading: 0.9;
+}
+
+.display--md {
+  --display-size: clamp(42px, 5.6vw, 92px);
+  --display-leading: 0.95;
+}
+
+.display--sm {
+  --display-size: clamp(38px, 4.6vw, 72px);
+  --display-leading: 0.95;
+}
+
+/* Titel auf Karten */
+.title {
+  margin: 0;
+  font: 500 clamp(30px, 3vw, 46px) / 0.98 var(--font-serif);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.title--sm {
+  font-size: clamp(22px, 1.8vw, 28px);
+  line-height: 1.05;
+}
+
+/* Zeile, die beim Einblenden von unten hinter einer Maske hervorkommt */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line-mask > * {
+  display: inline-block;
+}
+
+/* Kursiver Einleitungstext */
+.lead {
+  margin: 0;
+  font: italic 400 clamp(18px, 1.6vw, 22px) / 1.4 var(--font-serif);
+  color: rgb(var(--white-rgb) / 0.78);
+  text-wrap: pretty;
+}
+
+.body {
+  margin: 0;
+  font: 400 16px/1.65 var(--font-sans);
+  color: var(--text-soft);
+  text-wrap: pretty;
+}
+
+.body--sm {
+  font-size: 15px;
+  color: rgb(var(--white-rgb) / 0.75);
+}
+
+/* Römische Ziffern (I, II, III …) */
+.numeral {
+  font: italic 400 20px/1 var(--font-serif);
+  letter-spacing: 0;
+  color: var(--peach);
+}
+
+.numeral--lg {
+  font-size: 56px;
+}

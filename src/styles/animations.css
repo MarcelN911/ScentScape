@@ -1,0 +1,180 @@
+/*
+ * Alle Keyframes der Vorlage, umbenannt ohne das Präfix "v2".
+ * In v7 war v2Dot doppelt definiert. Hier ist es "typing-dot": das Hüpfen der Tipp-Punkte im Chat.
+ * v2Kb und v2Grow wurden in v7 nicht verwendet und fehlen deshalb.
+ */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(3deg);
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes sheen {
+  0%,
+  60% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-120%);
+  }
+  55%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+@keyframes typing-dot {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(55%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes orb {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(50px, -40px) scale(1.15);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hilfsklassen für die häufigsten Animationen */
+.anim-fade-in {
+  animation: fade-in 0.35s var(--ease) both;
+}
+
+.anim-spin {
+  animation: spin 18s linear infinite;
+}
+
+.anim-float {
+  animation: float 7s ease-in-out infinite;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  animation: pulse-ring 2.2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Laufband: Inhalt zweimal hintereinander, Spur läuft um die halbe Breite */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee__track {
+  display: inline-flex;
+  animation: marquee var(--marquee-duration, 26s) linear infinite;
+}
+
+.marquee--reverse .marquee__track {
+  animation-name: marquee-reverse;
+}
+
+.marquee--pausable:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__group {
+  display: inline-flex;
+  gap: var(--marquee-gap, 36px);
+  padding-right: var(--marquee-gap, 36px);
+}
