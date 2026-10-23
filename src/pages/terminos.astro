@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { EMAIL, FREE_SHIPPING_THRESHOLD, PHONE_DISPLAY } from '../scripts/config.js';
+import { formatCOP } from '../scripts/utils/format.js';
+import LegalPage from '../sections/pages/LegalPage.astro';
+---
+
+<BaseLayout
+  title="Términos y Condiciones | ScentScape"
+  description="Términos y condiciones de compra en ScentScape: pedidos, pagos, envíos, derecho de retracto y garantía."
+>
+  <LegalPage title="Términos y" accent="Condiciones" updated="Última actualización: abril de 2026">
+    <h2>1. Sobre ScentScape</h2>
+    <p>
+      ScentScape es una tienda de fragancias con sede en Medellín, Colombia, operada por Sara y
+      Brayan. Ofrecemos fragancias inspiradas en perfumes de marcas de lujo a precios accesibles. Al
+      realizar un pedido o contactarnos, el cliente acepta estos términos.
+    </p>
+
+    <h2>2. Proceso de compra y formación del contrato</h2>
+    <p>
+      ScentScape opera exclusivamente a través de pedidos por WhatsApp. El proceso es el siguiente:
+    </p>
+    <ul>
+      <li>
+        El cliente selecciona productos en nuestro sitio web y completa el formulario de pedido, que
+        genera un mensaje precompuesto enviado a nuestro WhatsApp.
+      </li>
+      <li>
+        El pedido no constituye un contrato de compraventa hasta que ScentScape lo confirme
+        expresamente por escrito vía WhatsApp.
+      </li>
+      <li>
+        La confirmación incluirá el detalle de los productos, el precio total en pesos colombianos
+        (COP) y las instrucciones de pago.
+      </li>
+      <li>
+        En caso de que algún producto no esté disponible, informaremos al cliente antes de confirmar
+        el pedido.
+      </li>
+    </ul>
+    <p>
+      Nos reservamos el derecho de rechazar cualquier pedido por razones de stock, error en el
+      precio publicado u otras circunstancias justificadas.
+    </p>
+
+    <h2>3. Precios y medios de pago</h2>
+    <p>
+      Todos los precios publicados en nuestro sitio web están expresados en pesos colombianos (COP)
+      e incluyen IVA cuando aplica. Los precios pueden cambiar sin previo aviso; el precio
+      definitivo es el confirmado vía WhatsApp en el momento del pedido.
+    </p>
+    <h3>Medios de pago aceptados</h3>
+    <ul>
+      <li>Nequi</li>
+      <li>Bancolombia (transferencia o botón de pago)</li>
+      <li>Efectivo (para entregas locales en Medellín)</li>
+      <li>[Otros medios según disponibilidad — completar]</li>
+    </ul>
+    <p>
+      El pago deberá realizarse según las indicaciones comunicadas por WhatsApp. El envío se
+      coordina una vez confirmado el pago.
+    </p>
+
+    <h2>4. Envíos</h2>
+    <p>
+      Realizamos envíos a todo Colombia a través de operadores logísticos. Los tiempos de entrega
+      estimados y los costos de envío se informan en el momento de confirmar el pedido por WhatsApp.
+    </p>
+    <p>
+      El envío es gratuito para pedidos que superen {formatCOP(FREE_SHIPPING_THRESHOLD)} COP. Para
+      pedidos por debajo de este valor, se cobrará un costo de envío que será informado al cliente
+      antes de confirmar el pedido.
+    </p>
+    <p>
+      ScentScape no se responsabiliza por demoras causadas por terceros (operadores logísticos,
+      situaciones de fuerza mayor) una vez el paquete haya sido despachado.
+    </p>
+
+    <h2>5. Derecho de retracto</h2>
+    <p>
+      De conformidad con el Artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor de
+      Colombia), el cliente tiene derecho a retractarse de la compra dentro de los cinco (5) días
+      hábiles siguientes a la entrega del producto, sin necesidad de justificación.
+    </p>
+    <h3>Condiciones para ejercer el retracto</h3>
+    <ul>
+      <li>
+        El producto debe estar en perfectas condiciones, sin uso y con su empaque o sello original
+        sin abrir.
+      </li>
+      <li>
+        Los perfumes cuyo precinto o sello de seguridad haya sido roto o manipulado no serán
+        aceptados por razones de higiene, conforme a las excepciones contempladas por la ley.
+      </li>
+      <li>
+        El cliente deberá notificar su intención de retracto por WhatsApp dentro del plazo indicado.
+      </li>
+      <li>
+        Los gastos de devolución corren por cuenta del cliente, salvo que el producto presente un
+        defecto de fábrica.
+      </li>
+    </ul>
+    <p>
+      Una vez recibida y verificada la devolución, reembolsaremos el valor pagado en un plazo máximo
+      de 30 días calendario, por el mismo medio de pago utilizado.
+    </p>
+
+    <h2>6. Garantía y productos defectuosos</h2>
+    <p>
+      Si el producto llega en condiciones diferentes a las pactadas (dañado, con fuga o incorrecto),
+      el cliente deberá notificarnos por WhatsApp dentro de las 48 horas siguientes a la recepción,
+      adjuntando evidencia fotográfica o en video. En ese caso, asumiremos los costos de reenvío y
+      reposición o reembolso, según corresponda.
+    </p>
+
+    <h2>7. Propiedad intelectual</h2>
+    <p>
+      Las fragancias de ScentScape son productos propios inspirados en aromas de marcas de lujo. No
+      somos representantes, distribuidores ni afiliados de ninguna marca de lujo mencionada como
+      referencia. Cualquier similitud de nombre o aroma tiene únicamente propósito informativo para
+      el consumidor.
+    </p>
+
+    <h2>8. Modificaciones</h2>
+    <p>
+      ScentScape se reserva el derecho de modificar estos términos en cualquier momento. Los cambios
+      serán publicados en esta página con indicación de la fecha de actualización. El uso continuado
+      del sitio web o la realización de un nuevo pedido implican la aceptación de los términos
+      vigentes.
+    </p>
+
+    <h2>9. Contacto</h2>
+    <p>Para cualquier consulta relacionada con estos términos, puedes escribirnos a:</p>
+    <ul>
+      <li>WhatsApp: {PHONE_DISPLAY}</li>
+      <li>
+        Correo: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      </li>
+    </ul>
+  </LegalPage>
+</BaseLayout>

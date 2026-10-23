@@ -1,0 +1,110 @@
+---
+import ColorSwatch from '../components/gift/ColorSwatch.astro';
+import GiftCardFaces from '../components/gift/GiftCardFaces.astro';
+import { GIFT_COLORS } from '../data/gift-card.js';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GiftCardForm from '../sections/pages/GiftCardForm.astro';
+---
+
+<BaseLayout
+  title="Gift card | ScentScape"
+  description="Regala un aroma: una gift card con el monto que elijas para comprar cualquier perfume en ScentScape."
+>
+  <main class="gift hatch" data-gift>
+    <div class="gift__grid">
+      <div class="gift__preview">
+        <GiftCardFaces />
+        <div class="gift__controls">
+          <p class="gift__color-label">
+            Color · <span data-gift-color-name>{GIFT_COLORS[0].name}</span>
+          </p>
+          <div class="gift__swatches">
+            {GIFT_COLORS.map((color, index) => (
+              <ColorSwatch color={color} index={index} />
+            ))}
+          </div>
+          <button class="gift__flip" type="button" data-gift-flip>
+            ↻ <span data-gift-flip-label>Ver reverso</span>
+          </button>
+        </div>
+      </div>
+      <GiftCardForm />
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .gift {
+    padding: clamp(130px, 13vw, 180px) var(--gutter) clamp(80px, 9vw, 130px);
+  }
+
+  .gift__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+    align-items: center;
+    gap: clamp(36px, 5vw, 90px);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gift__preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    min-width: 0;
+  }
+
+  .gift__controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .gift__color-label {
+    margin: 0;
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+
+  .gift__color-label span {
+    font: italic 400 15px/1 var(--font-serif);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--sand);
+  }
+
+  .gift__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .gift__flip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    background: none;
+    color: var(--sand);
+    font: 600 12px/1 var(--font-sans);
+  }
+
+  .gift__flip:hover {
+    border-color: var(--peach);
+  }
+</style>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initGiftCard } from '../scripts/features/gift-card/index.js';
+
+  onPage(initGiftCard);
+</script>

@@ -128,14 +128,14 @@ legacy/          alte Seite, nur als Vorlage
 - [x] Video-Karussell mit Auffächern + Video-Modal
 - [x] Bewertungen (einfliegende Karten, hochzählende Note), FAQ
 
-### Phase 6: Weitere Seiten
+### Phase 6: Weitere Seiten ✅
 
-- [ ] Nosotros
-- [ ] Original garantizado mit Lot-Prüfung
-- [ ] Test olfativo (Quiz-Modal)
-- [ ] Gift Card (3D-Karte, Farben, Umdrehen)
-- [ ] Catálogo + Druckversion für PDF
-- [ ] Reseñas, Contacto, Términos, Privacidad, 404
+- [x] Nosotros
+- [x] Original garantizado mit Lot-Prüfung
+- [x] Test olfativo (Quiz-Modal)
+- [x] Gift Card (3D-Karte, Farben, Umdrehen)
+- [x] Catálogo + Druckversion für PDF
+- [x] Reseñas, Contacto, Términos, Privacidad, 404
 
 ### Phase 7: Neue Funktionen mit Backend
 

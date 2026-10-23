@@ -1,0 +1,68 @@
+---
+import CatalogItem from '../../components/catalog/CatalogItem.astro';
+
+/** @typedef {{ group: { number: string, title: string, line: string, products: object[] } }} Props */
+const { group } = Astro.props;
+---
+
+<section class="catalog-group">
+  <div class="catalog-group__intro">
+    <span class="catalog-group__number">{group.number}</span>
+    <h2 class="catalog-group__title">{group.title}</h2>
+    <p class="catalog-group__line">{group.line}</p>
+  </div>
+  <div class="catalog-group__grid">
+    {group.products.map((product) => (
+      <CatalogItem product={product} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .catalog-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: clamp(24px, 4vw, 60px);
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: clamp(56px, 6vw, 96px) var(--gutter) 0;
+  }
+
+  .catalog-group__intro {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex: 1 1 260px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .catalog-group__number {
+    font: italic 400 56px/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .catalog-group__title {
+    margin: 0;
+    font: 500 clamp(44px, 5vw, 76px) / 0.95 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .catalog-group__line {
+    max-width: 320px;
+    margin: 0;
+    font: italic 400 19px/1.4 var(--font-serif);
+    color: rgb(var(--white-rgb) / 0.78);
+  }
+
+  .catalog-group__grid {
+    display: grid;
+    flex: 3 1 560px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 1px;
+    min-width: 0;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    background: rgb(var(--peach-rgb) / 0.2);
+  }
+</style>

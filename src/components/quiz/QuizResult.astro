@@ -1,0 +1,199 @@
+---
+import { NOTE_TIERS } from '../../data/families.js';
+---
+
+<div class="quiz-result" data-quiz-result>
+  <div class="quiz-result__glow" data-quiz-glow></div>
+  <div class="quiz-result__top">
+    <span class="quiz-result__badge">Tu match</span>
+    <button class="quiz-result__next" type="button" data-quiz-next>
+      Otra opción ↻
+    </button>
+  </div>
+  <div class="quiz-result__bottle">
+    <img data-quiz-image alt="" />
+  </div>
+  <div class="quiz-result__body">
+    <p class="quiz-result__meta" data-quiz-meta></p>
+    <h3 class="quiz-result__name" data-quiz-name>
+      …
+    </h3>
+    <p class="quiz-result__why" data-quiz-why></p>
+    <div class="quiz-result__pyramid" data-quiz-pyramid>
+      {NOTE_TIERS.map((tier) => (
+        <div class="quiz-result__tier">
+          <span class="quiz-result__tier-label">{tier.label}</span>
+          <span class="quiz-result__tier-notes" data-quiz-tier></span>
+        </div>
+      ))}
+    </div>
+    <div class="quiz-result__actions">
+      <a class="btn btn--primary btn--lg" data-quiz-link href="/productos/">
+        Ver perfume · <span data-quiz-price></span>
+      </a>
+      <button
+        class="quiz-result__add"
+        type="button"
+        aria-label="Añadir al carrito"
+        data-action="add-to-cart"
+        data-quiz-add
+      >
+        +
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .quiz-result {
+    position: relative;
+    overflow: hidden;
+    padding: 26px;
+    border-radius: 6px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    background: var(--navy);
+  }
+
+  .quiz-result.is-changing {
+    animation: quiz-pop 0.55s var(--ease);
+  }
+
+  @keyframes quiz-pop {
+    from {
+      transform: scale(0.96) rotate(-1.5deg);
+    }
+    60% {
+      transform: scale(1.015) rotate(0.5deg);
+    }
+  }
+
+  .quiz-result__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 35%, var(--quiz-accent, #d4af7d66), transparent 60%);
+    transition: background 0.6s;
+  }
+
+  .quiz-result__top,
+  .quiz-result__bottle,
+  .quiz-result__body {
+    position: relative;
+  }
+
+  .quiz-result__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quiz-result__badge {
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    background: rgb(var(--peach-rgb) / 0.15);
+    color: var(--peach);
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .quiz-result__next {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--white-rgb) / 0.25);
+    background: none;
+    font: 600 12px/1 var(--font-sans);
+  }
+
+  .quiz-result__bottle {
+    display: grid;
+    place-items: center;
+    height: 180px;
+    margin: 14px 0 8px;
+  }
+
+  .quiz-result__bottle img {
+    height: 180px;
+    max-width: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.55));
+  }
+
+  .quiz-result__meta {
+    margin: 0 0 8px;
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .quiz-result__name {
+    margin: 0 0 8px;
+    font: 500 clamp(26px, 2.6vw, 38px) / 1 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .quiz-result__why {
+    margin: 0 0 18px;
+    font: italic 400 18px/1.45 var(--font-serif);
+    color: rgb(var(--white-rgb) / 0.8);
+  }
+
+  .quiz-result__pyramid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .quiz-result__tier {
+    width: 60%;
+    margin: 0 auto;
+    padding: 10px 14px;
+    border-radius: 4px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    background: rgb(var(--peach-rgb) / 0.07);
+    text-align: center;
+  }
+
+  .quiz-result__tier:nth-child(2) {
+    width: 80%;
+    background: rgb(var(--peach-rgb) / 0.13);
+  }
+
+  .quiz-result__tier:nth-child(3) {
+    width: 100%;
+    background: rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .quiz-result__tier-label {
+    display: block;
+    margin-bottom: 5px;
+    font: 600 9px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .quiz-result__tier-notes {
+    font: italic 400 16px/1.3 var(--font-serif);
+  }
+
+  .quiz-result__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quiz-result__add {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--peach-rgb) / 0.5);
+    background: none;
+    color: var(--peach);
+    font-size: 22px;
+  }
+</style>

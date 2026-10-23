@@ -1,0 +1,69 @@
+---
+/** @typedef {{ step: { key: string, question: string, options: string[] }, number: string }} Props */
+const { step, number } = Astro.props;
+---
+
+<fieldset class="quiz-step">
+  <legend class="quiz-step__question">
+    <span>{number}</span>
+    {step.question}
+  </legend>
+  <div class="quiz-step__options">
+    {step.options.map((option) => (
+      <button
+        class="quiz-step__option"
+        type="button"
+        data-quiz-key={step.key}
+        data-quiz-value={option}
+        aria-pressed="false"
+      >
+        {option}
+      </button>
+    ))}
+  </div>
+</fieldset>
+
+<style>
+  .quiz-step {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .quiz-step__question {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 12px;
+    padding: 0;
+    font: 500 22px/1.1 var(--font-serif);
+  }
+
+  .quiz-step__question span {
+    min-width: 28px;
+    font: italic 400 22px/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .quiz-step__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .quiz-step__option {
+    height: 44px;
+    padding: 0 20px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    background: transparent;
+    font: 600 14px/1 var(--font-sans);
+    transition: all 0.3s ease;
+  }
+
+  .quiz-step__option[aria-pressed='true'] {
+    border-color: var(--peach);
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

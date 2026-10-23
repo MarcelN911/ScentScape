@@ -1,0 +1,199 @@
+---
+/* Formular zur Lot-Prüfung. Die Bestätigung läuft über WhatsApp. */
+---
+
+<section class="lot" id="verificar">
+  <div class="lot__box frame hatch">
+    <div>
+      <p class="eyebrow lot__eyebrow">Verificación de lote</p>
+      <h2 class="display display--sm lot__title">
+        Escribe tu <em>código</em>
+      </h2>
+      <p class="lot__text">
+        Lo encuentras en la base de la caja, cerca del código de barras. Suele tener entre 4 y 10
+        letras y números.
+      </p>
+      <p class="lot__note">
+        ¿El sello llegó roto o el código no coincide? Escríbenos antes de abrirlo y lo resolvemos.
+      </p>
+    </div>
+    <div class="lot__side">
+      <form class="lot__form" data-lot-form novalidate>
+        <label class="lot__label" for="lot-code">
+          Código de lote
+        </label>
+        <input
+          class="lot__input"
+          id="lot-code"
+          name="lot"
+          placeholder="Ej. 3B21A"
+          autocomplete="off"
+          data-lot-input
+        />
+        <button class="lot__submit" type="submit">
+          Verificar
+        </button>
+      </form>
+      <div class="lot__ok" data-lot-ok hidden>
+        <p class="lot__ok-title">
+          Código <span data-lot-code></span> recibido
+        </p>
+        <p class="lot__ok-text">
+          Envíalo por WhatsApp y Sara o Brayan te confirman el origen y la fecha de producción.
+        </p>
+        <a class="lot__whatsapp" href="#" target="_blank" rel="noopener" data-lot-whatsapp>
+          <span>
+            <img src="/assets/img/whatsapp_white.svg" alt="" width="16" height="16" />
+          </span>
+          Confirmar por WhatsApp
+        </a>
+      </div>
+      <p class="lot__error" data-lot-error role="alert" hidden>
+        Revisa el código: solo letras y números, entre 4 y 14 caracteres.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lot {
+    padding: 0 var(--gutter) clamp(80px, 9vw, 130px);
+  }
+
+  .lot__box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    align-items: center;
+    gap: clamp(24px, 4vw, 60px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 64px);
+    border-radius: 0;
+  }
+
+  .lot__eyebrow {
+    margin-bottom: 18px;
+  }
+
+  .lot__title {
+    margin-bottom: 18px;
+  }
+
+  .lot__text {
+    margin: 0 0 16px;
+    font: 400 16px/1.6 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.78);
+    text-wrap: pretty;
+  }
+
+  .lot__note {
+    margin: 0;
+    font: italic 400 18px/1.45 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .lot__side,
+  .lot__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lot__form {
+    gap: 12px;
+  }
+
+  .lot__label {
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+
+  .lot__input {
+    height: 66px;
+    padding: 0 24px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    background: rgb(var(--white-rgb) / 0.04);
+    font: 500 24px/1 var(--font-serif);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    outline: none;
+  }
+
+  .lot__submit {
+    height: 58px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 15px/1 var(--font-sans);
+  }
+
+  .lot__submit:hover {
+    background: var(--sand);
+  }
+
+  .lot__ok {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 22px;
+    border-radius: 22px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    background: rgb(var(--peach-rgb) / 0.1);
+    animation: fade-in 0.4s ease;
+  }
+
+  .lot__ok-title {
+    margin: 0;
+    font: 500 22px/1.2 var(--font-serif);
+  }
+
+  .lot__ok-title span {
+    letter-spacing: 0.1em;
+    color: var(--peach);
+  }
+
+  .lot__ok-text {
+    margin: 0;
+    font: 400 14px/1.55 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.75);
+  }
+
+  .lot__whatsapp {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 10px;
+    height: 48px;
+    padding: 0 20px 0 6px;
+    border-radius: var(--radius-pill);
+    background: var(--whatsapp);
+    color: var(--white);
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .lot__whatsapp:hover {
+    color: var(--white);
+  }
+
+  .lot__whatsapp span {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.15);
+  }
+
+  .lot__error {
+    margin: 0;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: rgb(97 3 27 / 0.5);
+    font: 500 14px/1.45 var(--font-sans);
+    color: var(--sand);
+  }
+</style>

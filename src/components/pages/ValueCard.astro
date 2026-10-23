@@ -1,0 +1,44 @@
+---
+/** @typedef {{ value: { title: string, text: string }, number: string, index: number }} Props */
+const { value, number, index } = Astro.props;
+---
+
+<article
+  class="value-card frame frame--soft frame--square hatch"
+  data-reveal="up"
+  style={`--reveal-delay:${index * 140}ms`}
+>
+  <span class="value-card__number">{number}</span>
+  <h3 class="value-card__title">{value.title}</h3>
+  <p class="value-card__text">{value.text}</p>
+</article>
+
+<style>
+  .value-card {
+    --hatch-alpha: 0.035;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 340px;
+    padding: clamp(26px, 3vw, 40px);
+  }
+
+  .value-card__number {
+    font: italic 400 56px/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .value-card__title {
+    margin: auto 0 0;
+    font: 500 clamp(26px, 2.4vw, 34px) / 1.05 var(--font-serif);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .value-card__text {
+    margin: 0;
+    font: 400 15px/1.65 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.75);
+    text-wrap: pretty;
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+import { CATALOG_YEAR } from '../../data/catalog.js';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { catalogGroups } from '../../scripts/catalog/groups.js';
+import { getCatalog } from '../../scripts/catalog/load.js';
+import { SITE_URL } from '../../scripts/config.js';
+import { shareUrl } from '../../scripts/utils/whatsapp.js';
+import CatalogGroup from '../../sections/pages/CatalogGroup.astro';
+
+const catalog = await getCatalog();
+const groups = catalogGroups(catalog);
+const share = shareUrl(`Catálogo ScentScape Parfums · ${SITE_URL}/catalogo/`);
+---
+
+<BaseLayout
+  title="Catálogo digital | ScentScape"
+  description={`Catálogo ScentScape ${CATALOG_YEAR}: ${catalog.length} fragancias. Compártelo por WhatsApp o descárgalo en PDF.`}
+>
+  <main class="catalog">
+    <section class="catalog__hero">
+      <div class="catalog__cover frame hatch">
+        <p class="eyebrow catalog__eyebrow">Catálogo digital · Colección {CATALOG_YEAR}</p>
+        <img
+          class="catalog__logo"
+          src="/assets/img/scentscape-fulllogo.png"
+          alt="ScentScape Parfums"
+        />
+        <p class="catalog__claim">Distinción sin límites</p>
+        <p class="catalog__count">{catalog.length} fragancias · Medellín, Colombia</p>
+        <div class="catalog__actions">
+          <a class="catalog__share" href={share} target="_blank" rel="noopener">
+            <span>
+              <img src="/assets/img/whatsapp_white.svg" alt="" width="17" height="17" />
+            </span>
+            Compartir por WhatsApp
+          </a>
+          <a
+            class="btn btn--outline btn--lg"
+            href="/catalogo/imprimir/"
+            target="_blank"
+            rel="noopener"
+          >
+            Descargar PDF
+          </a>
+        </div>
+      </div>
+    </section>
+    {groups.map((group) => (
+      <CatalogGroup group={group} />
+    ))}
+  </main>
+</BaseLayout>
+
+<style>
+  .catalog {
+    padding-bottom: clamp(80px, 9vw, 130px);
+  }
+
+  .catalog__hero {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: clamp(110px, 11vw, 150px) var(--gutter) 0;
+  }
+
+  .catalog__cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: clamp(48px, 7vw, 110px) clamp(22px, 5vw, 80px);
+    border-radius: 0;
+    outline-offset: -12px;
+    text-align: center;
+  }
+
+  .catalog__eyebrow {
+    letter-spacing: 3px;
+  }
+
+  .catalog__logo {
+    width: min(320px, 62vw);
+    height: auto;
+  }
+
+  .catalog__claim {
+    margin: 0;
+    font: italic 400 clamp(22px, 2.2vw, 30px) / 1.3 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .catalog__count {
+    margin: 0;
+    font: 500 13px/1.5 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+
+  .catalog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .catalog__share {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 54px;
+    padding: 0 24px 0 8px;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .catalog__share:hover {
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .catalog__share span {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+  }
+</style>

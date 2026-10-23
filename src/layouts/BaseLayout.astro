@@ -8,6 +8,7 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import MobileMenu from '../components/layout/MobileMenu.astro';
 import ScrollProgress from '../components/layout/ScrollProgress.astro';
+import QuizModal from '../components/quiz/QuizModal.astro';
 import Toast from '../components/layout/Toast.astro';
 import '../styles/global.css';
 
@@ -70,6 +71,7 @@ const ogImage = new URL(image, Astro.site);
         <AdvisorButton />
         <Toast />
         <CartDrawer />
+        <QuizModal />
         <Curtain />
         <Cursor />
       </>
@@ -79,10 +81,14 @@ const ogImage = new URL(image, Astro.site);
 
 <script>
   import { onFirstPage, onPage } from '../scripts/core/lifecycle.js';
+  import { initParallax } from '../scripts/effects/parallax.js';
   import { initPointerVars } from '../scripts/effects/pointer-vars.js';
   import { initReveal } from '../scripts/effects/reveal.js';
+  import { initQuiz } from '../scripts/features/quiz/index.js';
   import '../scripts/features/wishlist.js';
 
   onFirstPage(initPointerVars);
+  onFirstPage(initQuiz);
   onPage(initReveal);
+  onPage(initParallax);
 </script>

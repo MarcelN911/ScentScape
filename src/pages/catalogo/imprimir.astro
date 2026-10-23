@@ -1,0 +1,230 @@
+---
+import PrintItem from '../../components/catalog/PrintItem.astro';
+import { CATALOG_YEAR } from '../../data/catalog.js';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { catalogGroups } from '../../scripts/catalog/groups.js';
+import { getCatalog } from '../../scripts/catalog/load.js';
+import { PHONE_DISPLAY } from '../../scripts/config.js';
+
+const groups = catalogGroups(await getCatalog());
+---
+
+<BaseLayout
+  title={`Catálogo ScentScape ${CATALOG_YEAR} · PDF`}
+  description="Versión para imprimir o guardar como PDF del catálogo ScentScape."
+  noindex
+  bare
+>
+  <div class="print-bar">
+    <a href="/catalogo/">← Volver al catálogo</a>
+    <button type="button" data-print>
+      Guardar como PDF
+    </button>
+  </div>
+  <main class="print">
+    <section class="print__cover">
+      <p class="print__eyebrow">Catálogo · Colección {CATALOG_YEAR}</p>
+      <img class="print__logo" src="/assets/img/scentscape-fulllogo.png" alt="ScentScape Parfums" />
+      <p class="print__claim">Distinción sin límites</p>
+      <p class="print__contact">Medellín, Colombia · WhatsApp {PHONE_DISPLAY}</p>
+    </section>
+    {groups.map((group) => (
+      <section class="print__group">
+        <div class="print__head">
+          <span class="print__number">{group.number}</span>
+          <h2 class="print__title">{group.title}</h2>
+          <p class="print__line">{group.line}</p>
+        </div>
+        <div class="print__grid">
+          {group.products.map((product) => (
+            <PrintItem product={product} />
+          ))}
+        </div>
+      </section>
+    ))}
+    <section class="print__order">
+      <h2 class="print__order-title">Cómo pedir</h2>
+      <p>
+        Escríbenos por WhatsApp al {PHONE_DISPLAY}. Cada perfume llega sellado de fábrica, con su
+        código de lote en la caja. Envíos a todo Colombia; envío gratis desde $500.000.
+      </p>
+      <p class="print__payments">
+        Nequi · Daviplata · Bancolombia / PSE · Tarjeta crédito o débito · Wompi · Contraentrega
+      </p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  @page {
+    size: letter;
+    margin: 0.6in;
+  }
+
+  :global(body) {
+    background: #fff;
+    color: var(--navy);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px var(--gutter);
+    background: var(--navy);
+  }
+
+  .print-bar button {
+    height: 44px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .print {
+    max-width: 8.5in;
+    margin: 0 auto;
+    padding: 0.6in;
+  }
+
+  .print__cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    min-height: 9in;
+    padding: 48px 32px;
+    border: 1px solid #b08a5a;
+    outline: 1px solid rgb(176 138 90 / 0.45);
+    outline-offset: -10px;
+    background-color: var(--navy);
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgb(240 190 145 / 0.06) 0 1px,
+      transparent 1px 7px
+    );
+    color: var(--sand);
+    text-align: center;
+    break-after: page;
+  }
+
+  .print__eyebrow {
+    margin: 0;
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .print__logo {
+    width: 3.2in;
+    height: auto;
+  }
+
+  .print__claim {
+    margin: 0;
+    font: italic 400 26px/1.3 var(--font-serif);
+  }
+
+  .print__contact {
+    margin: 0;
+    font: 500 13px/1.6 var(--font-sans);
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .print__group {
+    padding-top: 0.4in;
+    break-before: page;
+  }
+
+  .print__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #b08a5a;
+    break-after: avoid;
+  }
+
+  .print__number {
+    font: italic 400 40px/1 var(--font-serif);
+    color: var(--wine);
+  }
+
+  .print__title {
+    margin: 0;
+    font: 500 40px/1 var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .print__line {
+    max-width: 3in;
+    margin: 0 0 0 auto;
+    font: italic 400 15px/1.35 var(--font-serif);
+    text-align: right;
+    color: #4a4a5a;
+  }
+
+  .print__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .print__order {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 24px;
+    break-before: page;
+    font: 400 14px/1.6 var(--font-sans);
+    color: #2a2a3a;
+  }
+
+  .print__order p {
+    margin: 0;
+  }
+
+  .print__order-title {
+    margin: 0;
+    font: 500 34px/1 var(--font-serif);
+    color: var(--navy);
+  }
+
+  .print__payments {
+    font: 600 12px/1.6 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--wine);
+  }
+
+  @media print {
+    .print-bar {
+      display: none;
+    }
+
+    .print {
+      max-width: none;
+      padding: 0;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../../scripts/core/lifecycle.js';
+
+  onPage((signal) => {
+    const button = document.querySelector('[data-print]');
+    button?.addEventListener('click', () => window.print(), { signal });
+  });
+</script>

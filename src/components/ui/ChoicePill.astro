@@ -1,0 +1,58 @@
+---
+/**
+ * Auswahl-Pille (gedrückt = aria-pressed="true"). Das Skript erkennt sie an data-choice.
+ * @typedef {object} Props
+ * @property {string} group        z. B. "amount"
+ * @property {string} value
+ * @property {boolean} [active]
+ * @property {'solid' | 'soft' | 'serif'} [variant]
+ */
+const { group, value, active = false, variant = 'solid' } = Astro.props;
+---
+
+<button
+  class:list={['choice', `choice--${variant}`]}
+  type="button"
+  data-choice={group}
+  data-value={value}
+  aria-pressed={String(active)}
+>
+  <slot />
+</button>
+
+<style>
+  .choice {
+    min-width: 0;
+    height: 46px;
+    padding: 0 20px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    background: transparent;
+    color: rgb(var(--white-rgb) / 0.8);
+    font: 600 14px/1 var(--font-sans);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+
+  .choice[aria-pressed='true'] {
+    border-color: var(--peach);
+  }
+
+  .choice--solid[aria-pressed='true'],
+  .choice--serif[aria-pressed='true'] {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .choice--soft[aria-pressed='true'] {
+    background: rgb(var(--peach-rgb) / 0.15);
+    color: var(--sand);
+  }
+
+  .choice--serif {
+    height: 50px;
+    padding: 0 6px;
+    color: var(--white);
+    font: 500 clamp(14px, 1.2vw, 16px) / 1 var(--font-serif);
+  }
+</style>
