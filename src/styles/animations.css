@@ -194,3 +194,14 @@
 .js [data-reveal='mask']:not(.is-revealed) {
   transform: translateY(108%) rotate(4deg);
 }
+
+/* Bild, das in den Warenkorb fliegt (scripts/cart/fly.js) */
+.cart-flyer {
+  position: fixed;
+  z-index: 9999;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 20px rgb(0 0 0 / 0.5));
+}

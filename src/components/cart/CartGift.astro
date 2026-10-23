@@ -1,0 +1,113 @@
+<div class="cart-box gift" data-cart-gift>
+  <label class="gift__toggle">
+    <input type="checkbox" data-gift-toggle />
+    Es un regalo
+    <span class="gift__free">sin costo</span>
+  </label>
+  <div class="gift__details" data-gift-details hidden>
+    <p class="gift__text">
+      Escribimos tu nota a mano en la tarjeta de gracias. El paquete va sin precio.
+    </p>
+    <textarea
+      class="gift__note"
+      rows="3"
+      maxlength="180"
+      placeholder="Tu nota para la tarjeta"
+      data-gift-note
+    ></textarea>
+    <span class="gift__count">
+      <span data-gift-count>0</span> / 180
+    </span>
+    <label class="gift__date">
+      Fecha de entrega
+      <input type="date" data-gift-date />
+    </label>
+    <span class="gift__check">✓ Paquete sin precio</span>
+  </div>
+</div>
+
+<style>
+  .gift__toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font: 700 15px/1.2 var(--font-sans);
+  }
+
+  .gift__toggle input {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    accent-color: var(--wine);
+  }
+
+  .gift__free {
+    margin-left: auto;
+    font: italic 400 15px/1 var(--font-serif);
+    color: var(--wine);
+  }
+
+  .gift__details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+    animation: fade-in 0.35s ease;
+  }
+
+  .gift__details[hidden] {
+    display: none;
+  }
+
+  .gift__text {
+    margin: 0;
+    font: 500 13px/1.5 var(--font-sans);
+    color: rgb(var(--navy-rgb) / 0.75);
+  }
+
+  .gift__note {
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid rgb(var(--navy-rgb) / 0.2);
+    background: var(--white);
+    color: var(--navy);
+    font: italic 400 17px/1.4 var(--font-serif);
+    resize: none;
+    outline: none;
+  }
+
+  .gift__count {
+    align-self: flex-end;
+    margin-top: -6px;
+    font: 500 11px/1 var(--font-sans);
+    color: rgb(var(--navy-rgb) / 0.55);
+  }
+
+  .gift__date {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font: 700 11px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgb(var(--navy-rgb) / 0.7);
+  }
+
+  .gift__date input {
+    height: 46px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgb(var(--navy-rgb) / 0.2);
+    background: var(--white);
+    color: var(--navy);
+    font: 500 15px/1 var(--font-sans);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .gift__check {
+    font: 600 12px/1 var(--font-sans);
+    color: var(--wine);
+  }
+</style>

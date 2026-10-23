@@ -1,0 +1,175 @@
+---
+import { PAY_MODES } from '../../data/payments.js';
+import CartGift from './CartGift.astro';
+import CartLineTemplate from './CartLineTemplate.astro';
+import CartTotals from './CartTotals.astro';
+import PayModeOption from './PayModeOption.astro';
+---
+
+<div class="cart-root" data-cart-root transition:persist="cart">
+  <div class="cart-overlay" data-action="close-cart"></div>
+  <aside class="cart" aria-label="Carrito" data-cart>
+    <div class="cart__head">
+      <h2 class="cart__title">
+        Tu carrito{' '}
+        <span class="cart__count" data-cart-count>
+          0
+        </span>
+      </h2>
+      <button
+        class="icon-btn icon-btn--dark cart__close"
+        type="button"
+        data-action="close-cart"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+    </div>
+    <div class="cart__body">
+      <div class="cart__empty" data-cart-empty>
+        <p class="cart__empty-text">Tu carrito está vacío</p>
+        <a class="btn btn--dark cart__empty-link" href="/productos/">
+          Ver productos →
+        </a>
+      </div>
+      <div data-cart-lines></div>
+      <div data-cart-filled-only>
+        <CartGift />
+        <div class="cart-box">
+          <p class="cart-box__label">¿Cómo quieres pagar?</p>
+          <div class="cart__modes">
+            {PAY_MODES.map((mode) => (
+              <PayModeOption mode={mode} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    <CartTotals />
+    <CartLineTemplate />
+  </aside>
+</div>
+
+<style>
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-cart-overlay);
+    background: rgb(5 6 15 / 0.55);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+  }
+
+  .cart {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: var(--z-cart);
+    display: flex;
+    flex-direction: column;
+    width: min(440px, calc(100vw - 20px));
+    border-radius: var(--radius-xl);
+    background: var(--sand);
+    color: var(--navy);
+    box-shadow: -30px 0 80px rgb(0 0 0 / 0.4);
+    transform: translateX(110%) rotate(4deg);
+    transition: transform 0.7s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  [data-cart-open] .cart-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  [data-cart-open] .cart {
+    transform: none;
+  }
+
+  .cart__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 26px;
+  }
+
+  .cart__title {
+    margin: 0;
+    font: 500 36px/1 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .cart__count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 15px;
+    background: var(--navy);
+    color: var(--peach);
+    font: 800 13px/1 var(--font-sans);
+    vertical-align: middle;
+  }
+
+  .cart__close {
+    font-size: 22px;
+  }
+
+  .cart__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 26px;
+  }
+
+  .cart__empty {
+    padding: 60px 0;
+    text-align: center;
+  }
+
+  .cart__empty-text {
+    margin: 0 0 18px;
+    font: italic 400 30px/1.2 var(--font-serif);
+  }
+
+  .cart__empty-link {
+    --btn-height: 50px;
+    color: var(--peach);
+  }
+
+  .cart__modes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  :global(.cart-box) {
+    margin: 6px 0 10px;
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    background: rgb(var(--white-rgb) / 0.55);
+  }
+
+  .cart-box__label {
+    margin: 0 0 12px;
+    font: 700 11px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgb(var(--navy-rgb) / 0.7);
+  }
+
+  :global([data-cart-filled-only][hidden]),
+  .cart__empty[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+  import { initCartUi } from '../../scripts/cart/ui/index.js';
+  import '../../scripts/cart/add-to-cart.js';
+
+  onFirstPage(initCartUi);
+</script>

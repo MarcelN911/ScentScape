@@ -1,0 +1,150 @@
+---
+import Icon from '../ui/Icon.astro';
+import CartPromo from './CartPromo.astro';
+---
+
+<div class="totals">
+  <div data-cart-filled-only>
+    <CartPromo />
+  </div>
+  <div class="totals__shipping">
+    <p class="totals__shipping-text" data-ship-text></p>
+    <div class="totals__track">
+      <div class="totals__bar" data-ship-bar></div>
+    </div>
+  </div>
+  <div class="totals__row totals__row--discount" data-discount-row hidden>
+    <span data-discount-label></span>
+    <span data-discount-value></span>
+  </div>
+  <div class="totals__row">
+    <span class="totals__label">Total</span>
+    <span class="totals__total" data-cart-total>
+      $0
+    </span>
+  </div>
+  <a class="totals__cta" href="/checkout/" data-cart-cta>
+    <img
+      class="totals__cta-icon totals__cta-icon--wa"
+      src="/assets/img/whatsapp_white.svg"
+      alt=""
+    />
+    <Icon name="lock" size={16} strokeWidth={2} class="totals__cta-icon totals__cta-icon--lock" />
+    <span data-cart-cta-label>Finalizar por WhatsApp</span>
+  </a>
+  <p class="totals__note" data-cart-cta-note></p>
+</div>
+
+<style>
+  .totals {
+    padding: 22px 26px 26px;
+  }
+
+  .totals__shipping {
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 20px;
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .totals__shipping-text {
+    margin: 0 0 10px;
+    font: 600 13px/1.3 var(--font-sans);
+    color: var(--peach);
+  }
+
+  .totals__track {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .totals__bar {
+    width: var(--ship-progress, 0%);
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--wine), var(--peach));
+    transition: width 0.6s var(--ease);
+  }
+
+  .totals__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+  }
+
+  .totals__row--discount {
+    margin-bottom: 10px;
+    font: 600 13px/1 var(--font-sans);
+    color: var(--wine);
+  }
+
+  .totals__row[hidden] {
+    display: none;
+  }
+
+  .totals__label {
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .totals__total {
+    font: 500 34px/1 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .totals__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 62px;
+    border-radius: var(--radius-pill);
+    background: var(--whatsapp);
+    color: var(--white);
+    font: 800 15px/1 var(--font-sans);
+    animation: fade-in 0.3s ease;
+  }
+
+  .totals__cta:hover {
+    color: var(--white);
+  }
+
+  .totals__cta[aria-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .totals__cta-icon--wa {
+    width: 18px;
+    height: 18px;
+  }
+
+  .totals__cta--card {
+    background: var(--navy);
+    color: var(--sand);
+  }
+
+  .totals__cta--card:hover {
+    color: var(--sand);
+  }
+
+  .totals__cta--addi {
+    background: var(--addi);
+  }
+
+  .totals__cta:not(.totals__cta--card) .totals__cta-icon--lock,
+  .totals__cta:not(.totals__cta--wa) .totals__cta-icon--wa {
+    display: none;
+  }
+
+  .totals__note {
+    margin: 10px 0 0;
+    text-align: center;
+    font: 500 12px/1.4 var(--font-sans);
+    opacity: 0.65;
+  }
+</style>

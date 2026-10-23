@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import CartDrawer from '../components/cart/CartDrawer.astro';
 import AdvisorButton from '../components/layout/AdvisorButton.astro';
 import Cursor from '../components/layout/Cursor.astro';
 import Curtain from '../components/layout/Curtain.astro';
@@ -68,6 +69,7 @@ const ogImage = new URL(image, Astro.site);
         <Footer />
         <AdvisorButton />
         <Toast />
+        <CartDrawer />
         <Curtain />
         <Cursor />
       </>
