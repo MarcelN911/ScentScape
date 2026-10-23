@@ -1,0 +1,29 @@
+---
+/** @typedef {{ link: { label: string, href?: string, action?: string } }} Props */
+const { link } = Astro.props;
+const Tag = link.action ? 'button' : 'a';
+---
+
+<Tag
+  class="footer-link"
+  href={link.href}
+  type={link.action ? 'button' : undefined}
+  data-action={link.action}
+>
+  {link.label}
+</Tag>
+
+<style>
+  .footer-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    font: 500 15px/1 var(--font-sans);
+    color: var(--white);
+  }
+
+  .footer-link:hover {
+    color: var(--peach);
+  }
+</style>

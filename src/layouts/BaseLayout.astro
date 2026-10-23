@@ -1,21 +1,37 @@
 ---
+import { ClientRouter } from 'astro:transitions';
+import AdvisorButton from '../components/layout/AdvisorButton.astro';
+import Cursor from '../components/layout/Cursor.astro';
+import Curtain from '../components/layout/Curtain.astro';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import MobileMenu from '../components/layout/MobileMenu.astro';
+import ScrollProgress from '../components/layout/ScrollProgress.astro';
+import Toast from '../components/layout/Toast.astro';
 import '../styles/global.css';
 
 /**
  * @typedef {object} Props
  * @property {string} title
  * @property {string} description
- * @property {string} [image]   Pfad zum Vorschaubild für WhatsApp, Facebook usw.
+ * @property {string} [image]    Vorschaubild für WhatsApp, Facebook usw.
  * @property {boolean} [noindex] Seite nicht bei Google aufnehmen
+ * @property {boolean} [bare]    ohne Navigation und Footer (z. B. Druckversion)
  */
 
-const { title, description, image = '/assets/img/og-banner.png', noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  image = '/assets/img/og-banner.png',
+  noindex = false,
+  bare = false,
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" transition:animate="none">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,8 +47,37 @@ const ogImage = new URL(image, Astro.site);
     <meta property="og:locale" content="es_CO" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta name="theme-color" content="#151932" />
+    <slot name="head" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <ClientRouter fallback="none" />
   </head>
   <body>
+    {!bare && (
+      <>
+        <ScrollProgress />
+        <Header />
+        <MobileMenu />
+      </>
+    )}
     <slot />
+    {!bare && (
+      <>
+        <Footer />
+        <AdvisorButton />
+        <Toast />
+        <Curtain />
+        <Cursor />
+      </>
+    )}
   </body>
 </html>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initReveal } from '../scripts/effects/reveal.js';
+
+  onPage(initReveal);
+</script>

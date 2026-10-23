@@ -1,0 +1,240 @@
+---
+import { getCatalog } from '../../scripts/catalog/load.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+import Icon from '../ui/Icon.astro';
+import MegaMenu from './MegaMenu.astro';
+import MusicPlayer from './MusicPlayer.astro';
+
+const catalog = await getCatalog();
+const images = Object.fromEntries(
+  catalog.map((product) => [product.slug, imageUrl(product.images[0], 400)]),
+);
+---
+
+<header class="site-header" transition:persist="site-header">
+  <div class="site-header__inner">
+    <div class="site-header__start" data-mega>
+      <nav class="glass-pill main-nav" aria-label="Principal">
+        <a class="main-nav__link" href="/" data-nav-link="home">
+          Inicio
+        </a>
+        <a class="main-nav__link" href="/productos/" data-nav-link="shop">
+          Productos
+        </a>
+        <button class="main-nav__link" type="button" data-mega-toggle aria-expanded="false">
+          Descubre <Icon name="chevron" size={10} strokeWidth={2.4} class="main-nav__chevron" />
+        </button>
+      </nav>
+      <MegaMenu images={images} />
+      <button class="icon-btn menu-button" type="button" data-action="open-menu" aria-label="Menú">
+        <Icon name="menu" />
+      </button>
+    </div>
+
+    <a class="site-header__logo" href="/" aria-label="ScentScape · Inicio">
+      <img src="/assets/img/scentscape-logo.png" alt="ScentScape Parfums" />
+    </a>
+
+    <div class="site-header__end">
+      <MusicPlayer />
+      <a class="icon-btn header-search" href="/productos/?buscar" aria-label="Buscar">
+        <Icon name="search" size={17} />
+      </a>
+      <button
+        class="cart-button"
+        type="button"
+        data-action="open-cart"
+        data-cart-target
+        aria-label="Carrito"
+      >
+        <Icon name="cart" />
+        <span class="cart-button__count" data-cart-count>
+          0
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-nav);
+    padding: 14px clamp(12px, 3vw, 32px) 26px;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--navy-deep-rgb) / 0.78) 0%,
+      rgb(var(--navy-deep-rgb) / 0.35) 65%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+
+  .site-header__start,
+  .site-header__end,
+  .site-header__logo {
+    pointer-events: auto;
+  }
+
+  .site-header__start {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-self: start;
+  }
+
+  .main-nav {
+    display: none;
+    gap: 2px;
+    padding: 5px;
+  }
+
+  .main-nav__link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 12px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    font: 600 13px/1 var(--font-sans);
+    color: var(--white);
+    transition: all 0.35s var(--ease);
+  }
+
+  .main-nav__link:hover {
+    color: var(--white);
+  }
+
+  .main-nav__link.is-active {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .main-nav__chevron {
+    transition: transform 0.3s var(--ease);
+  }
+
+  [data-mega-open] .main-nav__chevron {
+    transform: rotate(180deg);
+  }
+
+  .menu-button {
+    --icon-btn-size: 48px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    background: var(--glass);
+    color: var(--white);
+  }
+
+  .site-header__logo {
+    display: block;
+    justify-self: center;
+    padding: 4px 8px;
+  }
+
+  .site-header__logo img {
+    width: auto;
+    height: 30px;
+    filter: drop-shadow(0 4px 18px rgb(var(--peach-rgb) / 0.35));
+  }
+
+  .site-header__end {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-self: end;
+  }
+
+  .header-search {
+    --icon-btn-size: 48px;
+    display: none;
+    border: 1px solid rgb(var(--peach-rgb) / 0.16);
+    background: var(--glass);
+    color: var(--white);
+    backdrop-filter: blur(16px);
+  }
+
+  .header-search:hover {
+    background: rgb(var(--peach-rgb) / 0.2);
+    color: var(--white);
+  }
+
+  .cart-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 16px 0 14px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    transition: background-color 0.3s ease;
+  }
+
+  .cart-button:hover {
+    background: var(--sand);
+  }
+
+  .cart-button__count {
+    display: grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--navy);
+    color: var(--peach);
+    font: 700 11px/1 var(--font-sans);
+  }
+
+  @media (min-width: 820px) {
+    .site-header__logo img {
+      height: 38px;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .main-nav {
+      display: flex;
+    }
+
+    .menu-button {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1180px) {
+    .site-header__logo img {
+      height: 50px;
+    }
+
+    .main-nav__link {
+      padding: 12px 18px;
+      font-size: 14px;
+    }
+
+    .header-search {
+      display: grid;
+    }
+  }
+</style>
+
+<script>
+  import { onFirstPage, onPage } from '../../scripts/core/lifecycle.js';
+  import { initMegaMenu, markActiveLinks } from '../../scripts/layout/header.js';
+
+  onFirstPage(initMegaMenu);
+  onPage(markActiveLinks);
+</script>

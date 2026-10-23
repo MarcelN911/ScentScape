@@ -1,0 +1,58 @@
+---
+/**
+ * @typedef {object} Props
+ * @property {string} label
+ * @property {'brand' | 'dark' | 'outline'} [variant]
+ * @property {string} [background]
+ */
+const { label, variant = 'brand', background } = Astro.props;
+---
+
+<span class:list={['payment', `payment--${variant}`]} title={label}>
+  <span class="payment__tile" style={background ? `background:${background}` : undefined}>
+    <slot />
+  </span>
+  <span class="payment__label">{label}</span>
+</span>
+
+<style>
+  .payment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .payment__tile {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 48px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.25);
+    font: 800 15px/1 var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
+  .payment--dark .payment__tile {
+    background: var(--navy);
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    color: var(--sand);
+  }
+
+  .payment--outline {
+    opacity: 0.55;
+  }
+
+  .payment--outline .payment__tile {
+    border: 1px dashed rgb(var(--peach-rgb) / 0.4);
+    box-shadow: none;
+    color: var(--sand);
+  }
+
+  .payment__label {
+    font: 500 10.5px/1.2 var(--font-sans);
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>

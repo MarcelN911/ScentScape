@@ -1,0 +1,37 @@
+---
+/** @typedef {{ link: { label: string, href?: string, action?: string }, size?: 'lg' | 'sm' }} Props */
+const { link, size = 'sm' } = Astro.props;
+const Tag = link.action ? 'button' : 'a';
+---
+
+<Tag
+  class:list={['menu-link', `menu-link--${size}`]}
+  href={link.href}
+  type={link.action ? 'button' : undefined}
+  data-action={link.action}
+>
+  {link.label}
+</Tag>
+
+<style>
+  .menu-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    color: var(--navy);
+  }
+
+  .menu-link:hover {
+    color: var(--wine);
+  }
+
+  .menu-link--lg {
+    font: 500 60px/1.1 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .menu-link--sm {
+    font: italic 400 28px/1.1 var(--font-serif);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import FooterLink from './FooterLink.astro';
+
+/** @typedef {{ column: { title: string, links: object[] } }} Props */
+const { column } = Astro.props;
+---
+
+<div class="footer-column">
+  <h4 class="footer-column__title">{column.title}</h4>
+  {column.links.map((link) => (
+    <FooterLink link={link} />
+  ))}
+</div>
+
+<style>
+  .footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .footer-column__title {
+    margin: 0 0 4px;
+    font: 700 12px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+</style>

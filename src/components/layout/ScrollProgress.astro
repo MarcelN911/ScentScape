@@ -1,0 +1,37 @@
+<div
+  class="scroll-progress"
+  data-scroll-progress
+  aria-hidden="true"
+  transition:persist="scroll-progress"
+></div>
+
+<style>
+  .scroll-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-progress);
+    height: 3px;
+    background: linear-gradient(90deg, var(--wine), var(--peach), var(--gold));
+    transform: scaleX(var(--progress, 0));
+    transform-origin: 0 50%;
+  }
+</style>
+
+<script>
+  const bar = document.querySelector('[data-scroll-progress]');
+  let frame = 0;
+
+  function update() {
+    frame = 0;
+    const scrollable = document.documentElement.scrollHeight - innerHeight;
+    bar.style.setProperty('--progress', String(scrollable > 0 ? scrollY / scrollable : 0));
+  }
+
+  function requestUpdate() {
+    frame ||= requestAnimationFrame(update);
+  }
+
+  addEventListener('scroll', requestUpdate, { passive: true });
+  addEventListener('resize', requestUpdate);
+  document.addEventListener('astro:page-load', requestUpdate);
+</script>

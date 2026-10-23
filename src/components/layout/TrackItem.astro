@@ -1,0 +1,55 @@
+---
+/** @typedef {{ track: { title: string, mood: string }, index: number }} Props */
+import { padNumber } from '../../scripts/utils/format.js';
+
+const { track, index } = Astro.props;
+---
+
+<button class="track" type="button" data-track={index}>
+  <span class="track__num">{padNumber(index + 1)}</span>
+  <span class="track__text">
+    <span class="track__title">{track.title}</span>
+    <span class="track__mood">{track.mood}</span>
+  </span>
+</button>
+
+<style>
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--navy);
+    text-align: left;
+    transition: background-color 0.3s ease;
+  }
+
+  .track.is-active {
+    background: var(--navy);
+    color: var(--peach);
+  }
+
+  .track__num {
+    width: 20px;
+    font: 700 11px/1 var(--font-sans);
+    opacity: 0.55;
+  }
+
+  .track__text {
+    flex: 1;
+  }
+
+  .track__title {
+    display: block;
+    font: 700 15px/1.15 var(--font-sans);
+  }
+
+  .track__mood {
+    display: block;
+    font: 500 11px/1.4 var(--font-sans);
+    opacity: 0.65;
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+import { MOBILE_PRIMARY, MOBILE_SECONDARY } from '../../data/navigation.js';
+import MenuLink from './MenuLink.astro';
+---
+
+<div class="mobile-menu" data-mobile-menu hidden transition:persist="mobile-menu">
+  <div class="mobile-menu__top">
+    <button
+      class="icon-btn icon-btn--dark mobile-menu__close"
+      type="button"
+      data-action="close-menu"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+  </div>
+  <nav class="mobile-menu__primary" aria-label="Menú">
+    {MOBILE_PRIMARY.map((link) => (
+      <MenuLink link={link} size="lg" />
+    ))}
+  </nav>
+  <div class="mobile-menu__secondary">
+    {MOBILE_SECONDARY.map((link) => (
+      <MenuLink link={link} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 26px 22px;
+    background: var(--peach);
+    color: var(--navy);
+    animation: fade-in 0.3s ease;
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 50px;
+  }
+
+  .mobile-menu__close {
+    --icon-btn-size: 50px;
+    font-size: 22px;
+  }
+
+  .mobile-menu__primary {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu__secondary {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid rgb(var(--navy-rgb) / 0.25);
+  }
+</style>
+
+<script>
+  import { registerAction } from '../../scripts/core/actions.js';
+
+  function menu() {
+    return document.querySelector('[data-mobile-menu]');
+  }
+
+  function setMenuOpen(open) {
+    menu().hidden = !open;
+    document.documentElement.classList.toggle('is-locked', open);
+  }
+
+  function closeOnEntryClick(event) {
+    if (event.target.closest('.menu-link')) setMenuOpen(false);
+  }
+
+  menu().addEventListener('click', closeOnEntryClick);
+  registerAction('open-menu', () => setMenuOpen(true));
+  registerAction('close-menu', () => setMenuOpen(false));
+  document.addEventListener('astro:before-preparation', () => setMenuOpen(false));
+</script>

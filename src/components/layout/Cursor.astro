@@ -1,0 +1,46 @@
+<div class="cursor" data-cursor-dot aria-hidden="true" transition:persist="cursor"></div>
+
+<style>
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: var(--z-cursor);
+    display: none;
+    place-items: center;
+    width: var(--cursor-size, 16px);
+    height: var(--cursor-size, 16px);
+    margin: calc(var(--cursor-size, 16px) / -2) 0 0 calc(var(--cursor-size, 16px) / -2);
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--navy);
+    font: 800 13px/1 var(--font-sans);
+    pointer-events: none;
+    transition:
+      width 0.3s var(--ease),
+      height 0.3s var(--ease),
+      margin 0.3s var(--ease),
+      opacity 0.3s;
+  }
+
+  .cursor.is-active {
+    display: grid;
+  }
+
+  .cursor.is-hover {
+    --cursor-size: 44px;
+    opacity: 0.55;
+  }
+
+  .cursor.is-label {
+    --cursor-size: 92px;
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { initCursor } from '../../scripts/layout/cursor.js';
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+
+  onFirstPage(initCursor);
+</script>

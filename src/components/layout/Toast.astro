@@ -1,0 +1,42 @@
+<div class="toast" role="status" aria-live="polite" data-toast transition:persist="toast"></div>
+
+<style>
+  .toast {
+    position: fixed;
+    left: 50%;
+    top: 84px;
+    z-index: var(--z-toast);
+    padding: 14px 22px;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+    white-space: nowrap;
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.35);
+    opacity: 0;
+    transform: translate(-50%, -40px);
+    transition: all 0.5s var(--ease-back);
+    pointer-events: none;
+  }
+
+  .toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0) rotate(-1deg);
+  }
+</style>
+
+<script>
+  import { EVENTS, listen } from '../../scripts/core/events.js';
+
+  const toast = document.querySelector('[data-toast]');
+  let timer = 0;
+
+  function show(message) {
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('is-visible'), 2400);
+  }
+
+  listen(EVENTS.toast, show);
+</script>

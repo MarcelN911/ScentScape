@@ -1,0 +1,31 @@
+---
+import { whatsappUrl } from '../../scripts/utils/whatsapp.js';
+
+/** @typedef {{ question: string }} Props */
+const { question } = Astro.props;
+const message = `Hola ScentScape, ${question.toLowerCase().replace(/[¿?]/g, '')}`;
+---
+
+<a class="chip" href={whatsappUrl(message)} target="_blank" rel="noopener">
+  {question}
+</a>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    color: var(--sand);
+    font: 600 12px/1 var(--font-sans);
+    transition: all 0.25s ease;
+  }
+
+  .chip:hover {
+    background: var(--peach);
+    border-color: var(--peach);
+    color: var(--navy);
+  }
+</style>

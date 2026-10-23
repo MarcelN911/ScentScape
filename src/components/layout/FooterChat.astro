@@ -1,0 +1,149 @@
+---
+import { ADVISOR_MESSAGE, CHAT_WORDS } from '../../data/chat.js';
+import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '../../scripts/config.js';
+import { whatsappUrl } from '../../scripts/utils/whatsapp.js';
+import ChatWindow from './ChatWindow.astro';
+---
+
+<section class="footer-chat frame frame--square hatch" data-chat>
+  <span class="footer-chat__orb" aria-hidden="true"></span>
+  <span class="footer-chat__orb footer-chat__orb--green" aria-hidden="true"></span>
+  <div class="footer-chat__text">
+    <p class="eyebrow eyebrow--dot footer-chat__eyebrow" data-reveal="up">
+      <span class="footer-chat__live">
+        <span class="pulse-ring"></span>
+      </span>
+      Asesoría personal por WhatsApp
+    </p>
+    <h2 class="display footer-chat__title">
+      <span class="line-mask">
+        <span data-reveal="mask">¿Hablamos</span>
+      </span>
+      <span class="footer-chat__second">
+        <span class="footer-chat__de">de</span>
+        <em class="footer-chat__word" data-chat-word>
+          {CHAT_WORDS[0]}?
+        </em>
+      </span>
+    </h2>
+    <p class="body footer-chat__lead" data-reveal="up">
+      Te ayudamos a elegir tu fragancia, resolvemos dudas y confirmamos tu pedido por WhatsApp.
+    </p>
+    <div class="footer-chat__actions" data-reveal="up" data-delay="120">
+      <a
+        class="btn btn--whatsapp btn--lg btn--icon-start"
+        href={whatsappUrl(ADVISOR_MESSAGE)}
+        target="_blank"
+        rel="noopener"
+      >
+        <span class="btn__icon">
+          <img src="/assets/img/whatsapp_white.svg" alt="" width="18" height="18" />
+        </span>
+        Escríbenos ahora
+      </a>
+      <a class="btn btn--outline btn--lg" href={`tel:+${WHATSAPP_NUMBER}`}>
+        {PHONE_DISPLAY}
+      </a>
+    </div>
+  </div>
+  <ChatWindow />
+</section>
+
+<style>
+  .footer-chat {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: clamp(30px, 5vw, 80px);
+    align-items: center;
+    overflow: hidden;
+    padding: clamp(32px, 5vw, 72px);
+    background-color: var(--navy);
+    outline-color: rgb(var(--peach-rgb) / 0.13);
+  }
+
+  .footer-chat__orb {
+    position: absolute;
+    left: -8%;
+    top: -30%;
+    width: 55%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(var(--peach-rgb) / 0.22), transparent 65%);
+    animation: orb 14s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .footer-chat__orb--green {
+    left: auto;
+    top: auto;
+    right: -10%;
+    bottom: -35%;
+    width: 50%;
+    background: radial-gradient(circle, rgb(37 211 102 / 0.16), transparent 65%);
+    animation-duration: 18s;
+    animation-direction: reverse;
+  }
+
+  .footer-chat__text {
+    position: relative;
+    min-width: 0;
+  }
+
+  .footer-chat__eyebrow {
+    margin-bottom: 22px;
+  }
+
+  .footer-chat__live {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--whatsapp);
+    color: var(--whatsapp);
+  }
+
+  .footer-chat__title {
+    --display-size: clamp(54px, 7vw, 116px);
+    margin-bottom: 26px;
+  }
+
+  .footer-chat__second {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25em;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    font-size: 0.62em;
+  }
+
+  .footer-chat__de {
+    font-style: italic;
+    font-weight: 400;
+    color: rgb(var(--white-rgb) / 0.55);
+  }
+
+  .footer-chat__word {
+    display: inline-block;
+    animation: word-in 0.7s var(--ease) both;
+  }
+
+  .footer-chat__lead {
+    max-width: 480px;
+    margin-bottom: 30px;
+    font-size: 17px;
+  }
+
+  .footer-chat__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+</style>
+
+<script>
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+  import { initChatDemo } from '../../scripts/features/chat-demo.js';
+
+  onFirstPage(initChatDemo);
+</script>

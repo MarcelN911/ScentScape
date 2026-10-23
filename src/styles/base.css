@@ -65,6 +65,10 @@ input[type='range'] {
   outline-offset: 3px;
 }
 
+html.is-locked {
+  overflow: hidden;
+}
+
 .container {
   width: 100%;
   max-width: var(--container);

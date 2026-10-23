@@ -1,0 +1,226 @@
+---
+import { TRACKS } from '../../data/tracks.js';
+import Icon from '../ui/Icon.astro';
+import TrackItem from './TrackItem.astro';
+---
+
+<div class="player" data-player>
+  <div class="glass-pill player__pill">
+    <button class="player__disc" type="button" data-player-list-toggle aria-label="Playlist">
+      <span class="player__vinyl">
+        <span class="player__hole"></span>
+      </span>
+    </button>
+    <button class="player__info" type="button" data-player-list-toggle>
+      <span class="player__title" data-player-title>
+        {TRACKS[0].title}
+      </span>
+      <span class="player__status">
+        <span data-player-time>0:00</span> · <span data-player-status>en pausa</span>
+      </span>
+    </button>
+    <button
+      class="icon-btn icon-btn--sm icon-btn--solid"
+      type="button"
+      data-player-play
+      aria-label="Reproducir"
+    >
+      <Icon name="play" size={12} class="player__when-paused" />
+      <Icon name="pause" size={12} class="player__when-playing" />
+    </button>
+    <button
+      class="icon-btn icon-btn--sm player__mute"
+      type="button"
+      data-player-mute
+      aria-label="Silenciar"
+    >
+      <Icon name="volume" size={16} class="player__when-sound" />
+      <Icon name="mute" size={16} class="player__when-muted" />
+    </button>
+  </div>
+
+  <div class="playlist anim-fade-in" data-player-list>
+    <div class="playlist__head">
+      <p class="playlist__label">ScentScape Sessions</p>
+      <button class="playlist__next" type="button" data-player-next>
+        Siguiente ›
+      </button>
+    </div>
+    <div class="playlist__tracks">
+      {TRACKS.map((track, index) => (
+        <TrackItem track={track} index={index} />
+      ))}
+    </div>
+    <label class="playlist__volume">
+      <span>VOL</span>
+      <input type="range" min="0" max="100" value="60" data-player-volume aria-label="Volumen" />
+    </label>
+  </div>
+</div>
+
+<style>
+  .player {
+    position: relative;
+  }
+
+  .player__pill {
+    gap: 2px;
+    height: 48px;
+    padding: 0 4px;
+  }
+
+  .player__disc {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .player__vinyl {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #f0be91, #61031b 25%, #151932 50%, #d4af7d 75%, #f0be91);
+    box-shadow:
+      inset 0 0 0 6px var(--navy),
+      inset 0 0 0 7px rgb(var(--peach-rgb) / 0.4);
+    animation: spin 3.5s linear infinite paused;
+  }
+
+  [data-playing]:not([data-muted]) .player__vinyl {
+    animation-play-state: running;
+  }
+
+  .player__hole {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin: -5px;
+    border-radius: 50%;
+    background: var(--peach);
+    border: 2px solid var(--navy);
+  }
+
+  .player__info {
+    display: none;
+    width: 130px;
+    padding: 0 6px;
+    border: 0;
+    background: none;
+    color: var(--white);
+    text-align: left;
+  }
+
+  .player__title {
+    display: block;
+    overflow: hidden;
+    font: 700 12px/1.15 var(--font-sans);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .player__status {
+    display: block;
+    font: 500 10px/1.4 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.55);
+  }
+
+  .player__mute {
+    background: none;
+    color: var(--white);
+  }
+
+  .player__mute:hover {
+    background: rgb(var(--peach-rgb) / 0.15);
+  }
+
+  [data-playing] .player__when-paused,
+  .player:not([data-playing]) .player__when-playing,
+  [data-muted] .player__when-sound,
+  .player:not([data-muted]) .player__when-muted {
+    display: none;
+  }
+
+  .playlist {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    display: none;
+    width: min(330px, calc(100vw - 24px));
+    padding: 18px;
+    border-radius: 26px;
+    background: var(--peach);
+    color: var(--navy);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
+  }
+
+  [data-list-open] .playlist {
+    display: block;
+  }
+
+  .playlist__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .playlist__label {
+    margin: 0;
+    font: 700 11px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .playlist__next {
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--navy);
+    background: none;
+    color: var(--navy);
+    font: 700 11px/1 var(--font-sans);
+  }
+
+  .playlist__tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+
+  .playlist__volume {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 700 11px/1 var(--font-sans);
+  }
+
+  .playlist__volume input {
+    flex: 1;
+    accent-color: var(--navy);
+  }
+
+  @media (min-width: 1180px) {
+    .player__info {
+      display: block;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .player__mute {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { initMusicPlayer } from '../../scripts/features/music/player.js';
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+
+  onFirstPage(initMusicPlayer);
+</script>

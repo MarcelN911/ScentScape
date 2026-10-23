@@ -178,3 +178,19 @@
   gap: var(--marquee-gap, 36px);
   padding-right: var(--marquee-gap, 36px);
 }
+
+/* Einblenden beim Scrollen (siehe scripts/effects/reveal.js). Ohne JavaScript bleibt alles sichtbar. */
+[data-reveal] {
+  transition:
+    opacity 0.9s var(--ease) var(--reveal-delay, 0ms),
+    transform 1.1s var(--ease) var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal='up']:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(50px) rotate(1.5deg);
+}
+
+.js [data-reveal='mask']:not(.is-revealed) {
+  transform: translateY(108%) rotate(4deg);
+}

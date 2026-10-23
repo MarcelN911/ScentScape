@@ -1,0 +1,57 @@
+<div class="curtain" data-curtain aria-hidden="true" transition:persist="curtain">
+  <img class="curtain__logo" src="/assets/img/scentscape-fulllogo.png" alt="" data-curtain-logo />
+  <div class="curtain__track">
+    <div class="curtain__bar" data-curtain-bar></div>
+  </div>
+</div>
+
+<style>
+  .curtain {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-curtain);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(26px, 4vh, 40px);
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 46%, rgb(var(--peach-rgb) / 0.14), transparent 70%),
+      var(--navy-curtain);
+    border-top: 1px solid var(--line);
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+
+  :global(.js) .curtain {
+    transform: translateY(0);
+  }
+
+  .curtain__logo {
+    width: min(300px, 56vw);
+    height: auto;
+    opacity: 0;
+    filter: drop-shadow(0 12px 40px rgb(var(--peach-rgb) / 0.22));
+  }
+
+  .curtain__track {
+    width: min(180px, 42vw);
+    height: 1px;
+    overflow: hidden;
+    background: rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .curtain__bar {
+    height: 100%;
+    background: var(--peach);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+</style>
+
+<script>
+  import { initCurtain } from '../../scripts/layout/curtain.js';
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+
+  onFirstPage(initCurtain);
+</script>
