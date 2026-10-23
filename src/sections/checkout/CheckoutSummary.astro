@@ -1,0 +1,84 @@
+---
+import SummaryLineTemplate from '../../components/checkout/SummaryLineTemplate.astro';
+---
+
+<aside class="summary" data-checkout-summary>
+  <p class="summary__title">Tu pedido</p>
+  <div class="summary__lines" data-summary-lines></div>
+  <SummaryLineTemplate />
+  <p class="summary__gift" data-summary-gift hidden>
+    Regalo · nota a mano, paquete sin precio
+  </p>
+  <div class="summary__row summary__row--accent" data-summary-sale hidden>
+    <span>Descuento de oferta</span>
+    <span data-summary-sale-value></span>
+  </div>
+  <div class="summary__row summary__row--accent" data-summary-code hidden>
+    <span data-summary-code-label></span>
+    <span data-summary-code-value></span>
+  </div>
+  <div class="summary__row">
+    <span>Envío</span>
+    <span data-summary-shipping></span>
+  </div>
+  <div class="summary__row summary__row--total">
+    <span>Total</span>
+    <span class="summary__total" data-summary-total-value></span>
+  </div>
+</aside>
+
+<style>
+  .summary {
+    position: sticky;
+    top: 100px;
+    padding: clamp(22px, 3vw, 30px);
+    border-radius: 24px;
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .summary__title {
+    margin: 0 0 16px;
+    font: 500 28px/1 var(--font-serif);
+  }
+
+  .summary__lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .summary__gift {
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgb(var(--white-rgb) / 0.55);
+    font: 600 12px/1.4 var(--font-sans);
+    color: var(--wine);
+  }
+
+  .summary__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid rgb(var(--navy-rgb) / 0.15);
+    font: 500 14px/1 var(--font-sans);
+  }
+
+  .summary__row--accent {
+    font-weight: 600;
+    color: var(--wine);
+  }
+
+  .summary__row--total {
+    align-items: baseline;
+    padding-bottom: 0;
+    font-weight: 700;
+  }
+
+  .summary__total {
+    font: 500 34px/1 var(--font-serif);
+  }
+</style>

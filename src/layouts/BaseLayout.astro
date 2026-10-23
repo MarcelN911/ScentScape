@@ -78,8 +78,11 @@ const ogImage = new URL(image, Astro.site);
 </html>
 
 <script>
-  import { onPage } from '../scripts/core/lifecycle.js';
+  import { onFirstPage, onPage } from '../scripts/core/lifecycle.js';
+  import { initPointerVars } from '../scripts/effects/pointer-vars.js';
   import { initReveal } from '../scripts/effects/reveal.js';
+  import '../scripts/features/wishlist.js';
 
+  onFirstPage(initPointerVars);
   onPage(initReveal);
 </script>

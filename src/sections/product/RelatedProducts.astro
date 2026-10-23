@@ -1,0 +1,49 @@
+---
+import RelatedCard from '../../components/product/RelatedCard.astro';
+
+/** @typedef {{ products: object[] }} Props */
+const { products } = Astro.props;
+---
+
+<section class="related">
+  <h2 class="container related__title">
+    También te <em>puede gustar</em>
+  </h2>
+  <div class="related__track" data-drag-scroll>
+    {products.map((product, index) => (
+      <RelatedCard product={product} index={index} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .related {
+    padding: 20px 0 100px;
+  }
+
+  .related__title {
+    margin: 0 auto 26px;
+    font: 500 clamp(38px, 4.6vw, 72px) / 0.95 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .related__title em {
+    font: italic 400 1.05em/1 var(--font-serif);
+    letter-spacing: 0;
+    color: var(--peach);
+  }
+
+  .related__track {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 10px var(--gutter) 20px;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .related__track.is-dragging {
+    cursor: grabbing;
+  }
+</style>

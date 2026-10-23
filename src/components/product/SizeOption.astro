@@ -1,0 +1,52 @@
+---
+import { cartItemJson } from '../../scripts/cart/cart-item.js';
+import { effectivePrice } from '../../scripts/catalog/sizes.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+
+/** @typedef {{ product: object, size: object, index: number }} Props */
+const { product, size, index } = Astro.props;
+---
+
+<button
+  class:list={['size-option', { 'is-active': index === 0 }]}
+  type="button"
+  data-size-option={index}
+  data-size-label={size.label}
+  data-price={effectivePrice(size)}
+  data-cart-item={cartItemJson(product, size)}
+>
+  <span class="size-option__label">{size.label}</span>
+  <span class="size-option__price">{formatCOP(effectivePrice(size))}</span>
+</button>
+
+<style>
+  .size-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    min-width: 124px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    border: 2px solid rgb(var(--white-rgb) / 0.25);
+    background: rgb(var(--navy-deep-rgb) / 0.3);
+    color: var(--white);
+    transition: all 0.35s var(--ease-back);
+  }
+
+  .size-option.is-active {
+    border-color: var(--peach);
+    background: var(--peach);
+    color: var(--navy);
+    transform: scale(1.06);
+  }
+
+  .size-option__label {
+    font: 500 20px/1 var(--font-serif);
+  }
+
+  .size-option__price {
+    font: 600 12px/1 var(--font-sans);
+    opacity: 0.7;
+  }
+</style>

@@ -138,10 +138,10 @@ import TrackItem from './TrackItem.astro';
     background: rgb(var(--peach-rgb) / 0.15);
   }
 
-  [data-playing] .player__when-paused,
-  .player:not([data-playing]) .player__when-playing,
-  [data-muted] .player__when-sound,
-  .player:not([data-muted]) .player__when-muted {
+  [data-playing] :global(.player__when-paused),
+  .player:not([data-playing]) :global(.player__when-playing),
+  [data-muted] :global(.player__when-sound),
+  .player:not([data-muted]) :global(.player__when-muted) {
     display: none;
   }
 

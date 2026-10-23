@@ -1,0 +1,25 @@
+---
+import { capitalize } from '../../scripts/utils/text.js';
+import NoteMark from '../ui/NoteMark.astro';
+
+/** @typedef {{ note: string, color: string }} Props */
+const { note, color } = Astro.props;
+---
+
+<span class="note-chip">
+  <NoteMark name={note} color={color} size={30} />
+  {capitalize(note)}
+</span>
+
+<style>
+  .note-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 14px 0 4px;
+    border-radius: var(--radius-pill);
+    background: rgb(var(--navy-deep-rgb) / 0.35);
+    font: 600 13px/1 var(--font-sans);
+  }
+</style>

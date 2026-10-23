@@ -1,0 +1,76 @@
+<template data-summary-line>
+  <div class="summary-line">
+    <div class="summary-line__thumb">
+      <img data-summary-image alt="" />
+      <span class="summary-line__gift">Gift</span>
+    </div>
+    <div class="summary-line__info">
+      <p class="summary-line__name" data-summary-name></p>
+      <p class="summary-line__meta" data-summary-meta></p>
+    </div>
+    <span class="summary-line__total" data-summary-total></span>
+  </div>
+</template>
+
+<style>
+  .summary-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .summary-line__thumb {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--white);
+  }
+
+  .summary-line__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .summary-line__gift {
+    display: none;
+    font: italic 400 17px/1 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .summary-line.is-gift-card .summary-line__thumb {
+    background: var(--navy);
+  }
+
+  .summary-line.is-gift-card img {
+    display: none;
+  }
+
+  .summary-line.is-gift-card .summary-line__gift {
+    display: block;
+  }
+
+  .summary-line__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .summary-line__name {
+    margin: 0 0 4px;
+    font: 800 14px/1.2 var(--font-sans);
+  }
+
+  .summary-line__meta {
+    margin: 0;
+    font: 500 12px/1 var(--font-sans);
+    opacity: 0.6;
+  }
+
+  .summary-line__total {
+    font: 800 14px/1 var(--font-sans);
+  }
+</style>

@@ -1,0 +1,212 @@
+---
+/**
+ * Bühne hinter der Flasche aus v7: Wand, Lichtstrahl, Boden, Sockel, Flasche mit Schatten und Spiegelung.
+ * Reagiert auf :hover der nächsten .stage-host (Karte) und auf [data-stage-hover].
+ * @typedef {object} Props
+ * @property {string} image
+ * @property {string} alt
+ * @property {'oro' | 'rosa' | 'vino'} theme
+ * @property {boolean} [shade]     dunkler Verlauf unten für Text
+ * @property {boolean} [eager]     Bild sofort laden
+ */
+const { image, alt, theme, shade = true, eager = false } = Astro.props;
+---
+
+<div class:list={['stage', `stage--${theme}`]}>
+  <div class="stage__wall"></div>
+  <div class="stage__beam"></div>
+  <div class="stage__floor"></div>
+  <div class="stage__pedestal"></div>
+  <div class="stage__bottle" data-stage-bottle>
+    <div class="stage__shadow"></div>
+    <img
+      class="stage__image"
+      src={image}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      draggable="false"
+    />
+    <img
+      class="stage__reflection"
+      src={image}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      draggable="false"
+    />
+  </div>
+  {shade && <div class="stage__shade"></div>}
+</div>
+
+<style>
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .stage > div {
+    position: absolute;
+  }
+
+  .stage__wall {
+    inset: 0;
+    background: var(--stage-wall);
+  }
+
+  .stage__beam {
+    inset: -10%;
+    background: var(--stage-beam);
+    mix-blend-mode: screen;
+    filter: blur(6px);
+    opacity: 0.75;
+    pointer-events: none;
+    transition:
+      opacity 1.2s var(--ease),
+      transform 1.2s var(--ease);
+  }
+
+  .stage__floor {
+    inset: auto 0 0;
+    height: 30%;
+    background: var(--stage-floor);
+    box-shadow: 0 -1px 0 rgb(255 255 255 / 0.18);
+  }
+
+  .stage__pedestal {
+    left: 24%;
+    right: 24%;
+    bottom: 20%;
+    height: 13%;
+    border-radius: 6px;
+    background: var(--stage-pedestal);
+    box-shadow:
+      0 20px 30px rgb(0 0 0 / 0.25),
+      inset 0 2px 0 rgb(255 255 255 / 0.35);
+  }
+
+  .stage__bottle {
+    left: 20%;
+    right: 20%;
+    bottom: 33%;
+    height: 48%;
+    transition: transform 0.8s var(--ease);
+  }
+
+  .stage--oro .stage__pedestal {
+    display: none;
+  }
+
+  .stage--oro .stage__bottle {
+    bottom: 23%;
+  }
+
+  .stage__shadow {
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    bottom: -5%;
+    height: 10%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgb(0 0 0 / 0.45), transparent 70%);
+    filter: blur(4px);
+  }
+
+  .stage__image,
+  .stage__reflection {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 50% 100%;
+  }
+
+  .stage__image {
+    inset: 0;
+    filter: drop-shadow(14px 18px 18px rgb(0 0 0 / 0.35));
+  }
+
+  .stage__reflection {
+    left: 0;
+    top: 100%;
+    transform: scaleY(-1);
+    opacity: 0.12;
+    mask-image: linear-gradient(to top, #000 0%, transparent 28%);
+    pointer-events: none;
+  }
+
+  .stage--oro .stage__reflection {
+    opacity: 0.22;
+  }
+
+  .stage__shade {
+    inset: auto 0 0;
+    height: 46%;
+    background: linear-gradient(180deg, transparent, rgb(var(--navy-deep-rgb) / 0.85));
+    pointer-events: none;
+  }
+
+  :global(.stage-host:hover) .stage__beam,
+  :global([data-stage-hover]) .stage__beam {
+    opacity: 1;
+    transform: translateX(6%);
+  }
+
+  :global(.stage-host:hover) .stage__bottle,
+  :global([data-stage-hover]) .stage__bottle {
+    transform: translateY(-12px) scale(1.05);
+  }
+
+  .stage--oro {
+    --stage-wall: radial-gradient(
+      ellipse 90% 70% at 72% 8%,
+      #fbe7c2 0%,
+      #d9ad72 30%,
+      #8c6236 70%,
+      #3e2914 100%
+    );
+    --stage-beam: linear-gradient(
+      118deg,
+      transparent 30%,
+      rgb(255 236 200 / 0.55) 44%,
+      rgb(255 236 200 / 0.1) 54%,
+      transparent 64%
+    );
+    --stage-floor: linear-gradient(180deg, #c49863 0%, #e9cb9a 18%, #a77a49 60%, #5d3f22 100%);
+  }
+
+  .stage--rosa {
+    --stage-wall: radial-gradient(
+      ellipse 90% 70% at 30% 10%,
+      #fde6d8 0%,
+      #efc0a6 34%,
+      #c48a74 72%,
+      #6e4438 100%
+    );
+    --stage-beam: linear-gradient(
+      62deg,
+      transparent 32%,
+      rgb(255 240 228 / 0.6) 46%,
+      transparent 62%
+    );
+    --stage-floor: linear-gradient(180deg, #e7b9a0 0%, #f5d8c6 20%, #cf9c84 100%);
+    --stage-pedestal: linear-gradient(180deg, #f6e3d2 0%, #e2c4ab 100%);
+  }
+
+  .stage--vino {
+    --stage-wall: radial-gradient(
+      ellipse 90% 70% at 70% 10%,
+      #b44a5a 0%,
+      #7a1428 35%,
+      #4a0814 70%,
+      #1e040a 100%
+    );
+    --stage-beam: linear-gradient(
+      115deg,
+      transparent 32%,
+      rgb(240 190 145 / 0.38) 46%,
+      transparent 62%
+    );
+    --stage-floor: linear-gradient(180deg, #5c0d1d 0%, #8a2a3a 18%, #3a0610 100%);
+    --stage-pedestal: linear-gradient(180deg, #2a1518 0%, #160a0c 100%);
+  }
+</style>

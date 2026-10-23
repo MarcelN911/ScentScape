@@ -1,0 +1,91 @@
+---
+import FloatingBottle from '../../components/shop/FloatingBottle.astro';
+import { HERO_BOTTLES } from '../../data/shop.js';
+import { findBySlug } from '../../scripts/catalog/queries.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+
+/** @typedef {{ catalog: object[] }} Props */
+const { catalog } = Astro.props;
+const bottles = HERO_BOTTLES.map((bottle) => ({
+  bottle,
+  product: findBySlug(catalog, bottle.slug),
+})).filter((entry) => entry.product);
+---
+
+<section class="shop-hero container">
+  <div class="shop-hero__bottles" aria-hidden="true">
+    {bottles.map(({ bottle, product }) => (
+      <FloatingBottle bottle={bottle} image={imageUrl(product.images[0], 500)} />
+    ))}
+  </div>
+  <div class="shop-hero__content">
+    <div>
+      <p class="shop-hero__badge" data-reveal="up">
+        Catálogo · {catalog.length} fragancias
+      </p>
+      <h1 class="display display--xl">
+        <span class="line-mask">
+          <span data-reveal="mask">Encuentra</span>
+        </span>
+        <span class="line-mask">
+          <span data-reveal="mask" class="shop-hero__accent">
+            tu firma.
+          </span>
+        </span>
+      </h1>
+    </div>
+    <p class="body shop-hero__text" data-reveal="up" data-delay="150">
+      Filtra por familia, busca por nota y pasa el cursor sobre cada frasco para descubrir con qué
+      abre.
+    </p>
+  </div>
+</section>
+
+<style>
+  .shop-hero {
+    position: relative;
+    padding-top: clamp(130px, 13vw, 170px);
+    padding-bottom: 44px;
+  }
+
+  .shop-hero__bottles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .shop-hero__content {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+  }
+
+  .shop-hero__badge {
+    display: inline-flex;
+    margin: 0 0 20px;
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    font: 600 11px/1 var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .shop-hero__accent {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05em;
+    letter-spacing: -0.01em;
+    color: var(--peach);
+  }
+
+  .shop-hero__text {
+    max-width: 360px;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+</style>

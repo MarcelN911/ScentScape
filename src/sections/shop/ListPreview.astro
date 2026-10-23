@@ -1,0 +1,185 @@
+<div class="list-preview" data-list-preview-card aria-hidden="true">
+  <div class="list-preview__media">
+    <img data-preview-image alt="" />
+    <span class="tag list-preview__eyebrow" data-preview-eyebrow></span>
+  </div>
+  <div class="list-preview__body">
+    <div>
+      <p class="list-preview__meta" data-preview-meta></p>
+      <h4 class="list-preview__name" data-preview-name></h4>
+    </div>
+    <p class="list-preview__description" data-preview-description></p>
+    <div class="list-preview__notes" data-preview-notes></div>
+    <div class="list-preview__rule"></div>
+    <div class="list-preview__foot">
+      <div>
+        <p class="list-preview__sizes" data-preview-sizes></p>
+        <p class="list-preview__price" data-preview-price></p>
+      </div>
+      <span class="list-preview__more">Ver detalles →</span>
+    </div>
+  </div>
+  <template data-preview-note>
+    <span class="list-preview__note">
+      <span class="list-preview__dot"></span>
+      <span></span>
+    </span>
+  </template>
+</div>
+
+<style>
+  .list-preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: var(--z-preview);
+    display: none;
+    width: 320px;
+    overflow: hidden;
+    border-radius: 26px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.28);
+    background: var(--navy);
+    box-shadow: 0 40px 80px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    scale: 0.92;
+    pointer-events: none;
+    transition:
+      opacity 0.35s var(--ease),
+      scale 0.45s var(--ease);
+  }
+
+  @media (hover: hover) and (min-width: 820px) {
+    .list-preview {
+      display: block;
+    }
+  }
+
+  .list-preview.is-visible {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .list-preview__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--navy-raised);
+  }
+
+  .list-preview__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgb(var(--navy-rgb) / 0.9) 100%);
+  }
+
+  .list-preview__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .list-preview.is-cover .list-preview__media img {
+    object-fit: cover;
+  }
+
+  .list-preview__eyebrow {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1;
+  }
+
+  .list-preview__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px 20px;
+  }
+
+  .list-preview__meta {
+    margin: 0 0 6px;
+    font: 600 10px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .list-preview__name {
+    margin: 0;
+    font: 500 24px/1.05 var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  .list-preview__description {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font: italic 400 16px/1.4 var(--font-serif);
+    color: rgb(var(--white-rgb) / 0.78);
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .list-preview__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  :global(.list-preview__note) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px 0 4px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    background: rgb(var(--peach-rgb) / 0.1);
+    font: 600 11px/1 var(--font-sans);
+    color: var(--sand);
+  }
+
+  :global(.list-preview__dot) {
+    width: 20px;
+    height: 20px;
+  }
+
+  :global(.list-preview__dot svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .list-preview__rule {
+    height: 1px;
+    background: var(--line-faint);
+  }
+
+  .list-preview__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .list-preview__sizes {
+    margin: 0 0 5px;
+    font: 500 11px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.5);
+  }
+
+  .list-preview__price {
+    margin: 0;
+    font: 500 22px/1 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .list-preview__more {
+    font: 700 11px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+</style>

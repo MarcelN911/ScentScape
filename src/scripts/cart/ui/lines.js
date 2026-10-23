@@ -1,21 +1,15 @@
 /* Zeigt die Warenkorb-Zeilen. Vorhandene Zeilen werden aktualisiert statt neu gebaut (keine erneute Animation). */
 import { formatCOP } from '../../utils/format.js';
+import { lineMetaOf } from '../line-meta.js';
 import { lineTotal } from '../pricing.js';
 import { changeQuantity, getItems, removeItem } from '../store.js';
-
-function metaOf(item) {
-  const parts = item.giftCard
-    ? [item.color, item.recipient && `Para ${item.recipient}`, item.delivery]
-    : [`${item.size} ml`, item.brand];
-  return parts.filter(Boolean).join(' · ');
-}
 
 function fillLine(line, item) {
   line.dataset.sku = item.sku;
   line.classList.toggle('is-gift-card', Boolean(item.giftCard));
   line.querySelector('[data-line-image]').src = item.image ?? '';
   line.querySelector('[data-line-name]').textContent = item.name;
-  line.querySelector('[data-line-meta]').textContent = metaOf(item);
+  line.querySelector('[data-line-meta]').textContent = lineMetaOf(item);
   line.querySelector('[data-line-qty]').textContent = item.quantity;
   line.querySelector('[data-line-total]').textContent = formatCOP(lineTotal(item));
 }

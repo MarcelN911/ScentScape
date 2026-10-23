@@ -1,0 +1,61 @@
+---
+import NoteMark from '../ui/NoteMark.astro';
+
+/** @typedef {{ slide: object, index: number, image: string, firstNote: string, color: string }} Props */
+const { slide, index, image, firstNote, color } = Astro.props;
+const zoomStyle = `transform-origin:${slide.origin ?? '50% 50%'};transform:scale(${slide.scale ?? 1})`;
+---
+
+<button
+  class:list={['thumb', { 'is-active': index === 0 }]}
+  type="button"
+  data-slide-go={index}
+  aria-label={slide.label}
+>
+  {slide.notes ? (
+    <span class="thumb__note">
+      <NoteMark name={firstNote} color={color} size={68} />
+    </span>
+  ) : (
+    <img src={image} alt="" style={zoomStyle} draggable="false" />
+  )}
+</button>
+
+<style>
+  .thumb {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 92px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 2px solid rgb(var(--white-rgb) / 0.08);
+    background: rgb(var(--navy-deep-rgb) / 0.35);
+    opacity: 0.65;
+    transition: all 0.5s var(--ease);
+  }
+
+  .thumb.is-active {
+    border-color: var(--peach);
+    background: color-mix(in oklch, var(--accent) 35%, var(--navy));
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+
+  .thumb img {
+    position: absolute;
+    left: 8%;
+    top: 8%;
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+  }
+
+  .thumb__note {
+    position: absolute;
+    inset: 12px 0;
+    display: grid;
+    place-items: center;
+  }
+</style>

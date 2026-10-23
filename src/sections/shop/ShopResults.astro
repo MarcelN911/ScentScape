@@ -1,0 +1,82 @@
+---
+import ProductCard from '../../components/product/ProductCard.astro';
+import ProductRow from '../../components/product/ProductRow.astro';
+import ShopItem from '../../components/shop/ShopItem.astro';
+
+/** @typedef {{ catalog: object[] }} Props */
+const { catalog } = Astro.props;
+---
+
+<div class="shop-results" data-shop-results>
+  <div class="shop-grid" data-view-panel="grid">
+    {catalog.map((product, index) => (
+      <ShopItem product={product} index={index}>
+        <ProductCard product={product} index={index} />
+      </ShopItem>
+    ))}
+  </div>
+  <div class="shop-list" data-view-panel="list" hidden>
+    {catalog.map((product, index) => (
+      <ShopItem product={product} index={index}>
+        <ProductRow product={product} index={index} />
+      </ShopItem>
+    ))}
+  </div>
+  <div class="shop-empty" data-shop-empty hidden>
+    <p class="shop-empty__title">
+      No encontramos “<span data-shop-empty-query></span>”
+    </p>
+    <p class="body">Prueba con otra nota, nombre o marca</p>
+    <button class="btn btn--primary" type="button" data-shop-clear>
+      Ver toda la colección
+    </button>
+  </div>
+</div>
+
+<style>
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 262px), 1fr));
+    gap: 18px;
+  }
+
+  :global(.has-entrance) .shop-grid :global([data-shop-item]) {
+    opacity: var(--enter-opacity, 1);
+    transform: perspective(1200px) translateY(calc((1 - var(--enter, 1)) * 120px))
+      rotateX(calc((1 - var(--enter, 1)) * -16deg)) scale(calc(0.9 + var(--enter, 1) * 0.1));
+    transform-origin: 50% 100%;
+  }
+
+  :global(.has-entrance) .shop-grid :global(.card) {
+    clip-path: inset(calc((1 - var(--enter, 1)) * 38%) -120px -120px -120px);
+  }
+
+  :global(.has-entrance) .shop-grid :global(.card img) {
+    scale: calc(1 + (1 - var(--enter, 1)) * 0.25);
+  }
+
+  .shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .shop-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 90px 0;
+    text-align: center;
+  }
+
+  .shop-empty__title {
+    margin: 0;
+    font: 500 44px/1 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .shop-empty .btn {
+    margin-top: 12px;
+  }
+</style>

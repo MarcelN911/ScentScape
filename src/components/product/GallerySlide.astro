@@ -1,0 +1,101 @@
+---
+import OrbitNotes from './OrbitNotes.astro';
+
+/**
+ * @typedef {object} Props
+ * @property {{ label: string, origin?: string, scale?: number, notes?: boolean }} slide
+ * @property {number} index
+ * @property {string} image
+ * @property {string} alt
+ * @property {boolean} cover        Stimmungsfoto statt Flasche
+ * @property {string[]} notes
+ * @property {string} color
+ */
+const { slide, index, image, alt, cover, notes, color } = Astro.props;
+const zoomStyle = `--slide-origin:${slide.origin ?? '50% 50%'};--slide-scale:${slide.scale ?? 1}`;
+---
+
+<div class:list={['slide', { 'is-active': index === 0, 'slide--cover': cover }]} data-slide={index}>
+  {slide.notes ? (
+    <div class="slide__notes">
+      <img class="slide__center" src={image} alt="" draggable="false" />
+      <OrbitNotes notes={notes} color={color} />
+    </div>
+  ) : (
+    <img
+      class="slide__image"
+      src={image}
+      alt={`${alt} · ${slide.label}`}
+      style={zoomStyle}
+      draggable="false"
+    />
+  )}
+</div>
+
+<style>
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateX(14%) scale(0.94);
+    pointer-events: none;
+    transition:
+      opacity 0.7s ease,
+      transform 1s var(--ease),
+      filter 0.7s ease;
+  }
+
+  .slide.is-before {
+    transform: translateX(-14%) scale(0.94);
+  }
+
+  .slide.is-active {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .slide__image {
+    position: absolute;
+    left: 10%;
+    top: 9%;
+    width: 80%;
+    height: 64%;
+    object-fit: contain;
+    object-position: 50% 100%;
+    filter: drop-shadow(0 50px 60px rgb(0 0 0 / 0.55));
+    transform-origin: var(--slide-origin);
+    transform: scale(var(--slide-scale));
+    transition: transform 0.7s var(--ease);
+  }
+
+  .slide--cover .slide__image {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: none;
+  }
+
+  :global([data-zoomed]) .slide.is-active .slide__image {
+    transform-origin: var(--zx, 50%) var(--zy, 50%);
+    transform: scale(calc(var(--slide-scale) * 1.9));
+  }
+
+  .slide__notes {
+    position: absolute;
+    inset: 0;
+  }
+
+  .slide__center {
+    position: absolute;
+    left: 32%;
+    top: 20%;
+    width: 36%;
+    height: 60%;
+    object-fit: contain;
+    filter: drop-shadow(0 40px 50px rgb(0 0 0 / 0.55));
+  }
+</style>

@@ -95,29 +95,29 @@ legacy/          alte Seite, nur als Vorlage
 - [x] Schrift Bodoni Moda lokal eingebunden (`@fontsource-variable`), kein Google Fonts
 - [x] Styleguide-Seite `/styleguide/` (noindex) zum Vergleichen mit der Vorlage
 
-### Phase 2: Was jede Seite hat
+### Phase 2: Was jede Seite hat ✅
 
-- [ ] `BaseLayout.astro` mit SEO/OG aus den alten Seiten + Scroll-Fortschrittsbalken
-- [ ] Navigation, Mega-Menü „Descubre“ mit Hover-Vorschau, Handy-Menü
-- [ ] Footer: Chat-Demo, wechselnde Wörter, Zahlungsarten, Links
-- [ ] schwebender Berater-Button (WhatsApp)
-- [ ] Seitenwechsel-Vorhang mit Logo, eigener Mauszeiger, Toast
-- [ ] Musik-Player mit echten Audiodateien (Playlist, Lautstärke, sich drehende Platte)
+- [x] `BaseLayout.astro` mit SEO/OG aus den alten Seiten + Scroll-Fortschrittsbalken
+- [x] Navigation, Mega-Menü „Descubre“ mit Hover-Vorschau, Handy-Menü
+- [x] Footer: Chat-Demo, wechselnde Wörter, Zahlungsarten, Links
+- [x] schwebender Berater-Button (WhatsApp)
+- [x] Seitenwechsel-Vorhang mit Logo, eigener Mauszeiger, Toast
+- [x] Musik-Player (Playlist, Lautstärke, sich drehende Platte); Audiodateien fehlen noch
 
-### Phase 3: Daten und Warenkorb
+### Phase 3: Daten und Warenkorb ✅
 
-- [ ] `api/`: Produkte, Bewertungen, Bestellung, Rabattcode (aus `legacy/script.js`)
-- [ ] Produktdaten normalisieren inkl. Familie + Noten, Slug aus dem Namen
-- [ ] `cart/` aus `legacy/scripts/cart.js` aufteilen: store, pricing, discount, shipping, whatsapp, render
-- [ ] Warenkorb-Drawer wie v7: Geschenk-Option, Rabattcode, Zahlungsart, Versandbalken
-- [ ] Wunschliste (Herzen)
+- [x] `api/`: Produkte, Bewertungen, Bestellung, Rabattcode (aus `legacy/script.js`)
+- [x] Produktdaten normalisieren inkl. Familie + Noten, Slug aus dem Namen
+- [x] `cart/` aus `legacy/scripts/cart.js` aufteilen: store, pricing, discount, shipping, whatsapp, render
+- [x] Warenkorb-Drawer wie v7: Geschenk-Option, Rabattcode, Zahlungsart, Versandbalken
+- [x] Wunschliste (Herzen)
 
-### Phase 4: Shop-Seiten
+### Phase 4: Shop-Seiten ✅
 
-- [ ] Productos: Hero, Noten-Band, Familien-Tabs, fixierte Filterleiste, Raster/Liste, FLIP-Animation, Listen-Vorschau
-- [ ] Produktseite `/producto/[slug]/`: Galerie (Fortschritt, Zoom, Wischen), Größen, Kaufbereich, Akkordeons, Pyramide, Bewertungen, Ähnliche, Kaufleiste
-- [ ] SEO pro Produkt (Meta + Schema aus `legacy/scripts/producto.js`)
-- [ ] Checkout-Seite (Schritte, Formular, Zusammenfassung), Abschluss über WhatsApp
+- [x] Productos: Hero, Noten-Band, Familien-Tabs, fixierte Filterleiste, Raster/Liste, FLIP-Animation, Listen-Vorschau
+- [x] Produktseite `/producto/[slug]/`: Galerie (Fortschritt, Zoom, Wischen), Größen, Kaufbereich, Akkordeons, Pyramide, Bewertungen, Ähnliche, Kaufleiste
+- [x] SEO pro Produkt (Meta + Schema aus `legacy/scripts/producto.js`)
+- [x] Checkout-Seite (Schritte, Formular, Zusammenfassung), Bestellung an nexomar + Abschluss über WhatsApp
 
 ### Phase 5: Startseite
 

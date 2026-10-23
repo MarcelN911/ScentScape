@@ -1,0 +1,34 @@
+---
+import { noteMarkSvg } from '../../scripts/utils/note-mark.js';
+
+/**
+ * @typedef {object} Props
+ * @property {string} name       Note oder Familie (der Anfangsbuchstabe wird gezeigt)
+ * @property {string} [color]
+ * @property {string} [glyph]    eigenes Zeichen statt Anfangsbuchstabe, z. B. "✦"
+ * @property {number} [size]
+ * @property {string} [class]
+ */
+const { name, color, glyph, size = 36, class: className } = Astro.props;
+---
+
+<span
+  class:list={['note-mark', className]}
+  style={`--note-size:${size}px`}
+  set:html={noteMarkSvg(name, color, glyph)}
+/>
+
+<style>
+  .note-mark {
+    display: block;
+    flex: none;
+    width: var(--note-size);
+    height: var(--note-size);
+    border-radius: 50%;
+  }
+
+  .note-mark :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+</style>

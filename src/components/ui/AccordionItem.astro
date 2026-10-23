@@ -1,0 +1,93 @@
+---
+/** @typedef {{ number: string, title: string, open?: boolean }} Props */
+const { number, title, open = false } = Astro.props;
+---
+
+<div class:list={['accordion-item', { 'is-open': open }]} data-accordion-item>
+  <button
+    class="accordion-item__head"
+    type="button"
+    data-accordion-toggle
+    aria-expanded={String(open)}
+  >
+    <span class="accordion-item__title">
+      <span class="accordion-item__number">{number}</span>
+      <span>{title}</span>
+    </span>
+    <span class="accordion-item__icon">+</span>
+  </button>
+  <div class="accordion-item__body">
+    <div class="accordion-item__inner">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .accordion-item {
+    border-top: 1px solid rgb(var(--white-rgb) / 0.12);
+  }
+
+  .accordion-item__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 20px 2px;
+    border: 0;
+    background: none;
+    color: var(--white);
+    text-align: left;
+  }
+
+  .accordion-item__title {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font: 500 22px/1.1 var(--font-serif);
+  }
+
+  .accordion-item__number {
+    min-width: 26px;
+    font: italic 400 18px/1 var(--font-serif);
+    color: var(--peach);
+  }
+
+  .accordion-item__icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    color: var(--peach);
+    font-size: 18px;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .is-open .accordion-item__icon {
+    transform: rotate(45deg);
+  }
+
+  .accordion-item__body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease);
+  }
+
+  .is-open .accordion-item__body {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-item__inner {
+    overflow: hidden;
+  }
+
+  .accordion-item__inner :global(p) {
+    margin: 0 0 20px;
+    font: 400 15px/1.7 var(--font-sans);
+    color: var(--text-soft);
+    text-wrap: pretty;
+  }
+</style>

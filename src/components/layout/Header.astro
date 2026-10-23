@@ -121,11 +121,11 @@ const images = Object.fromEntries(
     color: var(--navy);
   }
 
-  .main-nav__chevron {
+  :global(.main-nav__chevron) {
     transition: transform 0.3s var(--ease);
   }
 
-  [data-mega-open] .main-nav__chevron {
+  [data-mega-open] :global(.main-nav__chevron) {
     transform: rotate(180deg);
   }
 

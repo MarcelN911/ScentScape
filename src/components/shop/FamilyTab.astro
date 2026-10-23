@@ -1,0 +1,85 @@
+---
+import NoteMark from '../ui/NoteMark.astro';
+
+/** @typedef {{ label: string, value: string, count: number, color: string, active?: boolean }} Props */
+const { label, value, count, color, active = false } = Astro.props;
+---
+
+<button
+  class:list={['family-tab', { 'is-active': active }]}
+  type="button"
+  data-filter-family={value}
+>
+  <span class="family-tab__mark">
+    <NoteMark name={value} color={color} glyph={value ? '' : '✦'} size={30} />
+  </span>
+  <span>{label}</span>
+  <span class="family-tab__count">{count}</span>
+</button>
+
+<style>
+  .family-tab {
+    display: inline-flex;
+    flex: 1 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: -1px;
+    padding: 12px 16px 14px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 14px 14px 0 0;
+    background: none;
+    font: 600 15px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.55);
+    white-space: nowrap;
+    transition:
+      color 0.35s,
+      border-color 0.35s,
+      background 0.35s;
+  }
+
+  .family-tab:hover,
+  .family-tab.is-active {
+    color: var(--white);
+  }
+
+  .family-tab.is-active {
+    border-bottom-color: var(--peach);
+    background: rgb(var(--peach-rgb) / 0.08);
+  }
+
+  .family-tab__mark {
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(var(--sand-rgb) / 0.25);
+    filter: grayscale(0.85) brightness(0.75);
+    transform: scale(0.9) rotate(-8deg);
+    transition: all 0.5s cubic-bezier(0.2, 0.7, 0.2, 1.3);
+  }
+
+  .is-active .family-tab__mark {
+    box-shadow:
+      0 0 0 2px var(--navy),
+      0 0 0 4px var(--peach);
+    filter: none;
+    transform: scale(1.06);
+  }
+
+  .family-tab__count {
+    display: grid;
+    place-items: center;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: rgb(var(--white-rgb) / 0.08);
+    font: 700 11px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.55);
+    transition: all 0.35s;
+  }
+
+  .is-active .family-tab__count {
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

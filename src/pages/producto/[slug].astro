@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCatalog, getReviews } from '../../scripts/catalog/load.js';
+import { relatedTo } from '../../scripts/catalog/queries.js';
+import { reviewsForProduct } from '../../scripts/catalog/reviews.js';
+import { productSchema } from '../../scripts/seo/product-schema.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+import ProductBuy from '../../sections/product/ProductBuy.astro';
+import ProductDetails from '../../sections/product/ProductDetails.astro';
+import ProductGallery from '../../sections/product/ProductGallery.astro';
+import ProductHeading from '../../sections/product/ProductHeading.astro';
+import ProductPyramid from '../../sections/product/ProductPyramid.astro';
+import ProductReviews from '../../sections/product/ProductReviews.astro';
+import RelatedProducts from '../../sections/product/RelatedProducts.astro';
+import StickyBuy from '../../sections/product/StickyBuy.astro';
+
+export async function getStaticPaths() {
+  const catalog = await getCatalog();
+  return catalog.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product } = Astro.props;
+const catalog = await getCatalog();
+const reviews = reviewsForProduct(await getReviews(), product);
+const related = relatedTo(product, catalog);
+const summary = product.plainDescription.slice(0, 150) || `${product.name} en ScentScape.`;
+---
+
+<BaseLayout
+  title={`${product.name} | ScentScape`}
+  description={summary}
+  image={imageUrl(product.images[0], 1200)}
+>
+  <script type="application/ld+json" slot="head" set:html={productSchema(product, reviews)} />
+  <main class="product-page" data-product-page>
+    <section class="container product-page__top">
+      <ProductGallery product={product} />
+      <div class="product-page__info">
+        <ProductHeading product={product} />
+        <ProductBuy product={product} />
+        <ProductDetails product={product} />
+      </div>
+    </section>
+    {product.notes && <ProductPyramid product={product} />}
+    <ProductReviews product={product} reviews={reviews} />
+    <RelatedProducts products={related} />
+    <StickyBuy product={product} />
+  </main>
+</BaseLayout>
+
+<style>
+  .product-page {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 60% 50% at 25% 30%, rgb(212 175 125 / 0.12), transparent 70%),
+      var(--navy);
+  }
+
+  .product-page__top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+    padding-top: 108px;
+    padding-bottom: 60px;
+  }
+
+  .product-page__info {
+    min-width: 0;
+    padding-top: clamp(0px, 1.5vw, 20px);
+  }
+</style>
+
+<script>
+  import { onPage } from '../../scripts/core/lifecycle.js';
+  import { initProductPage } from '../../scripts/features/product/index.js';
+
+  onPage(initProductPage);
+</script>

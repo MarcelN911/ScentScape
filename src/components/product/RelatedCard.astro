@@ -1,0 +1,124 @@
+---
+import { metaLineOf, themeOf } from '../../scripts/catalog/theme.js';
+import { cartItemJson } from '../../scripts/cart/cart-item.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+import ProductStage from './ProductStage.astro';
+
+/** @typedef {{ product: object, index: number }} Props */
+const { product, index } = Astro.props;
+const image = imageUrl(product.images[0], 600);
+---
+
+<div class="related-card" data-reveal="up" style={`--reveal-delay:${(index % 4) * 90}ms`}>
+  <article class="related-card__body stage-host" data-tilt data-cursor="Ver">
+    {product.hasCoverPhoto ? (
+      <img
+        class="related-card__photo"
+        src={image}
+        alt={product.name}
+        loading="lazy"
+        draggable="false"
+      />
+    ) : (
+      <ProductStage image={image} alt={product.name} theme={themeOf(product)} />
+    )}
+    <a
+      class="related-card__link"
+      href={`/producto/${product.slug}/`}
+      aria-label={product.name}
+      draggable="false"
+    ></a>
+    <div class="related-card__info">
+      <div>
+        <p class="meta related-card__meta">{metaLineOf(product)}</p>
+        <h3 class="related-card__name">{product.name}</h3>
+        <span class="related-card__price">{formatCOP(product.price)}</span>
+      </div>
+      <button
+        class="related-card__add"
+        type="button"
+        aria-label={`Añadir ${product.name}`}
+        data-action="add-to-cart"
+        data-cart-item={cartItemJson(product)}
+      >
+        +
+      </button>
+    </div>
+  </article>
+</div>
+
+<style>
+  .related-card {
+    flex: 0 0 clamp(240px, 22vw, 300px);
+  }
+
+  .related-card__body {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 28px;
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+      translateY(var(--tilt-lift, 0px));
+    transition: transform 0.6s var(--ease);
+  }
+
+  .related-card__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ease);
+  }
+
+  .related-card__body:hover .related-card__photo {
+    transform: scale(1.08);
+  }
+
+  .related-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .related-card__info {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .related-card__meta {
+    margin: 0 0 6px;
+    color: rgb(var(--white-rgb) / 0.7);
+  }
+
+  .related-card__name {
+    margin: 0 0 6px;
+    font: 500 20px/1.05 var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  .related-card__price {
+    font: 600 14px/1 var(--font-sans);
+  }
+
+  .related-card__add {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 22px/1 var(--font-sans);
+    pointer-events: auto;
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import { cartItemJson } from '../../scripts/cart/cart-item.js';
+import { effectivePrice } from '../../scripts/catalog/sizes.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+import { imageUrl } from '../../scripts/utils/image.js';
+
+/** @typedef {{ product: object }} Props */
+const { product } = Astro.props;
+const first = product.sizes[0];
+---
+
+<div class="sticky-buy" data-sticky-buy aria-hidden="true">
+  <img class="sticky-buy__image" src={imageUrl(product.images[0], 120)} alt="" />
+  <div class="sticky-buy__text">
+    <p class="sticky-buy__name">{product.name}</p>
+    <p class="sticky-buy__detail" data-sticky-detail>
+      {first.label} · {formatCOP(effectivePrice(first))}
+    </p>
+  </div>
+  <button
+    class="sticky-buy__add"
+    type="button"
+    tabindex="-1"
+    data-action="add-to-cart"
+    data-sticky-add
+    data-cart-item={cartItemJson(product, first)}
+  >
+    Añadir
+  </button>
+</div>
+
+<style>
+  .sticky-buy {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    z-index: var(--z-sticky-buy);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(540px, calc(100vw - 32px));
+    padding: 8px 8px 8px 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    background: rgb(var(--navy-deep-rgb) / 0.92);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(20px);
+    transform: translate(-50%, 160%);
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1.2);
+  }
+
+  :global(html.has-sticky-buy) .sticky-buy {
+    transform: translate(-50%, 0);
+  }
+
+  .sticky-buy__image {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+  }
+
+  .sticky-buy__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sticky-buy__name {
+    margin: 0 0 4px;
+    overflow: hidden;
+    font: 800 16px/1 var(--font-sans);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .sticky-buy__detail {
+    margin: 0;
+    font: 500 12px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.6);
+  }
+
+  .sticky-buy__add {
+    height: 48px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+  }
+</style>

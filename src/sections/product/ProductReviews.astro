@@ -1,0 +1,119 @@
+---
+import ReviewCard from '../../components/review/ReviewCard.astro';
+import { averageRating, starsOf } from '../../scripts/catalog/reviews.js';
+import { formatRating } from '../../scripts/utils/format.js';
+
+/** @typedef {{ product: object, reviews: object[] }} Props */
+const { product, reviews } = Astro.props;
+const average = averageRating(reviews);
+const writeUrl = `/resenas/?producto=${encodeURIComponent(product.name)}`;
+const countText =
+  reviews.length === 1 ? 'Basado en 1 reseña' : `Basado en ${reviews.length} reseñas`;
+---
+
+<section class="container product-reviews">
+  <div class="product-reviews__head">
+    <div class="product-reviews__intro">
+      <h2 class="product-reviews__title">
+        Reseñas <em>de {product.name}</em>
+      </h2>
+      {reviews.length > 0 && (
+        <div class="product-reviews__score">
+          <span class="product-reviews__average">{formatRating(average)}</span>
+          <span class="product-reviews__summary">
+            <span class="product-reviews__stars">{starsOf(average)}</span>
+            <span>{countText}</span>
+          </span>
+        </div>
+      )}
+    </div>
+    <a class="btn btn--outline" href={writeUrl}>
+      Escribir una reseña
+    </a>
+  </div>
+  {reviews.length > 0 ? (
+    <div class="product-reviews__grid">
+      {reviews.map((review, index) => (
+        <ReviewCard review={review} index={index} />
+      ))}
+    </div>
+  ) : (
+    <p class="product-reviews__empty">
+      Aún no hay reseñas de {product.name}. ¿Ya lo tienes? Cuéntanos qué te pareció.
+    </p>
+  )}
+</section>
+
+<style>
+  .product-reviews {
+    padding-top: 40px;
+    padding-bottom: 70px;
+  }
+
+  .product-reviews__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+
+  .product-reviews__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .product-reviews__title {
+    margin: 0;
+    font: 500 clamp(38px, 4.6vw, 72px) / 0.95 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .product-reviews__title em {
+    font: italic 400 1.05em/1 var(--font-serif);
+    letter-spacing: 0;
+    color: var(--peach);
+  }
+
+  .product-reviews__score {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .product-reviews__average {
+    font: 500 44px/1 var(--font-serif);
+    color: var(--sand);
+  }
+
+  .product-reviews__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font: 500 12px/1 var(--font-sans);
+    color: rgb(var(--white-rgb) / 0.55);
+  }
+
+  .product-reviews__stars {
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  .product-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 18px;
+  }
+
+  .product-reviews__empty {
+    margin: 0;
+    padding: 34px;
+    border-radius: 26px;
+    border: 1px dashed rgb(var(--peach-rgb) / 0.3);
+    font: italic 400 22px/1.4 var(--font-serif);
+    color: rgb(var(--white-rgb) / 0.75);
+  }
+</style>

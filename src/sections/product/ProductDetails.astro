@@ -1,0 +1,52 @@
+---
+import AccordionItem from '../../components/ui/AccordionItem.astro';
+import PaymentLogos from '../../components/ui/PaymentLogos.astro';
+import TrustMarquee from '../../components/product/TrustMarquee.astro';
+import { ORIGINAL_TEXT, SHIPPING_TEXT } from '../../data/product.js';
+import { descriptionHtml } from '../../scripts/catalog/description.js';
+
+/** @typedef {{ product: object }} Props */
+const { product } = Astro.props;
+const description = product.description
+  ? descriptionHtml(product.description)
+  : `<p>${product.name}.</p>`;
+---
+
+<TrustMarquee />
+<div class="details" data-accordion>
+  <AccordionItem number="I" title="Descripción" open>
+    <div class="details__description" set:html={description} />
+  </AccordionItem>
+  <AccordionItem number="II" title="Envíos y pagos">
+    <p>{SHIPPING_TEXT}</p>
+    <p class="details__label">Medios de pago</p>
+    <div class="details__payments">
+      <PaymentLogos />
+    </div>
+  </AccordionItem>
+  <AccordionItem number="III" title="Original garantizado">
+    <p>{ORIGINAL_TEXT}</p>
+  </AccordionItem>
+</div>
+
+<style>
+  .details {
+    border-bottom: 1px solid rgb(var(--white-rgb) / 0.12);
+  }
+
+  .details__description :global(strong) {
+    color: var(--sand);
+  }
+
+  .details .details__label {
+    margin-bottom: 12px;
+    font: 600 10px/1 var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--peach);
+  }
+
+  .details__payments {
+    margin-bottom: 24px;
+  }
+</style>

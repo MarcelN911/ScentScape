@@ -82,10 +82,6 @@ import CartPromo from './CartPromo.astro';
     color: var(--wine);
   }
 
-  .totals__row[hidden] {
-    display: none;
-  }
-
   .totals__label {
     font: 700 14px/1 var(--font-sans);
   }
@@ -136,7 +132,7 @@ import CartPromo from './CartPromo.astro';
     background: var(--addi);
   }
 
-  .totals__cta:not(.totals__cta--card) .totals__cta-icon--lock,
+  .totals__cta:not(.totals__cta--card) :global(.totals__cta-icon--lock),
   .totals__cta:not(.totals__cta--wa) .totals__cta-icon--wa {
     display: none;
   }

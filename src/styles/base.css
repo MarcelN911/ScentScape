@@ -65,6 +65,11 @@ input[type='range'] {
   outline-offset: 3px;
 }
 
+/* "hidden" soll immer verstecken, auch wenn eine Klasse display: flex setzt */
+[hidden] {
+  display: none !important;
+}
+
 html.is-locked {
   overflow: hidden;
 }
