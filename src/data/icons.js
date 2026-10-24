@@ -3,6 +3,7 @@ export const ICONS = {
   cart: {
     svg: '<path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/>',
   },
+  bag: { svg: '<path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
   search: { svg: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>' },
   menu: { svg: '<path d="M4 8h16M4 16h11"/>' },
   chevron: { svg: '<path d="M6 9l6 6 6-6"/>' },
@@ -13,7 +14,7 @@ export const ICONS = {
   },
   mute: { svg: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/>' },
   heart: {
-    svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+    svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>',
   },
   lock: {
     svg: '<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',

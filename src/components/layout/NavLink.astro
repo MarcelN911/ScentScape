@@ -1,0 +1,32 @@
+---
+/** @typedef {{ link: { key: string, label: string, href: string } }} Props */
+const { link } = Astro.props;
+---
+
+<a class="nav-link" href={link.href} data-nav-link={link.key}>
+  {link.label}
+</a>
+
+<style>
+  .nav-link {
+    padding: 11px 15px;
+    border-radius: 20px;
+    color: var(--cream);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .nav-link:hover {
+    background: rgb(var(--peach-rgb) / 0.1);
+    color: var(--sand);
+  }
+
+  .nav-link.is-active {
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

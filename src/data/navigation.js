@@ -1,121 +1,33 @@
-/*
- * Mega-Menü "Descubre".
- * preview: 'product' (Flasche aus dem Katalog), 'logo' oder 'seal' (Siegel mit ✓)
- * action: 'open-quiz' öffnet den Test statt einen Link
- */
-export const MEGA_GROUPS = [
-  {
-    label: 'Comprar',
-    items: [
-      {
-        key: 'shop',
-        title: 'Productos',
-        text: 'Toda la colección, por familia y género.',
-        href: '/productos/',
-        preview: 'product',
-        slug: 'khamrah',
-        accent: '#d9782e',
-      },
-      {
-        key: 'catalog',
-        title: 'Catálogo digital',
-        text: 'Hojéalo, compártelo por WhatsApp o descárgalo en PDF.',
-        href: '/catalogo/',
-        preview: 'product',
-        slug: 'amethyst',
-        accent: '#9a62c8',
-      },
-      {
-        key: 'gift',
-        title: 'Gift card',
-        text: 'Regala un monto y que elijan su aroma.',
-        href: '/gift-card/',
-        preview: 'product',
-        slug: 'amber-oud-ruby',
-        accent: '#c8303e',
-      },
-    ],
-  },
-  {
-    label: 'Elige tu aroma',
-    items: [
-      {
-        key: 'quiz',
-        title: 'Test olfativo',
-        text: 'Tres preguntas y te mostramos tu match.',
-        action: 'open-quiz',
-        cta: 'Hacer el test',
-        preview: 'product',
-        slug: 'cloud-pink',
-        accent: '#ee9cc0',
-      },
-      {
-        key: 'families',
-        title: 'Familias olfativas',
-        text: 'Especiada, floral, amaderada, fresca y dulce.',
-        href: '/#familias',
-        section: true,
-        preview: 'product',
-        slug: 'boss-bottled-tonic',
-        accent: '#e0a848',
-      },
-      {
-        key: 'reviews',
-        title: 'Reseñas',
-        text: 'Lo que dicen nuestros clientes en toda Colombia.',
-        href: '/#resenas',
-        section: true,
-        preview: 'product',
-        slug: 'club-de-nuit-intense-ndt',
-        accent: '#8a96b0',
-      },
-    ],
-  },
-  {
-    label: 'ScentScape',
-    items: [
-      {
-        key: 'faq',
-        title: 'Preguntas frecuentes',
-        text: 'Envíos, pagos, originalidad y regalos.',
-        href: '/#faq',
-        section: true,
-        preview: 'seal',
-        accent: '#f0d2aa',
-      },
-      {
-        key: 'about',
-        title: 'Nosotros',
-        text: 'Nuestra historia desde Medellín.',
-        href: '/nosotros/',
-        preview: 'logo',
-        accent: '#f0be91',
-      },
-      {
-        key: 'original',
-        title: 'Original garantizado',
-        text: 'Sellado de fábrica. Verifica el código de lote.',
-        href: '/original/',
-        preview: 'seal',
-        accent: '#d4af7d',
-      },
-    ],
-  },
+/* Alle Menüs der Seite: Header, Dropdown "Servicios", Vollbild-Menü und Footer. */
+
+export const NAV_LINKS = [
+  { key: 'home', label: 'Inicio', href: '/' },
+  { key: 'shop', label: 'Productos', href: '/productos/' },
+  { key: 'services', label: 'Servicios', href: '/servicios/', dropdown: true },
+  { key: 'about', label: 'Nosotros', href: '/nosotros/' },
+  { key: 'contact', label: 'Contacto', href: '/contacto/' },
 ];
 
-export const MOBILE_PRIMARY = [
+export const SERVICE_LINKS = [
+  { title: 'Test Olfativo', text: 'Encuentra tu aroma ideal', href: '/test-olfativo/' },
+  { title: 'Gift Card', text: 'Regala distinción', href: '/gift-card/' },
+  { title: 'Catálogo Digital', text: 'Tu PDF para WhatsApp', href: '/catalogo/' },
+  { title: 'Original Garantizado', text: 'Verifica tu perfume', href: '/original/' },
+  { title: 'Reseñas', text: 'Comparte tu experiencia', href: '/resenas/' },
+  { title: 'El Ritual', text: 'Así llega tu perfume', href: '/el-ritual/' },
+  { title: 'Te asesoramos', text: 'Envíos, pagos y más', href: '/te-asesoramos/' },
+];
+
+/* Pfade, bei denen im Header "Servicios" markiert wird */
+export const SERVICE_PATHS = ['/servicios/', '/regalo/', ...SERVICE_LINKS.map((link) => link.href)];
+
+export const MENU_LINKS = [
   { label: 'Inicio', href: '/' },
   { label: 'Productos', href: '/productos/' },
-  { label: 'Familias', href: '/#familias' },
-  { label: 'Reseñas', href: '/#resenas' },
-];
-
-export const MOBILE_SECONDARY = [
-  { label: 'Test olfativo', action: 'open-quiz' },
-  { label: 'Catálogo digital', href: '/catalogo/' },
-  { label: 'Gift card', href: '/gift-card/' },
-  { label: 'Original garantizado', href: '/original/' },
+  { label: 'Servicios', href: '/servicios/' },
+  ...SERVICE_LINKS.map(({ title, href }) => ({ label: title, href })),
   { label: 'Nosotros', href: '/nosotros/' },
+  { label: 'Contacto', href: '/contacto/' },
 ];
 
 export const FOOTER_COLUMNS = [
@@ -123,30 +35,23 @@ export const FOOTER_COLUMNS = [
     title: 'Tienda',
     links: [
       { label: 'Productos', href: '/productos/' },
+      { label: 'Para Dama', href: '/productos/?para=dama' },
+      { label: 'Para Caballero', href: '/productos/?para=caballero' },
+      { label: 'Unisex', href: '/productos/?para=unisex' },
+    ],
+  },
+  {
+    title: 'Servicios',
+    links: SERVICE_LINKS.map(({ title, href }) => ({ label: title, href })),
+  },
+  {
+    title: 'ScentScape',
+    links: [
+      { label: 'Inicio', href: '/' },
       { label: 'Nosotros', href: '/nosotros/' },
-      { label: 'Reseñas', href: '/resenas/' },
-    ],
-  },
-  {
-    title: 'Descubre',
-    links: [
-      { label: 'Test Olfativo', action: 'open-quiz' },
-      { label: 'Catálogo digital', href: '/catalogo/' },
-      { label: 'Gift card', href: '/gift-card/' },
-    ],
-  },
-  {
-    title: 'Ayuda',
-    links: [
-      { label: 'Original garantizado', href: '/original/' },
       { label: 'Contacto', href: '/contacto/' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
-      { label: 'Términos y Condiciones', href: '/terminos/' },
-      { label: 'Política de Privacidad', href: '/privacidad/' },
+      { label: 'Términos', href: '/terminos/' },
+      { label: 'Privacidad', href: '/privacidad/' },
     ],
   },
 ];

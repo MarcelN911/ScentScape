@@ -1,27 +1,40 @@
-<div class="toast" role="status" aria-live="polite" data-toast transition:persist="toast"></div>
+<div class="toast" role="status" aria-live="polite" data-toast transition:persist="toast">
+  <span data-toast-text></span>
+  <span class="toast__bag" data-toast-bag hidden>
+    Bolsa (<span data-cart-count>0</span>)
+  </span>
+</div>
 
 <style>
   .toast {
     position: fixed;
     left: 50%;
-    top: 84px;
+    bottom: 26px;
     z-index: var(--z-toast);
-    padding: 14px 22px;
-    border-radius: var(--radius-pill);
-    background: var(--peach);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px;
+    border-radius: 28px;
+    background: var(--sand);
     color: var(--navy);
-    font: 700 14px/1 var(--font-sans);
+    font: 400 13px var(--font-sans);
     white-space: nowrap;
-    box-shadow: 0 20px 40px rgb(0 0 0 / 0.35);
     opacity: 0;
-    transform: translate(-50%, -40px);
-    transition: all 0.5s var(--ease-back);
+    transform: translate(-50%, 30px);
+    transition:
+      transform 0.6s var(--ease),
+      opacity 0.4s;
     pointer-events: none;
   }
 
   .toast.is-visible {
     opacity: 1;
-    transform: translate(-50%, 0) rotate(-1deg);
+    transform: translate(-50%, 0);
+  }
+
+  .toast__bag {
+    font-weight: 600;
   }
 </style>
 
@@ -31,11 +44,12 @@
   const toast = document.querySelector('[data-toast]');
   let timer = 0;
 
-  function show(message) {
-    toast.textContent = message;
+  function show({ message, cart = false }) {
+    toast.querySelector('[data-toast-text]').textContent = message;
+    toast.querySelector('[data-toast-bag]').hidden = !cart;
     toast.classList.add('is-visible');
     clearTimeout(timer);
-    timer = setTimeout(() => toast.classList.remove('is-visible'), 2400);
+    timer = setTimeout(() => toast.classList.remove('is-visible'), 2600);
   }
 
   listen(EVENTS.toast, show);

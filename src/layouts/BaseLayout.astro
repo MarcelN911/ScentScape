@@ -1,14 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import CartDrawer from '../components/cart/CartDrawer.astro';
-import AdvisorButton from '../components/layout/AdvisorButton.astro';
-import Cursor from '../components/layout/Cursor.astro';
 import Curtain from '../components/layout/Curtain.astro';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import MobileMenu from '../components/layout/MobileMenu.astro';
+import MusicPlayer from '../components/layout/MusicPlayer.astro';
 import ScrollProgress from '../components/layout/ScrollProgress.astro';
-import QuizModal from '../components/quiz/QuizModal.astro';
 import Toast from '../components/layout/Toast.astro';
 import '../styles/global.css';
 
@@ -19,6 +17,9 @@ import '../styles/global.css';
  * @property {string} [image]    Vorschaubild für WhatsApp, Facebook usw.
  * @property {boolean} [noindex] Seite nicht bei Google aufnehmen
  * @property {boolean} [bare]    ohne Navigation und Footer (z. B. Druckversion)
+ * @property {string} [curtainX]  Lage der Lichtlinie im Vorhang ab 900px Breite, z. B. '47.619%'
+ * @property {'line' | 'row' | 'none'} [curtainMode] senkrechte Linie, waagerechte Linie oder keine
+ * @property {boolean} [footer]  Footer anzeigen (Regalo hat keinen)
  */
 
 const {
@@ -27,6 +28,9 @@ const {
   image = '/assets/img/og-banner.png',
   noindex = false,
   bare = false,
+  curtainX = '50%',
+  curtainMode = 'line',
+  footer = true,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
@@ -49,14 +53,14 @@ const ogImage = new URL(image, Astro.site);
     <meta property="og:locale" content="es_CO" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta name="theme-color" content="#151932" />
+    <meta name="theme-color" content="#161A32" />
     <slot name="head" />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
     <ClientRouter fallback="none" />
   </head>
-  <body>
+  <body data-curtain-x={curtainX} data-curtain-mode={curtainMode}>
     {!bare && (
       <>
         <ScrollProgress />
@@ -65,15 +69,13 @@ const ogImage = new URL(image, Astro.site);
       </>
     )}
     <slot />
+    {!bare && footer && <Footer />}
     {!bare && (
       <>
-        <Footer />
-        <AdvisorButton />
         <Toast />
         <CartDrawer />
-        <QuizModal />
+        <MusicPlayer />
         <Curtain />
-        <Cursor />
       </>
     )}
   </body>
@@ -84,11 +86,9 @@ const ogImage = new URL(image, Astro.site);
   import { initParallax } from '../scripts/effects/parallax.js';
   import { initPointerVars } from '../scripts/effects/pointer-vars.js';
   import { initReveal } from '../scripts/effects/reveal.js';
-  import { initQuiz } from '../scripts/features/quiz/index.js';
   import '../scripts/features/wishlist.js';
 
   onFirstPage(initPointerVars);
-  onFirstPage(initQuiz);
   onPage(initReveal);
   onPage(initParallax);
 </script>

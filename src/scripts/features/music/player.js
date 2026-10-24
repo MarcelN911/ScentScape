@@ -1,67 +1,78 @@
-import { showToast } from '../../core/events.js';
+/*
+ * Bedienung des Players. Wer Musik nicht ausgeschaltet hat, hört sie ab dem ersten Klick oder Tastendruck
+ * irgendwo auf der Seite (Browser erlauben Ton erst nach einer Nutzeraktion).
+ */
 import * as player from './audio.js';
-import { renderPlayer, toggleList } from './view.js';
+import { renderPlayer, renderTime, setListOpen } from './view.js';
 
 const { music } = player;
 
-async function startPlayback(root) {
-  try {
-    await player.play();
-  } catch {
-    player.pause();
-    showToast('La música llega muy pronto ♪');
-  }
-  renderPlayer(root);
+function togglePlay() {
+  if (music.playing) player.pause();
+  else player.play();
 }
 
-function togglePlay(root) {
-  if (music.playing) {
-    player.pause();
-    renderPlayer(root);
-    return;
-  }
-  startPlayback(root);
+function pickTrack(index) {
+  player.setTrack(index);
+  if (!music.playing) player.play();
 }
 
-function switchTrack(root, index) {
-  player.loadTrack(index);
-  startPlayback(root);
-}
-
-function bindControls(root) {
-  root.querySelector('[data-player-play]').addEventListener('click', () => togglePlay(root));
-  root
-    .querySelector('[data-player-next]')
-    .addEventListener('click', () => switchTrack(root, music.index + 1));
-  root.querySelectorAll('[data-player-list-toggle]').forEach((button) => {
-    button.addEventListener('click', () => toggleList(root));
-  });
+function bindPlayback(root, render) {
+  const on = (selector, action) =>
+    root.querySelector(selector).addEventListener('click', () => (action(), render()));
+  on('[data-player-play]', togglePlay);
+  on('[data-player-next]', () => player.setTrack(music.index + 1));
   root.querySelectorAll('[data-track]').forEach((button) => {
-    button.addEventListener('click', () => switchTrack(root, Number(button.dataset.track)));
+    button.addEventListener('click', () => (pickTrack(Number(button.dataset.track)), render()));
   });
 }
 
-function bindSound(root) {
+function bindSound(root, render) {
   root.querySelector('[data-player-mute]').addEventListener('click', () => {
     player.setMuted(!music.muted);
-    renderPlayer(root);
+    render();
   });
   root.querySelector('[data-player-volume]').addEventListener('input', (event) => {
     player.setVolume(Number(event.target.value));
-    renderPlayer(root);
+    render();
   });
 }
 
-function bindAudio(root) {
-  music.audio.addEventListener('timeupdate', () => renderPlayer(root));
-  music.audio.addEventListener('ended', () => switchTrack(root, music.index + 1));
+function bindList(root) {
+  root.querySelectorAll('[data-player-list-toggle]').forEach((button) => {
+    button.addEventListener('click', () => setListOpen(root, !root.hasAttribute('data-list-open')));
+  });
+  document.addEventListener(
+    'click',
+    (event) => root.contains(event.target) || setListOpen(root, false),
+  );
+  document.addEventListener(
+    'keydown',
+    (event) => event.key === 'Escape' && setListOpen(root, false),
+  );
+}
+
+function startOnFirstInteraction(root, render) {
+  if (!player.wantsMusic()) return;
+  const start = (event) => {
+    if (root.contains(event.target)) return;
+    removeEventListener('pointerdown', start, true);
+    removeEventListener('keydown', start, true);
+    if (!music.playing) player.play();
+    render();
+  };
+  addEventListener('pointerdown', start, true);
+  addEventListener('keydown', start, true);
 }
 
 export function initMusicPlayer() {
   const root = document.querySelector('[data-player]');
   if (!root) return;
-  bindControls(root);
-  bindSound(root);
-  bindAudio(root);
-  renderPlayer(root);
+  const render = () => renderPlayer(root);
+  bindPlayback(root, render);
+  bindSound(root, render);
+  bindList(root);
+  startOnFirstInteraction(root, render);
+  setInterval(() => (player.tick() ? render() : renderTime(root)), 1000);
+  render();
 }

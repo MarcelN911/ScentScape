@@ -1,0 +1,8 @@
+---
+/** Sprechblase von WhatsApp, Farbe über color. @typedef {{ size?: number, color?: string }} Props */
+const { size = 16, color = 'var(--whatsapp)' } = Astro.props;
+---
+
+<svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden="true">
+  <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"></path>
+</svg>

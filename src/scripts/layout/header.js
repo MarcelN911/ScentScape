@@ -1,59 +1,52 @@
-const SHOP_PATHS = ['/productos', '/producto/'];
-const DISCOVER_PATHS = ['/original', '/gift-card', '/catalogo', '/nosotros'];
+/*
+ * Header: Glas-Hintergrund ab 40px Scroll, beim Runterscrollen ausblenden, beim Hochscrollen zeigen.
+ * Dazu die Markierung des aktiven Menüpunkts.
+ */
+import { SERVICE_PATHS } from '../../data/navigation.js';
+
+const SOLID_FROM = 40;
+const HIDE_FROM = 320;
+const state = { lastY: 0, hidden: false, frame: 0 };
+
+function nextHidden(header, y) {
+  const dropdownOpen = header.querySelector('.is-open');
+  if (y < state.lastY - 2 || y < HIDE_FROM) return false;
+  if (!dropdownOpen && y > state.lastY + 2) return true;
+  return state.hidden;
+}
+
+function update(header) {
+  state.frame = 0;
+  const y = scrollY;
+  state.hidden = nextHidden(header, y);
+  header.classList.toggle('is-solid', y > SOLID_FROM);
+  header.classList.toggle('is-hidden', state.hidden);
+  state.lastY = y;
+}
+
+export function initHeader() {
+  const header = document.querySelector('[data-header]');
+  if (!header) return;
+  const request = () => (state.frame ||= requestAnimationFrame(() => update(header)));
+  addEventListener('scroll', request, { passive: true });
+  document.addEventListener('astro:page-load', request);
+  update(header);
+}
 
 function sectionOf(path) {
   if (path === '/') return 'home';
-  if (SHOP_PATHS.some((prefix) => path.startsWith(prefix))) return 'shop';
-  return DISCOVER_PATHS.some((prefix) => path.startsWith(prefix)) ? 'discover' : null;
+  if (path.startsWith('/producto')) return 'shop';
+  if (SERVICE_PATHS.includes(path)) return 'services';
+  if (path.startsWith('/nosotros')) return 'about';
+  return path.startsWith('/contacto') ? 'contact' : null;
 }
 
-/** Hebt in der Navigation den Bereich hervor, in dem man sich gerade befindet. */
+/** Hebt den Menüpunkt hervor, in dessen Bereich man sich gerade befindet. */
 export function markActiveLinks() {
   const section = sectionOf(location.pathname);
   document.querySelectorAll('[data-nav-link]').forEach((link) => {
-    link.classList.toggle('is-active', link.dataset.navLink === section);
+    const active = link.dataset.navLink === section;
+    link.classList.toggle('is-active', active);
+    link.toggleAttribute('aria-current', active);
   });
-  document
-    .querySelector('[data-mega-toggle]')
-    ?.classList.toggle('is-active', section === 'discover');
-}
-
-function setOpen(root, open) {
-  root.toggleAttribute('data-mega-open', open);
-  root.querySelector('[data-mega-toggle]').setAttribute('aria-expanded', String(open));
-}
-
-function showPreview(root, key) {
-  root.querySelectorAll('[data-mega-preview]').forEach((preview) => {
-    preview.classList.toggle('is-active', preview.dataset.megaPreview === key);
-  });
-  root.querySelectorAll('[data-mega-item]').forEach((item) => {
-    item.classList.toggle('is-active', item.dataset.megaItem === key);
-  });
-}
-
-function bindPreviews(root) {
-  root.querySelectorAll('[data-mega-item]').forEach((item) => {
-    const activate = () => showPreview(root, item.dataset.megaItem);
-    item.addEventListener('mouseenter', activate);
-    item.addEventListener('focus', activate);
-    item.addEventListener('click', () => setOpen(root, false));
-  });
-}
-
-function bindOpenClose(root) {
-  const toggle = root.querySelector('[data-mega-toggle]');
-  toggle.addEventListener('click', () => setOpen(root, !root.hasAttribute('data-mega-open')));
-  toggle.addEventListener('mouseenter', () => setOpen(root, true));
-  root.addEventListener('mouseleave', () => setOpen(root, false));
-  document.addEventListener('keydown', (event) => event.key === 'Escape' && setOpen(root, false));
-  document.addEventListener('astro:before-preparation', () => setOpen(root, false));
-}
-
-export function initMegaMenu() {
-  const root = document.querySelector('[data-mega]');
-  if (!root) return;
-  showPreview(root, root.querySelector('[data-mega-item]').dataset.megaItem);
-  bindPreviews(root);
-  bindOpenClose(root);
 }

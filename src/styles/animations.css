@@ -198,10 +198,9 @@
 /* Bild, das in den Warenkorb fliegt (scripts/cart/fly.js) */
 .cart-flyer {
   position: fixed;
-  z-index: 9999;
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
+  z-index: 200;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
   pointer-events: none;
-  filter: drop-shadow(0 10px 20px rgb(0 0 0 / 0.5));
 }

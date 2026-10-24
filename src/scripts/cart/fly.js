@@ -1,51 +1,56 @@
-/* Das Produktbild fliegt vom Button in einem Bogen zum Warenkorb-Symbol. */
+/*
+ * Das Produktbild fliegt in einem Bogen zur Bolsa im Header, danach hüpft die Bolsa kurz.
+ * Startfläche ist das nächste Element mit [data-fly-source] (z. B. die ganze Karte), sonst der Button.
+ */
 import { prefersReducedMotion } from '../utils/motion.js';
 
-const BUMP = [
-  { transform: 'scale(1)' },
-  { transform: 'scale(1.18) rotate(-4deg)' },
-  { transform: 'scale(.96)' },
-  { transform: 'scale(1)' },
-];
+export const FLIGHT_MS = 950;
+const BUMP = [{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }];
 
-function centerOf(element) {
-  const box = element.getBoundingClientRect();
-  return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
-}
-
-function createFlyer(image, start) {
+function createFlyer(image, box) {
   const flyer = document.createElement('img');
   flyer.src = image;
   flyer.className = 'cart-flyer';
-  flyer.style.left = `${start.x - 40}px`;
-  flyer.style.top = `${start.y - 40}px`;
+  Object.assign(flyer.style, {
+    left: `${box.left}px`,
+    top: `${box.top}px`,
+    width: `${box.width}px`,
+    height: `${box.height}px`,
+  });
   document.body.append(flyer);
   return flyer;
 }
 
 function flightPath(dx, dy) {
   return [
-    { transform: 'translate(0, 0) scale(1) rotate(0)' },
+    { transform: 'translate(0,0) scale(1)', opacity: 1 },
     {
-      transform: `translate(${dx * 0.4}px, ${Math.min(dy, 0) - 140}px) scale(1.1) rotate(-20deg)`,
+      transform: `translate(${dx * 0.4}px,${dy * 0.4 - 120}px) scale(.5) rotate(-8deg)`,
       offset: 0.45,
     },
-    { transform: `translate(${dx}px, ${dy}px) scale(.12) rotate(30deg)`, opacity: 0.4 },
+    { transform: `translate(${dx}px,${dy}px) scale(.06) rotate(12deg)`, opacity: 0.2 },
   ];
+}
+
+function offsetBetween(box, target) {
+  const end = target.getBoundingClientRect();
+  return {
+    dx: end.left + end.width / 2 - (box.left + box.width / 2),
+    dy: end.top + end.height / 2 - (box.top + box.height / 2),
+  };
 }
 
 function land(flyer, target) {
   flyer.remove();
-  target.animate(BUMP, { duration: 500, easing: 'ease-out' });
+  target.animate(BUMP, { duration: 420, easing: 'cubic-bezier(.3,1.6,.5,1)' });
 }
 
 export function flyToCart(source, image) {
   const target = document.querySelector('[data-cart-target]');
   if (!source || !target || !image || prefersReducedMotion()) return;
-  const start = centerOf(source);
-  const end = centerOf(target);
-  const flyer = createFlyer(image, start);
-  const path = flightPath(end.x - start.x, end.y - start.y);
-  const flight = flyer.animate(path, { duration: 900, easing: 'cubic-bezier(.5, 0, .3, 1)' });
-  flight.onfinish = () => land(flyer, target);
+  const box = (source.closest('[data-fly-source]') ?? source).getBoundingClientRect();
+  const flyer = createFlyer(image, box);
+  const { dx, dy } = offsetBetween(box, target);
+  const options = { duration: FLIGHT_MS, easing: 'cubic-bezier(.5,0,.2,1)' };
+  flyer.animate(flightPath(dx, dy), options).onfinish = () => land(flyer, target);
 }

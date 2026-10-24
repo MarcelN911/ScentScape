@@ -1,6 +1,5 @@
-/* Absenden: Code bestätigen, Bestellung speichern, WhatsApp öffnen, Warenkorb leeren. */
+/* Absenden: Code bestätigen, Bestellung in nexomar speichern, WhatsApp öffnen, Bolsa leeren. */
 import { confirmCode, getRule, removeCode } from '../cart/discount.js';
-import { getPreferences, updatePreferences } from '../cart/preferences.js';
 import { summaryOf } from '../cart/pricing.js';
 import { clearCart, getItems } from '../cart/store.js';
 import { whatsappUrl } from '../utils/whatsapp.js';
@@ -10,12 +9,7 @@ import { saveOrder } from './order.js';
 export function currentOrder() {
   const items = getItems();
   const rule = getRule();
-  return { items, rule, summary: summaryOf(items, rule), preferences: getPreferences() };
-}
-
-/* Das Fenster muss direkt beim Klick aufgehen, sonst blockiert der Browser es als Pop-up. */
-function openBlankTab() {
-  return window.open('', '_blank');
+  return { items, rule, summary: summaryOf(items, rule) };
 }
 
 function finish(order, customer, tab) {
@@ -24,19 +18,16 @@ function finish(order, customer, tab) {
   saveOrder(customer, order.items, order.rule);
   clearCart();
   removeCode();
-  updatePreferences({ gift: false, note: '', date: '' });
-  return message;
 }
 
-/** Gibt { error } oder { message, total, modeKey } zurück. */
+/** Gibt null oder { message } bei einem Fehler zurück. Das Fenster öffnet direkt beim Klick (Pop-up-Sperre). */
 export async function submitOrder(customer) {
-  const tab = openBlankTab();
+  const tab = window.open('', '_blank');
   const codeError = await confirmCode(customer.phone, getItems());
   if (codeError) {
     tab?.close();
-    return { error: { message: codeError } };
+    return { message: codeError };
   }
-  const order = currentOrder();
-  const message = finish(order, customer, tab);
-  return { message, total: order.summary.total, modeKey: order.preferences.payMode };
+  finish(currentOrder(), customer, tab);
+  return null;
 }

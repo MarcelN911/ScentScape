@@ -4,14 +4,23 @@ import { lineMetaOf } from '../line-meta.js';
 import { lineTotal } from '../pricing.js';
 import { changeQuantity, getItems, removeItem } from '../store.js';
 
+const FALLBACK_IMAGE = '/assets/img/scentscape-logo.png';
+
+function fillPrices(line, item) {
+  const old = item.salePrice ? formatCOP(item.regularPrice * item.quantity) : '';
+  const total = item.regularPrice ? formatCOP(lineTotal(item)) : 'Consultar';
+  line.querySelector('[data-line-old]').textContent = old;
+  line.querySelector('[data-line-total]').textContent = total;
+  line.querySelector('[data-line-sale]').hidden = !item.salePrice;
+}
+
 function fillLine(line, item) {
   line.dataset.sku = item.sku;
-  line.classList.toggle('is-gift-card', Boolean(item.giftCard));
-  line.querySelector('[data-line-image]').src = item.image ?? '';
+  line.querySelector('[data-line-image]').src = item.image || FALLBACK_IMAGE;
   line.querySelector('[data-line-name]').textContent = item.name;
-  line.querySelector('[data-line-meta]').textContent = lineMetaOf(item);
+  line.querySelector('[data-line-meta]').textContent = lineMetaOf(item) || 'ScentScape';
   line.querySelector('[data-line-qty]').textContent = item.quantity;
-  line.querySelector('[data-line-total]').textContent = formatCOP(lineTotal(item));
+  fillPrices(line, item);
 }
 
 function removeStaleLines(container, items) {

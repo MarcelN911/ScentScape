@@ -1,15 +1,19 @@
 ---
-import FooterLink from './FooterLink.astro';
-
-/** @typedef {{ column: { title: string, links: object[] } }} Props */
+/** @typedef {{ column: { title: string, links: { label: string, href?: string }[] } }} Props */
 const { column } = Astro.props;
 ---
 
 <div class="footer-column">
-  <h4 class="footer-column__title">{column.title}</h4>
-  {column.links.map((link) => (
-    <FooterLink link={link} />
-  ))}
+  <p class="footer-column__title">{column.title}</p>
+  {column.links.map((link) =>
+    link.href ? (
+      <a class="footer-column__link" href={link.href}>
+        {link.label}
+      </a>
+    ) : (
+      <span class="footer-column__text">{link.label}</span>
+    ),
+  )}
 </div>
 
 <style>
@@ -20,10 +24,30 @@ const { column } = Astro.props;
   }
 
   .footer-column__title {
-    margin: 0 0 4px;
-    font: 700 12px/1 var(--font-sans);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    margin: 0 0 6px;
     color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .footer-column__link,
+  .footer-column__text {
+    display: inline-block;
+    width: fit-content;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 15px var(--font-sans);
+    transition:
+      color 0.3s,
+      transform 0.4s;
+  }
+
+  .footer-column__text {
+    color: rgb(var(--cream-rgb) / 0.65);
+  }
+
+  .footer-column__link:hover {
+    color: var(--sand);
+    transform: translateX(6px);
   }
 </style>

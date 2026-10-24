@@ -1,0 +1,143 @@
+---
+import { CHECKOUT_FIELDS } from '../../data/checkout.js';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+import CheckoutField from './CheckoutField.astro';
+
+const single = CHECKOUT_FIELDS.filter((field) => !field.row);
+const paired = CHECKOUT_FIELDS.filter((field) => field.row);
+const [name, phone, ...rest] = single;
+---
+
+<div class="checkout" data-when-view="checkout">
+  <button class="checkout__back" type="button" data-action="cart-back">
+    ← Volver a la bolsa
+  </button>
+  <p class="checkout__intro">Un paso más y tu fragancia estará en camino.</p>
+  <p class="checkout__privacy">
+    Tus datos solo se usan para tu pedido y para generar el mensaje de WhatsApp.
+  </p>
+  <form class="checkout__form" data-checkout-form novalidate>
+    <CheckoutField field={name} />
+    <CheckoutField field={phone} />
+    <div class="checkout__pair">
+      {paired.map((field) => (
+        <CheckoutField field={field} />
+      ))}
+    </div>
+    {rest.map((field) => (
+      <CheckoutField field={field} />
+    ))}
+    <p class="checkout__error" data-checkout-error></p>
+    <div class="checkout__total">
+      <span>Total</span>
+      <span class="checkout__amount">
+        <span data-cart-total>$0</span> <small>COP</small>
+      </span>
+    </div>
+    <button class="checkout__submit" type="submit" data-checkout-submit>
+      <WhatsAppIcon size={16} color="#06210f" />
+      Enviar pedido por WhatsApp
+    </button>
+  </form>
+</div>
+
+<style>
+  .checkout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 18px;
+    overflow: auto;
+    padding: 0 28px 28px;
+  }
+
+  .checkout__back {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--peach);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .checkout__intro {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.8);
+    font: 300 15px/1.6 var(--font-sans);
+  }
+
+  .checkout__privacy {
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 14px;
+    background: rgb(var(--peach-rgb) / 0.08);
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 13px/1.6 var(--font-sans);
+  }
+
+  .checkout__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .checkout__pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .checkout__error {
+    min-height: 18px;
+    margin: 0;
+    color: var(--error);
+    font: 400 13px var(--font-sans);
+  }
+
+  .checkout__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 16px 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .checkout__amount {
+    color: var(--sand);
+    font: 400 28px var(--font-serif);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .checkout__amount small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .checkout__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 56px;
+    border: 0;
+    border-radius: 28px;
+    background: var(--whatsapp);
+    color: #06210f;
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .checkout__submit:disabled {
+    opacity: 0.6;
+  }
+</style>

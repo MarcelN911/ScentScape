@@ -1,0 +1,55 @@
+---
+/** @typedef {{ field: import('../../data/checkout.js').CHECKOUT_FIELDS[number] }} Props */
+const { field } = Astro.props;
+---
+
+<label class="field">
+  <span class="field__label">
+    {field.label}
+    {field.optional && <span class="field__optional"> (opcional)</span>}
+  </span>
+  <input
+    class="field__input"
+    name={field.name}
+    type={field.type ?? 'text'}
+    placeholder={field.placeholder}
+    autocomplete={field.autocomplete ?? 'off'}
+  />
+</label>
+
+<style>
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field__label {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .field__optional {
+    letter-spacing: 1px;
+    text-transform: none;
+    opacity: 0.7;
+  }
+
+  .field__input {
+    min-width: 0;
+    height: 52px;
+    padding: 0 18px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 16px;
+    background: rgb(var(--navy-rgb) / 0.5);
+    color: var(--cream);
+    font: 400 15px var(--font-sans);
+    outline: none;
+  }
+
+  .field__input:focus {
+    border-color: var(--peach);
+  }
+</style>

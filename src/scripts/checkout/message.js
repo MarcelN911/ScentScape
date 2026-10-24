@@ -1,11 +1,5 @@
 /* Baut die komplette WhatsApp-Nachricht mit der Bestellung. */
-import { discountLines, giftLines, itemLine, money, shippingLine } from './message-lines.js';
-
-const PAY_LABELS = {
-  wa: 'WhatsApp (Nequi, Daviplata, transferencia o contraentrega)',
-  card: 'Tarjeta o PSE — por favor envíenme el enlace de pago Wompi',
-  addi: 'Addi a cuotas — por favor envíenme el enlace de Addi',
-};
+import { discountLines, itemLine, money, shippingLine } from './message-lines.js';
 
 function customerLines(customer) {
   const reference = customer.reference ? [`*Referencia:* ${customer.reference}`] : [];
@@ -32,22 +26,15 @@ const INTRO = [
   'Hola, quiero hacer un pedido con la siguiente información:',
 ];
 
-function totalLines(summary, payMode) {
-  return [
-    `*Pago:* ${PAY_LABELS[payMode] ?? PAY_LABELS.wa}`,
-    `*Total a pagar: ${money(summary.total)}*`,
-  ];
-}
-
-/** order = { customer, items, summary, rule, preferences }. Die Blöcke stehen durch Leerzeilen getrennt. */
+/** order = { customer, items, summary, rule }. Die Blöcke stehen durch Leerzeilen getrennt. */
 export function orderMessage(order) {
-  const { customer, items, summary, rule, preferences } = order;
+  const { customer, items, summary, rule } = order;
   const blocks = [
     INTRO,
-    [...customerLines(customer), ...giftLines(preferences)],
+    customerLines(customer),
     ['*Productos:*', ...items.map(itemLine)],
     ['*Resumen del pedido:*', ...summaryLines(summary, rule)],
-    totalLines(summary, preferences.payMode),
+    [`*Total a pagar: ${money(summary.total)}*`],
   ];
   return blocks.map((lines) => lines.join('\n')).join('\n\n');
 }

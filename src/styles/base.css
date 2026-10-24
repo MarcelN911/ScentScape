@@ -30,6 +30,11 @@ a {
   text-decoration: none;
 }
 
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 a:hover {
   color: var(--sand);
 }
@@ -52,7 +57,7 @@ textarea::placeholder {
 }
 
 input[type='range'] {
-  accent-color: var(--gold);
+  accent-color: var(--navy);
 }
 
 ::selection {
@@ -61,8 +66,8 @@ input[type='range'] {
 }
 
 :focus-visible {
-  outline: 2px solid var(--peach);
-  outline-offset: 3px;
+  outline: 1px solid var(--sand);
+  outline-offset: 4px;
 }
 
 /* "hidden" soll immer verstecken, auch wenn eine Klasse display: flex setzt */
@@ -94,9 +99,9 @@ html.is-locked {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

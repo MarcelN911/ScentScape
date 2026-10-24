@@ -1,89 +1,95 @@
 /*
- * Design-Grundwerte aus der Vorlage (ScentScape Shop v7).
+ * Design-Grundwerte aus der Vorlage (Claude Design Handoff, 14 Seiten).
  * Farben mit Transparenz werden im CSS so geschrieben:
  *   rgb(var(--peach-rgb) / 0.35)
- * Dadurch bleiben die exakten Werte der Vorlage erhalten, ohne für jede Stufe ein Token anzulegen.
  */
 :root {
   /* Farben */
-  --navy: #151932;
-  --navy-deep: #0e1124;
-  --navy-raised: #1b1f3d;
-  --navy-curtain: #12152b;
+  --navy: #161a32;
+  --navy-deep: #11142b;
+  --navy-ink: #0c0f24;
+  --navy-card: #1e2342;
+  --navy-raised: #242949;
+  --cream: #fffcf2;
   --peach: #f0be91;
   --sand: #f0d2aa;
-  --gold: #d4af7d;
-  --wine: #61031b;
-  --wine-deep: #3a0214;
-  --wine-hover: #7a0a26;
-  --white: #ffffff;
+  --sand-light: #f6e3c6;
+  --wine: #531019;
+  --wine-light: #6e1824;
+  --wine-deep: #3d0211;
+  --gold: #c9a06e;
+  --copper: #b88d58;
+  --error: #e7899b;
+  --error-strong: #c0485e;
   --whatsapp: #25d366;
-  --addi: #00b4e6;
 
-  --navy-rgb: 21 25 50;
-  --navy-deep-rgb: 14 17 36;
+  --navy-rgb: 22 26 50;
+  --navy-deep-rgb: 17 20 43;
+  --navy-ink-rgb: 12 15 36;
+  --navy-card-rgb: 30 35 66;
   --peach-rgb: 240 190 145;
   --sand-rgb: 240 210 170;
-  --white-rgb: 255 255 255;
+  --cream-rgb: 255 252 242;
+  --wine-rgb: 83 16 25;
+
+  /* Ältere Namen, zeigen auf die neuen Werte */
+  --white: var(--cream);
+  --white-rgb: var(--cream-rgb);
 
   /* Text auf dunklem Grund */
-  --text: var(--white);
-  --text-soft: rgb(var(--white-rgb) / 0.78);
-  --text-muted: rgb(var(--white-rgb) / 0.6);
-  --text-faint: rgb(var(--white-rgb) / 0.45);
+  --text: var(--cream);
+  --text-soft: rgb(var(--cream-rgb) / 0.78);
+  --text-muted: rgb(var(--cream-rgb) / 0.6);
+  --text-faint: rgb(var(--cream-rgb) / 0.45);
 
   /* Linien */
   --line-faint: rgb(var(--peach-rgb) / 0.15);
-  --line: rgb(var(--peach-rgb) / 0.25);
+  --line: rgb(var(--peach-rgb) / 0.22);
   --line-strong: rgb(var(--peach-rgb) / 0.4);
 
-  /* Glas-Flächen (Pillen über Bildern) */
-  --glass: rgb(var(--navy-deep-rgb) / 0.55);
-  --glass-light: rgb(var(--navy-deep-rgb) / 0.45);
+  /* Flächen */
+  --panel: rgb(var(--navy-card-rgb) / 0.55);
+  --field: rgb(var(--navy-rgb) / 0.4);
+  --glass: rgb(var(--navy-rgb) / 0.55);
 
   /* Schriften */
-  --font-serif: 'Bodoni Moda Variable', 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
-  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', system-ui, sans-serif;
+  --font-script: 'Pinyon Script', cursive;
+  --font-mono: ui-monospace, Menlo, monospace;
 
   /* Abstände */
-  --gutter: clamp(16px, 4vw, 60px);
-  --section-y: clamp(80px, 9vw, 140px);
-  --container: 1500px;
+  --gutter: clamp(20px, 6vw, 96px);
+  --container: 1440px;
 
   /* Rundungen */
   --radius-pill: 999px;
-  --radius-xl: 32px;
-  --radius-lg: 28px;
-  --radius-md: 22px;
+  --radius-xl: 28px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
   --radius-sm: 14px;
-  --radius-frame: 8px;
 
   /* Schatten */
   --shadow-card: 0 30px 60px rgb(0 0 0 / 0.35);
   --shadow-float: 0 40px 80px rgb(0 0 0 / 0.45);
-  --shadow-button: 0 14px 34px rgb(37 211 102 / 0.3);
+  --shadow-deep: 0 50px 100px rgb(0 0 0 / 0.55);
 
   /* Bewegung */
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --ease-back: cubic-bezier(0.2, 0.7, 0.2, 1.4);
-  --ease-curtain: cubic-bezier(0.7, 0, 0.3, 1);
-  --duration-fast: 0.3s;
-  --duration: 0.6s;
-  --duration-slow: 0.9s;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-curtain: cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-pop: cubic-bezier(0.3, 1.6, 0.5, 1);
 
   /* Ebenen */
-  --z-sticky: 40;
-  --z-preview: 90;
-  --z-nav: 120;
-  --z-sticky-buy: 140;
-  --z-whatsapp: 150;
-  --z-cart-overlay: 180;
-  --z-cart: 190;
-  --z-video: 240;
-  --z-toast: 260;
-  --z-progress: 300;
-  --z-menu: 400;
-  --z-quiz: 600;
-  --z-curtain: 900;
-  --z-cursor: 950;
+  --z-header: 50;
+  --z-progress: 60;
+  --z-toast: 65;
+  --z-menu: 70;
+  --z-sheet: 80;
+  --z-curtain: 100;
+  --z-player: 140;
+  --z-cart-overlay: 150;
+  --z-cart: 151;
+  --z-intro: 200;
+  --z-modal: 240;
 }

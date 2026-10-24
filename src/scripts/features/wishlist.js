@@ -13,11 +13,19 @@ function savedHearts() {
   return readJson(localStorage, STORAGE_KEY, {});
 }
 
+function renderCount(saved) {
+  const count = Object.keys(saved).length;
+  document.querySelectorAll('[data-wish-count]').forEach((badge) => {
+    badge.textContent = count ? `(${count})` : '';
+  });
+}
+
 function renderHearts() {
   const saved = savedHearts();
   document.querySelectorAll('[data-wish-id]').forEach((button) => {
     button.setAttribute('aria-pressed', String(Boolean(saved[button.dataset.wishId])));
   });
+  renderCount(saved);
 }
 
 function toggleHeart(button) {

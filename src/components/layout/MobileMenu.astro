@@ -1,88 +1,104 @@
 ---
-import { MOBILE_PRIMARY, MOBILE_SECONDARY } from '../../data/navigation.js';
-import MenuLink from './MenuLink.astro';
+import { MENU_LINKS } from '../../data/navigation.js';
+import { padNumber } from '../../scripts/utils/format.js';
 ---
 
-<div class="mobile-menu" data-mobile-menu hidden transition:persist="mobile-menu">
-  <div class="mobile-menu__top">
-    <button
-      class="icon-btn icon-btn--dark mobile-menu__close"
-      type="button"
-      data-action="close-menu"
-      aria-label="Cerrar"
-    >
-      ×
-    </button>
-  </div>
-  <nav class="mobile-menu__primary" aria-label="Menú">
-    {MOBILE_PRIMARY.map((link) => (
-      <MenuLink link={link} size="lg" />
+<div class="menu" data-menu aria-hidden="true" transition:persist="mobile-menu">
+  <nav class="menu__links" aria-label="Menú">
+    {MENU_LINKS.map((link, index) => (
+      <a class="menu__link" href={link.href} style={`--delay:${250 + index * 70}ms`} tabindex="-1">
+        <span class="menu__number">{padNumber(index + 1)}</span>
+        <span class="menu__label">{link.label}</span>
+      </a>
     ))}
   </nav>
-  <div class="mobile-menu__secondary">
-    {MOBILE_SECONDARY.map((link) => (
-      <MenuLink link={link} />
-    ))}
-  </div>
+  <button
+    class="menu__close"
+    type="button"
+    data-action="close-menu"
+    aria-label="Cerrar menú"
+    tabindex="-1"
+  >
+    ✕&nbsp;&nbsp;Cerrar
+  </button>
 </div>
 
 <style>
-  .mobile-menu {
+  .menu {
     position: fixed;
     inset: 0;
     z-index: var(--z-menu);
     display: flex;
     flex-direction: column;
+    justify-content: center;
     overflow-y: auto;
-    padding: 26px 22px;
-    background: var(--peach);
-    color: var(--navy);
-    animation: fade-in 0.3s ease;
+    padding: 100px clamp(24px, 7vw, 110px) 60px;
+    background: var(--navy-deep);
+    clip-path: inset(0% 0% 100% 0%);
+    transition: clip-path 0.9s var(--ease-curtain);
   }
 
-  .mobile-menu__top {
+  .menu.is-open {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+
+  .menu__link {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 50px;
+    align-items: baseline;
+    gap: 22px;
+    overflow: hidden;
+    color: var(--cream);
+    font: 400 clamp(30px, 4.6vw, 64px) / 1.12 var(--font-serif);
   }
 
-  .mobile-menu__close {
-    --icon-btn-size: 50px;
-    font-size: 22px;
+  .menu__link:hover {
+    color: var(--sand);
   }
 
-  .mobile-menu__primary {
-    display: flex;
-    flex-direction: column;
+  .menu__number {
+    color: var(--peach);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 3px;
   }
 
-  .mobile-menu__secondary {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 30px;
-    padding-top: 24px;
-    border-top: 1px solid rgb(var(--navy-rgb) / 0.25);
+  .menu__label {
+    display: inline-block;
+    transform: translateY(110%);
+    transition: transform 0.9s var(--ease) var(--delay);
+  }
+
+  .menu.is-open .menu__label {
+    transform: translateY(0%);
+  }
+
+  .menu__close {
+    position: absolute;
+    top: 24px;
+    left: clamp(18px, 4vw, 56px);
+    padding: 10px 0;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
 </style>
 
 <script>
   import { registerAction } from '../../scripts/core/actions.js';
 
-  function menu() {
-    return document.querySelector('[data-mobile-menu]');
-  }
+  const menu = document.querySelector('[data-menu]');
 
   function setMenuOpen(open) {
-    menu().hidden = !open;
+    menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    menu.querySelectorAll('a, button').forEach((el) => (el.tabIndex = open ? 0 : -1));
     document.documentElement.classList.toggle('is-locked', open);
   }
 
-  function closeOnEntryClick(event) {
-    if (event.target.closest('.menu-link')) setMenuOpen(false);
-  }
-
-  menu().addEventListener('click', closeOnEntryClick);
+  menu.addEventListener('click', (event) => event.target.closest('a') && setMenuOpen(false));
+  document.addEventListener('keydown', (event) => event.key === 'Escape' && setMenuOpen(false));
   registerAction('open-menu', () => setMenuOpen(true));
   registerAction('close-menu', () => setMenuOpen(false));
   document.addEventListener('astro:before-preparation', () => setMenuOpen(false));

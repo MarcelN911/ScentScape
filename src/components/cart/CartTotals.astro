@@ -1,146 +1,159 @@
----
-import Icon from '../ui/Icon.astro';
-import CartPromo from './CartPromo.astro';
----
-
 <div class="totals">
-  <div data-cart-filled-only>
-    <CartPromo />
+  <form class="totals__code" data-promo-form>
+    <input
+      class="totals__code-input"
+      placeholder="Código de descuento"
+      aria-label="Código de descuento"
+      autocomplete="off"
+      data-promo-input
+    />
+    <button class="totals__code-btn" type="submit" data-promo-button>
+      Aplicar
+    </button>
+  </form>
+  <span class="totals__feedback" data-promo-feedback></span>
+  <div class="totals__row">
+    <span>Subtotal</span>
+    <span data-cart-subtotal></span>
   </div>
-  <div class="totals__shipping">
-    <p class="totals__shipping-text" data-ship-text></p>
-    <div class="totals__track">
-      <div class="totals__bar" data-ship-bar></div>
-    </div>
+  <div class="totals__row totals__row--accent" data-sale-row hidden>
+    <span>Descuento</span>
+    <span data-sale-value></span>
   </div>
-  <div class="totals__row totals__row--discount" data-discount-row hidden>
+  <div class="totals__row totals__row--accent" data-discount-row hidden>
     <span data-discount-label></span>
     <span data-discount-value></span>
   </div>
   <div class="totals__row">
+    <span>Envío</span>
+    <span data-ship-value></span>
+  </div>
+  <div class="totals__sum">
     <span class="totals__label">Total</span>
-    <span class="totals__total" data-cart-total>
-      $0
+    <span class="totals__total">
+      <span data-cart-total>$0</span> <small>COP</small>
     </span>
   </div>
-  <a class="totals__cta" href="/checkout/" data-cart-cta>
-    <img
-      class="totals__cta-icon totals__cta-icon--wa"
-      src="/assets/img/whatsapp_white.svg"
-      alt=""
-    />
-    <Icon name="lock" size={16} strokeWidth={2} class="totals__cta-icon totals__cta-icon--lock" />
-    <span data-cart-cta-label>Finalizar por WhatsApp</span>
-  </a>
-  <p class="totals__note" data-cart-cta-note></p>
+  <button class="totals__cta" type="button" data-action="cart-checkout" data-cart-cta>
+    Finalizar compra →
+  </button>
+  <span class="totals__note">Serás redirigido a WhatsApp para confirmar tu pedido.</span>
 </div>
 
 <style>
   .totals {
-    padding: 22px 26px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 28px 24px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+    background: rgb(var(--navy-rgb) / 0.4);
   }
 
-  .totals__shipping {
-    margin-bottom: 16px;
-    padding: 16px;
-    border-radius: 20px;
-    background: var(--navy);
-    color: var(--white);
+  .totals__code {
+    display: flex;
+    gap: 8px;
   }
 
-  .totals__shipping-text {
-    margin: 0 0 10px;
-    font: 600 13px/1.3 var(--font-sans);
-    color: var(--peach);
+  .totals__code-input {
+    flex: 1;
+    min-width: 0;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 23px;
+    background: rgb(var(--navy-rgb) / 0.5);
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
   }
 
-  .totals__track {
-    height: 8px;
-    overflow: hidden;
-    border-radius: 4px;
-    background: rgb(var(--peach-rgb) / 0.2);
+  .totals__code-input::placeholder {
+    text-transform: none;
   }
 
-  .totals__bar {
-    width: var(--ship-progress, 0%);
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--wine), var(--peach));
-    transition: width 0.6s var(--ease);
+  .totals__code-btn {
+    height: 46px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 23px;
+    background: rgb(var(--peach-rgb) / 0.16);
+    color: var(--sand);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .totals__feedback {
+    color: var(--sand);
+    font: 400 12px var(--font-sans);
+  }
+
+  .totals__feedback.is-error {
+    color: var(--error);
+  }
+
+  .totals__feedback:empty {
+    display: none;
   }
 
   .totals__row {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 16px;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 400 13px var(--font-sans);
   }
 
-  .totals__row--discount {
-    margin-bottom: 10px;
-    font: 600 13px/1 var(--font-sans);
-    color: var(--wine);
+  .totals__row--accent {
+    color: var(--sand);
+  }
+
+  .totals__sum {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 6px;
   }
 
   .totals__label {
-    font: 700 14px/1 var(--font-sans);
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
 
   .totals__total {
-    font: 500 34px/1 var(--font-serif);
-    letter-spacing: -0.015em;
+    color: var(--sand);
+    font: 400 30px var(--font-serif);
+  }
+
+  .totals__total small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
   }
 
   .totals__cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    height: 62px;
-    border-radius: var(--radius-pill);
-    background: var(--whatsapp);
-    color: var(--white);
-    font: 800 15px/1 var(--font-sans);
-    animation: fade-in 0.3s ease;
+    height: 56px;
+    border: 0;
+    border-radius: 28px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
   }
 
-  .totals__cta:hover {
-    color: var(--white);
-  }
-
-  .totals__cta[aria-disabled='true'] {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  .totals__cta-icon--wa {
-    width: 18px;
-    height: 18px;
-  }
-
-  .totals__cta--card {
-    background: var(--navy);
-    color: var(--sand);
-  }
-
-  .totals__cta--card:hover {
-    color: var(--sand);
-  }
-
-  .totals__cta--addi {
-    background: var(--addi);
-  }
-
-  .totals__cta:not(.totals__cta--card) :global(.totals__cta-icon--lock),
-  .totals__cta:not(.totals__cta--wa) .totals__cta-icon--wa {
-    display: none;
+  .totals__cta:disabled {
+    background: rgb(var(--peach-rgb) / 0.3);
+    cursor: not-allowed;
   }
 
   .totals__note {
-    margin: 10px 0 0;
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 300 12px var(--font-sans);
     text-align: center;
-    font: 500 12px/1.4 var(--font-sans);
-    opacity: 0.65;
   }
 </style>

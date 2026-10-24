@@ -1,26 +1,23 @@
-import { currentTrack, music } from './audio.js';
+import { currentTrack, music, wantsMusic } from './audio.js';
 
-function formatTime(seconds) {
-  const whole = Math.floor(seconds || 0);
-  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
+function timeText() {
+  const minutes = Math.floor(music.elapsed / 60);
+  const seconds = String(music.elapsed % 60).padStart(2, '0');
+  const status = !music.playing ? 'en pausa' : music.muted ? 'silenciado' : 'sonando';
+  return `${minutes}:${seconds} · ${status}`;
 }
 
-function statusText() {
-  if (!music.playing) return 'en pausa';
-  return music.muted ? 'silenciado' : 'sonando';
-}
-
-function renderText(root) {
-  root.querySelector('[data-player-title]').textContent = currentTrack().title;
-  root.querySelector('[data-player-time]').textContent = formatTime(music.audio.currentTime);
-  root.querySelector('[data-player-status]').textContent = statusText();
+export function renderTime(root) {
+  root.querySelector('[data-player-time]').textContent = timeText();
 }
 
 function renderButtons(root) {
-  const play = root.querySelector('[data-player-play]');
-  const mute = root.querySelector('[data-player-mute]');
-  play.setAttribute('aria-label', music.playing ? 'Pausar' : 'Reproducir');
-  mute.setAttribute('aria-label', music.muted ? 'Activar sonido' : 'Silenciar');
+  root
+    .querySelector('[data-player-play]')
+    .setAttribute('aria-label', music.playing ? 'Pausar' : 'Reproducir');
+  root
+    .querySelector('[data-player-mute]')
+    .setAttribute('aria-label', music.muted ? 'Activar sonido' : 'Silenciar');
   root.querySelectorAll('[data-track]').forEach((button) => {
     button.classList.toggle('is-active', Number(button.dataset.track) === music.index);
   });
@@ -29,10 +26,13 @@ function renderButtons(root) {
 export function renderPlayer(root) {
   root.toggleAttribute('data-playing', music.playing);
   root.toggleAttribute('data-muted', music.muted);
-  renderText(root);
+  root.toggleAttribute('data-waiting', !music.playing && wantsMusic());
+  root.querySelector('[data-player-title]').textContent = currentTrack().title;
+  root.querySelector('[data-player-volume]').value = music.volume;
   renderButtons(root);
+  renderTime(root);
 }
 
-export function toggleList(root) {
-  root.toggleAttribute('data-list-open');
+export function setListOpen(root, open) {
+  root.toggleAttribute('data-list-open', open);
 }

@@ -2,7 +2,6 @@ export const EVENTS = {
   cartChange: 'ss:cart-change',
   cartOpen: 'ss:cart-open',
   toast: 'ss:toast',
-  quizOpen: 'ss:quiz-open',
 };
 
 export function emit(name, detail) {
@@ -13,6 +12,7 @@ export function listen(name, handler, options) {
   window.addEventListener(name, (event) => handler(event.detail), options);
 }
 
-export function showToast(message) {
-  emit(EVENTS.toast, message);
+/** options.cart: zusätzlich "Bolsa (n)" anzeigen */
+export function showToast(message, options = {}) {
+  emit(EVENTS.toast, { message, ...options });
 }

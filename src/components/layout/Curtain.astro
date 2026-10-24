@@ -1,8 +1,5 @@
 <div class="curtain" data-curtain aria-hidden="true" transition:persist="curtain">
-  <img class="curtain__logo" src="/assets/img/scentscape-fulllogo.png" alt="" data-curtain-logo />
-  <div class="curtain__track">
-    <div class="curtain__bar" data-curtain-bar></div>
-  </div>
+  <span class="curtain__line" data-curtain-line></span>
 </div>
 
 <style>
@@ -10,42 +7,36 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-curtain);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(26px, 4vh, 40px);
-    background:
-      radial-gradient(ellipse 55% 45% at 50% 46%, rgb(var(--peach-rgb) / 0.14), transparent 70%),
-      var(--navy-curtain);
-    border-top: 1px solid var(--line);
-    transform: translateY(-100%);
+    display: none;
+    background: var(--navy);
+    clip-path: inset(0% 0% 0% 0%);
     pointer-events: none;
   }
 
   :global(.js) .curtain {
-    transform: translateY(0);
+    display: block;
   }
 
-  .curtain__logo {
-    width: min(300px, 56vw);
-    height: auto;
-    opacity: 0;
-    filter: drop-shadow(0 12px 40px rgb(var(--peach-rgb) / 0.22));
+  .curtain__line {
+    position: absolute;
+    left: var(--curtain-x, 50%);
+    top: 50%;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, transparent, var(--sand), transparent);
+    box-shadow: 0 0 24px 2px rgb(var(--sand-rgb) / 0.6);
+    transform: translate(-50%, -50%);
   }
 
-  .curtain__track {
-    width: min(180px, 42vw);
+  .curtain[data-mode='row'] .curtain__line {
+    left: 50%;
+    width: 0;
     height: 1px;
-    overflow: hidden;
-    background: rgb(var(--peach-rgb) / 0.2);
+    background: linear-gradient(90deg, transparent, var(--sand), transparent);
   }
 
-  .curtain__bar {
-    height: 100%;
-    background: var(--peach);
-    transform: scaleX(0);
-    transform-origin: 0 50%;
+  .curtain[data-mode='none'] .curtain__line {
+    display: none;
   }
 </style>
 
