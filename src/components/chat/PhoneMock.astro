@@ -1,0 +1,288 @@
+---
+/*
+ * iPhone mit WhatsApp-Chat. Nachrichten fügt scripts/features/chat/chat.js ein.
+ * input="link": unten ein Feld, das WhatsApp öffnet · input="field": echtes Eingabefeld mit Senden
+ */
+import { WHATSAPP_NUMBER } from '../../scripts/config.js';
+import PhoneStatusBar from './PhoneStatusBar.astro';
+import PhoneChatHeader from './PhoneChatHeader.astro';
+import PhoneInputBar from './PhoneInputBar.astro';
+
+/** @typedef {{ greeting: string, input?: 'link' | 'field' }} Props */
+const { greeting, input = 'link' } = Astro.props;
+---
+
+<div class="phone" data-phone>
+  <span class="phone__key phone__key--a"></span>
+  <span class="phone__key phone__key--b"></span>
+  <span class="phone__key phone__key--c"></span>
+  <span class="phone__key phone__key--d"></span>
+  <div class="phone__bezel">
+    <div class="phone__screen">
+      <span class="phone__island" data-phone-island>
+        <span class="phone__island-dot"></span>
+        <span>escribiendo</span>
+      </span>
+      <PhoneStatusBar />
+      <PhoneChatHeader />
+      <div class="phone__body" data-chat-body>
+        <span class="phone__day">Hoy</span>
+        <span class="phone__lock">🔒 Los mensajes están cifrados de extremo a extremo.</span>
+        <div class="bubble bubble--them">
+          <span class="bubble__text">{greeting}</span>
+          <span class="bubble__time"></span>
+        </div>
+        <span class="phone__wa" data-chat-wa hidden>
+          Abriendo WhatsApp con tu mensaje…
+        </span>
+        <div class="phone__typing" data-chat-typing hidden>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <PhoneInputBar input={input} href={`https://wa.me/${WHATSAPP_NUMBER}`} />
+      <span class="phone__home"></span>
+    </div>
+  </div>
+  <template data-bubble>
+    <div class="bubble">
+      <span class="bubble__text"></span>
+      <span class="bubble__time"></span>
+    </div>
+  </template>
+</div>
+
+<style>
+  .phone {
+    position: relative;
+    z-index: 2;
+    height: var(--phone-height, min(880px, 94vh));
+    min-height: var(--phone-min, 640px);
+    aspect-ratio: 9 / 19;
+    padding: 4px;
+    border-radius: 62px;
+    background: linear-gradient(145deg, #4a4a52, #1c1c21 40%, #3a3a42 70%, #18181c);
+    box-shadow:
+      0 80px 140px rgb(0 0 0 / 0.7),
+      0 0 0 1px rgb(var(--cream-rgb) / 0.06);
+    opacity: var(--phone-o, 1);
+    transform: translateY(calc(var(--phone-y, 0) * 1px)) rotateX(calc(var(--phone-rx, 0) * 1deg))
+      rotateY(calc(var(--phone-ry, 0) * 1deg)) rotateZ(calc(var(--phone-rz, 0) * 1deg));
+    transform-origin: 50% 80%;
+  }
+
+  .phone__key {
+    position: absolute;
+    width: 3px;
+    background: #2a2a30;
+  }
+
+  .phone__key--a,
+  .phone__key--b,
+  .phone__key--c {
+    left: -3px;
+    border-radius: 2px 0 0 2px;
+  }
+
+  .phone__key--a {
+    top: 18%;
+    height: 28px;
+  }
+
+  .phone__key--b {
+    top: 25%;
+    height: 52px;
+  }
+
+  .phone__key--c {
+    top: 34%;
+    height: 52px;
+  }
+
+  .phone__key--d {
+    right: -3px;
+    top: 28%;
+    height: 80px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .phone__bezel {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border-radius: 58px;
+    background: #000;
+  }
+
+  .phone__screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 48px;
+    background: var(--navy-deep);
+  }
+
+  .phone__island {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 120px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 18px;
+    background: #000;
+    color: var(--whatsapp);
+    font: 500 10px var(--font-sans);
+    transform: translateX(-50%);
+    transition: width 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  .phone__island > * {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .phone__island-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--whatsapp);
+  }
+
+  .phone.is-typing .phone__island {
+    width: 190px;
+  }
+
+  .phone.is-typing .phone__island > * {
+    opacity: 1;
+  }
+
+  .phone__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    padding: 16px 12px;
+    background:
+      radial-gradient(circle at 15% 8%, rgb(var(--peach-rgb) / 0.07), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgb(var(--wine-rgb) / 0.3), transparent 50%),
+      var(--navy-deep);
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+
+  .phone__day,
+  .phone__lock {
+    align-self: center;
+    padding: 4px 10px;
+    border-radius: 7px;
+    color: rgb(var(--sand-rgb) / 0.75);
+    font: 500 10px var(--font-sans);
+  }
+
+  .phone__day {
+    background: rgb(var(--navy-card-rgb) / 0.95);
+    letter-spacing: 1px;
+  }
+
+  .phone__lock {
+    max-width: 86%;
+    padding: 6px 10px;
+    background: rgb(var(--peach-rgb) / 0.12);
+    color: rgb(var(--sand-rgb) / 0.85);
+    font: 400 10px/1.4 var(--font-sans);
+    text-align: center;
+  }
+
+  .phone :global(.bubble) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-self: flex-start;
+    max-width: 80%;
+    padding: 8px 11px 6px;
+    border-radius: 4px 16px 16px 16px;
+    background: var(--navy-raised);
+    color: var(--cream);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+  }
+
+  .phone :global(.bubble--me) {
+    align-self: flex-end;
+    border-radius: 16px 4px 16px 16px;
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .phone :global(.bubble__text) {
+    font:
+      400 14px/1.4 -apple-system,
+      'SF Pro Text',
+      var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .phone :global(.bubble__time) {
+    align-self: flex-end;
+    font: 400 10px var(--font-sans);
+    opacity: 0.7;
+  }
+
+  .phone__wa {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid rgb(37 211 102 / 0.4);
+    border-radius: 14px;
+    background: rgb(37 211 102 / 0.14);
+    color: #7fe3a6;
+    font: 500 11px var(--font-sans);
+  }
+
+  .phone__typing {
+    display: flex;
+    gap: 5px;
+    align-self: flex-start;
+    padding: 12px 14px;
+    border-radius: 4px 16px 16px 16px;
+    background: var(--navy-raised);
+  }
+
+  .phone__typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 4px;
+    background: var(--sand);
+    animation: typing-dot 0.78s infinite;
+  }
+
+  .phone__typing span:nth-child(2) {
+    animation-delay: 0.26s;
+  }
+
+  .phone__typing span:nth-child(3) {
+    animation-delay: 0.52s;
+  }
+
+  .phone__home {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 36%;
+    height: 5px;
+    border-radius: 3px;
+    background: rgb(var(--cream-rgb) / 0.85);
+    transform: translateX(-50%);
+  }
+</style>

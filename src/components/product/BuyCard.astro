@@ -1,0 +1,276 @@
+---
+/* Preis, Größen, Menge, "Añadir al carrito" und "Pedir por WhatsApp". Bedienung: scripts/features/product/buy.js */
+import { cartItemFor } from '../../scripts/cart/cart-item.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+import { whatsappUrl } from '../../scripts/utils/whatsapp.js';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+
+/** @typedef {{ product: object }} Props */
+const { product } = Astro.props;
+const sizes = product.sizes.map((size) => ({
+  ...size,
+  now: formatCOP(size.salePrice ?? size.price),
+  old: size.salePrice ? formatCOP(size.price) : '',
+  item: JSON.stringify(cartItemFor(product, size)),
+}));
+const optionAttrs = (size, index) => ({
+  'aria-checked': index === 0 ? 'true' : 'false',
+  'data-buy-option': index,
+  'data-item': size.item,
+  'data-old': size.old,
+  'data-ml': size.ml,
+});
+const first = sizes[0];
+const message = `Hola, quiero pedir ${product.name} (${first.ml} ml) x1.`;
+---
+
+<div class="buy" data-buy data-product-name={product.name}>
+  <div class="buy__top">
+    <div class="buy__price">
+      <span class="buy__label">
+        Precio · <span data-buy-size>{first.label}</span>
+      </span>
+      <div class="buy__roll">
+        <span class="buy__ghost">{first.now}</span>
+        {sizes.map((size, index) => (
+          <span class="buy__amount" style={`--y:${index === 0 ? 0 : 110}`} data-buy-price>
+            {size.now}
+          </span>
+        ))}
+      </div>
+    </div>
+    <span class="buy__old" data-buy-old>
+      {first.old}
+    </span>
+  </div>
+  <div class="buy__sizes" role="radiogroup" aria-label="Tamaño">
+    {sizes.map((size, index) => (
+      <button class="buy__size" type="button" role="radio" {...optionAttrs(size, index)}>
+        <span class="buy__size-ml">{size.label}</span>
+        <span class="buy__size-price">{size.now}</span>
+      </button>
+    ))}
+  </div>
+  <div class="buy__row">
+    <div class="buy__qty">
+      <button type="button" aria-label="Reducir cantidad" data-buy-qty="-1">
+        −
+      </button>
+      <span data-buy-count>1</span>
+      <button type="button" aria-label="Aumentar cantidad" data-buy-qty="1">
+        +
+      </button>
+    </div>
+    <button
+      class="buy__add"
+      type="button"
+      data-action="add-to-cart"
+      data-cart-item={first.item}
+      data-quantity="1"
+      data-buy-add
+    >
+      Añadir al carrito <span>→</span>
+    </button>
+  </div>
+  <a class="buy__wa" href={whatsappUrl(message)} target="_blank" rel="noopener" data-buy-wa>
+    <WhatsAppIcon size={18} />
+    Pedir por WhatsApp
+  </a>
+</div>
+
+<style>
+  .buy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 28px;
+    background: var(--panel);
+  }
+
+  .buy__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+  }
+
+  .buy__price {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .buy__label {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .buy__roll {
+    position: relative;
+    height: clamp(44px, 3.6vw, 58px);
+    overflow: hidden;
+  }
+
+  .buy__ghost,
+  .buy__amount {
+    font: italic 400 clamp(36px, 3.2vw, 52px) / 1.1 var(--font-serif);
+    white-space: nowrap;
+  }
+
+  .buy__ghost {
+    visibility: hidden;
+  }
+
+  .buy__amount {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--sand);
+    font-variant-numeric: lining-nums;
+    transform: translateY(calc(var(--y) * 1%));
+    transition: transform 0.7s var(--ease);
+  }
+
+  .buy__old {
+    padding-bottom: 8px;
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 300 14px var(--font-sans);
+    text-decoration: line-through;
+  }
+
+  .buy__sizes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .buy__size {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 18px;
+    background: var(--field);
+    text-align: left;
+    transition:
+      background-color 0.4s,
+      border-color 0.4s,
+      transform 0.4s var(--ease-pop);
+  }
+
+  .buy__size:hover {
+    transform: translateY(-3px);
+  }
+
+  .buy__size-ml {
+    color: var(--cream);
+    font: 400 22px/1 var(--font-serif);
+  }
+
+  .buy__size-price {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 11px var(--font-sans);
+    white-space: nowrap;
+  }
+
+  .buy__size[aria-checked='true'] {
+    border-color: var(--peach);
+    background: var(--peach);
+  }
+
+  .buy__size[aria-checked='true'] .buy__size-ml {
+    color: var(--navy);
+  }
+
+  .buy__size[aria-checked='true'] .buy__size-price {
+    color: rgb(var(--navy-rgb) / 0.75);
+  }
+
+  .buy__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .buy__qty {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 28px;
+  }
+
+  .buy__qty button {
+    width: 48px;
+    height: 100%;
+    border: 0;
+    background: none;
+    color: var(--peach);
+    font: 300 22px var(--font-sans);
+  }
+
+  .buy__qty span {
+    min-width: 28px;
+    text-align: center;
+    font: 500 15px var(--font-sans);
+  }
+
+  .buy__add {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 220px;
+    height: 56px;
+    border: 0;
+    border-radius: 28px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s,
+      transform 0.2s;
+  }
+
+  .buy__add:hover {
+    gap: 20px;
+    background: var(--sand);
+  }
+
+  .buy__add:active {
+    transform: scale(0.97);
+  }
+
+  .buy__wa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 54px;
+    border: 1px solid rgb(37 211 102 / 0.6);
+    border-radius: 27px;
+    color: var(--cream);
+    font: 500 12px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+  }
+
+  .buy__wa:hover {
+    background: rgb(37 211 102 / 0.14);
+    color: var(--cream);
+  }
+</style>

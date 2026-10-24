@@ -1,0 +1,316 @@
+---
+/*
+ * "¿No sabes cuál elegir? Te asesoramos": Fragenliste, Handy-Chat und Kontakt.
+ * Auf Produktseite und Servicios. Beim Hereinscrollen kippt das Handy ins Bild (scripts/features/chat/advice.js).
+ */
+import PhoneMock from '../../components/chat/PhoneMock.astro';
+import ContactList from '../../components/chat/ContactList.astro';
+import WhatsAppIcon from '../../components/ui/WhatsAppIcon.astro';
+import { CHAT_GREETING, CHAT_QUESTIONS } from '../../data/faq.js';
+import { WHATSAPP_NUMBER } from '../../scripts/config.js';
+import { padNumber } from '../../scripts/utils/format.js';
+
+/** @typedef {{ allLink?: boolean }} Props */
+const { allLink = false } = Astro.props;
+---
+
+<section class="advice" data-advice>
+  <div class="advice__mark" aria-hidden="true">
+    ?
+  </div>
+  <div class="advice__grid">
+    <div>
+      <p class="advice__eyebrow">
+        <span></span>FAQ · Contacto
+      </p>
+      <h2 class="advice__title">
+        <span class="advice__mask">
+          <span class="advice__one">¿No sabes cuál elegir?</span>
+        </span>
+        <span class="advice__mask advice__mask--pad">
+          <span class="advice__two">Te asesoramos</span>
+        </span>
+      </h2>
+      <p class="advice__lead">Sara y Brayan responden en persona</p>
+      <p class="advice__label">Preguntas frecuentes · toca una</p>
+      <div class="advice__list">
+        {CHAT_QUESTIONS.map((item, index) => (
+          <button class="advice__q" type="button" data-chat-question={index} style={`--i:${index}`}>
+            <span class="advice__n">{padNumber(index + 1)}</span>
+            <span class="advice__text">{item.question}</span>
+            <span class="advice__icon"></span>
+          </button>
+        ))}
+      </div>
+      {allLink && (
+        <a class="advice__all" href="/te-asesoramos/">
+          Ver todas las preguntas →
+        </a>
+      )}
+    </div>
+    <div class="advice__stage">
+      <div class="advice__glow"></div>
+      <PhoneMock greeting={CHAT_GREETING} />
+      <div class="advice__side">
+        <p>¿Tu pregunta no está en la lista? Escríbenos directamente.</p>
+        <ContactList />
+        <a
+          class="advice__wa"
+          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          target="_blank"
+          rel="noopener"
+        >
+          <WhatsAppIcon size={20} color="var(--cream)" />
+          Escribir a Sara y Brayan
+        </a>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-chat-data set:html={JSON.stringify(CHAT_QUESTIONS)} />
+</section>
+
+<style>
+  .advice {
+    position: relative;
+    overflow: hidden;
+    padding: 18vh clamp(20px, 6vw, 96px) 16vh;
+    background: var(--navy);
+  }
+
+  .advice__mark {
+    position: absolute;
+    right: -4vw;
+    top: 8vh;
+    color: transparent;
+    font: italic 400 clamp(300px, 44vw, 760px) / 0.8 var(--font-serif);
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.08);
+    transform: translateY(calc(var(--bg-y, 0) * 1px));
+    pointer-events: none;
+  }
+
+  .advice__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: clamp(40px, 6vw, 100px);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .advice__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 18px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .advice__eyebrow span {
+    display: block;
+    width: calc(var(--line, 10) * 1px);
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .advice__title {
+    margin: 0;
+    font: 400 clamp(40px, 4.8vw, 84px) / 1 var(--font-serif);
+  }
+
+  .advice__mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .advice__mask--pad {
+    padding-bottom: 0.08em;
+  }
+
+  .advice__one,
+  .advice__two {
+    display: block;
+    transform: translateY(calc(var(--t1, 110) * 1%));
+  }
+
+  .advice__two {
+    color: var(--peach);
+    font-style: italic;
+    transform: translateY(calc(var(--t2, 110) * 1%));
+  }
+
+  .advice__lead,
+  .advice__label,
+  .advice__all {
+    opacity: var(--to, 0);
+  }
+
+  .advice__lead {
+    margin: 20px 0 0;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 17px/1.6 var(--font-sans);
+  }
+
+  .advice__label {
+    margin: 44px 0 14px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .advice__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .advice__q {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 4px;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.2);
+    background: none;
+    color: var(--cream);
+    text-align: left;
+    opacity: var(--qo, 0);
+    transform: translateX(calc(var(--qx, -40) * 1px));
+    transition:
+      padding 0.4s,
+      color 0.4s;
+  }
+
+  .advice__q:hover {
+    padding-left: 14px;
+    color: var(--sand);
+  }
+
+  .advice__q:disabled {
+    cursor: default;
+  }
+
+  .advice__n {
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .advice__text {
+    font: 400 clamp(17px, 1.4vw, 21px) / 1.3 var(--font-serif);
+  }
+
+  .advice__icon {
+    justify-self: end;
+    color: var(--peach);
+    font: 400 14px var(--font-sans);
+  }
+
+  .advice__icon::before {
+    content: '→';
+  }
+
+  .advice__q.is-asked {
+    color: var(--sand);
+  }
+
+  .advice__q.is-asked .advice__text {
+    font-style: italic;
+  }
+
+  .advice__q.is-asked .advice__icon::before {
+    content: '✓';
+  }
+
+  .advice__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 26px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.6);
+    color: var(--peach);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .advice__stage {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px clamp(32px, 3vw, 56px);
+    perspective: 1800px;
+  }
+
+  .advice__glow {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgb(var(--peach-rgb) / 0.22),
+      rgb(var(--wine-rgb) / 0.25) 45%,
+      transparent 70%
+    );
+    filter: blur(30px);
+    transform: translate(-50%, -50%) scale(var(--glow, 0.6));
+    pointer-events: none;
+  }
+
+  .advice__side {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 230px;
+    opacity: var(--bo, 0);
+    transform: translateY(calc(var(--by, 24) * 1px));
+  }
+
+  .advice__side > p {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 15px/1.6 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .advice__wa {
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 56px;
+    margin-top: 8px;
+    padding: 0 26px;
+    border-radius: 28px;
+    background: var(--whatsapp);
+    color: var(--cream);
+    font: 600 13px var(--font-sans);
+    letter-spacing: 1px;
+    transition: box-shadow 0.3s;
+  }
+
+  .advice__wa:hover {
+    color: var(--cream);
+    box-shadow: 0 14px 34px rgb(37 211 102 / 0.4);
+  }
+
+  @media (min-width: 1280px) {
+    .advice__grid {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+</style>

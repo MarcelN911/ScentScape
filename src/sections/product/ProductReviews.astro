@@ -1,119 +1,273 @@
 ---
-import ReviewCard from '../../components/review/ReviewCard.astro';
-import { averageRating, starsOf } from '../../scripts/catalog/reviews.js';
-import { formatRating } from '../../scripts/utils/format.js';
+/* "Lo que dicen de …": Karten in Sandtönen, leicht schräg, fliegen beim Scrollen ein. */
+import { REVIEW_CARD_COLORS, REVIEW_CARD_TILTS } from '../../data/product.js';
+import { averageRating } from '../../scripts/catalog/reviews.js';
+import { initialOf } from '../../scripts/utils/text.js';
 
 /** @typedef {{ product: object, reviews: object[] }} Props */
 const { product, reviews } = Astro.props;
-const average = averageRating(reviews);
-const writeUrl = `/resenas/?producto=${encodeURIComponent(product.name)}`;
-const countText =
-  reviews.length === 1 ? 'Basado en 1 reseña' : `Basado en ${reviews.length} reseñas`;
+const average = averageRating(reviews).toFixed(1);
+const summary = reviews.length
+  ? `★ ${average} · ${reviews.length} ${reviews.length === 1 ? 'reseña' : 'reseñas'}`
+  : '';
+const writeHref = `/resenas/?id=${encodeURIComponent(product.id)}#escribir`;
+const cards = reviews.slice(0, 6).map((review, index) => ({
+  ...review,
+  stars: '★★★★★'.slice(0, Math.max(1, Math.min(5, review.rating))),
+  style: `--bg:${REVIEW_CARD_COLORS[index % 6]};--rot:${REVIEW_CARD_TILTS[index % 6]}deg;--d:${(index % 3) * 100}ms`,
+}));
 ---
 
-<section class="container product-reviews">
-  <div class="product-reviews__head">
-    <div class="product-reviews__intro">
-      <h2 class="product-reviews__title">
-        Reseñas <em>de {product.name}</em>
-      </h2>
-      {reviews.length > 0 && (
-        <div class="product-reviews__score">
-          <span class="product-reviews__average">{formatRating(average)}</span>
-          <span class="product-reviews__summary">
-            <span class="product-reviews__stars">{starsOf(average)}</span>
-            <span>{countText}</span>
-          </span>
+<section class="reviews" id="resenas" data-product-reviews>
+  <div class="reviews__inner">
+    <div class="reviews__head">
+      <div>
+        <p class="reviews__eyebrow">Reseñas</p>
+        <h2 class="reviews__title">
+          Lo que dicen de <em>{product.name}</em>
+        </h2>
+        {summary && <p class="reviews__summary">{summary}</p>}
+      </div>
+      <a class="reviews__write" href={writeHref}>
+        Escribir una reseña
+      </a>
+    </div>
+    {cards.length > 0 ? (
+      <>
+        <div class="reviews__grid">
+          {cards.map((card) => (
+            <figure class="review-card" style={card.style} data-review-card>
+              <span class="review-card__stars">{card.stars}</span>
+              <blockquote>{card.text}</blockquote>
+              <figcaption>
+                <span class="review-card__ini">{initialOf(card.name)}</span>
+                <span class="review-card__who">
+                  <strong>{card.name}</strong>
+                  <span>{card.city}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
-      )}
-    </div>
-    <a class="btn btn--outline" href={writeUrl}>
-      Escribir una reseña
-    </a>
+        <div class="reviews__all">
+          <a href="/resenas/">
+            Ver todas las reseñas <span>→</span>
+          </a>
+        </div>
+      </>
+    ) : (
+      <div class="reviews__empty">
+        <span class="reviews__empty-stars">★★★★★</span>
+        <p class="reviews__empty-title">
+          Aún no hay reseñas de <em>{product.name}</em>
+        </p>
+        <p class="reviews__empty-text">Sé el primero en contar cómo te fue con esta fragancia.</p>
+        <a href={writeHref}>
+          Escribir la primera reseña <span>→</span>
+        </a>
+      </div>
+    )}
   </div>
-  {reviews.length > 0 ? (
-    <div class="product-reviews__grid">
-      {reviews.map((review, index) => (
-        <ReviewCard review={review} index={index} />
-      ))}
-    </div>
-  ) : (
-    <p class="product-reviews__empty">
-      Aún no hay reseñas de {product.name}. ¿Ya lo tienes? Cuéntanos qué te pareció.
-    </p>
-  )}
 </section>
 
 <style>
-  .product-reviews {
-    padding-top: 40px;
-    padding-bottom: 70px;
+  .reviews {
+    position: relative;
+    overflow: hidden;
+    padding: 16vh clamp(20px, 6vw, 96px);
+    background: var(--navy-deep);
   }
 
-  .product-reviews__head {
+  .reviews__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .reviews__head {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
     gap: 24px;
-    margin-bottom: 30px;
+    margin-bottom: 8vh;
   }
 
-  .product-reviews__intro {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .reviews__eyebrow {
+    margin: 0 0 14px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
   }
 
-  .product-reviews__title {
+  .reviews__title {
     margin: 0;
-    font: 500 clamp(38px, 4.6vw, 72px) / 0.95 var(--font-serif);
-    letter-spacing: -0.015em;
+    font: 400 clamp(38px, 4.6vw, 76px) / 1 var(--font-serif);
   }
 
-  .product-reviews__title em {
-    font: italic 400 1.05em/1 var(--font-serif);
-    letter-spacing: 0;
+  .reviews__title em,
+  .reviews__empty-title em {
     color: var(--peach);
   }
 
-  .product-reviews__score {
-    display: flex;
+  .reviews__summary {
+    margin: 14px 0 0;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 400 14px var(--font-sans);
+  }
+
+  .reviews__write {
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
-  }
-
-  .product-reviews__average {
-    font: 500 44px/1 var(--font-serif);
-    color: var(--sand);
-  }
-
-  .product-reviews__summary {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font: 500 12px/1 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.55);
-  }
-
-  .product-reviews__stars {
-    font-size: 16px;
+    height: 52px;
+    padding: 0 26px;
+    border-radius: 26px;
+    background: var(--sand);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
     letter-spacing: 3px;
-    color: var(--gold);
+    text-transform: uppercase;
   }
 
-  .product-reviews__grid {
+  .reviews__write:hover {
+    background: var(--cream);
+    color: var(--navy);
+  }
+
+  .reviews__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 30px;
+  }
+
+  .review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--bg);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
+    opacity: 0;
+    transform: translateY(80px) rotate(var(--rot));
+    transition:
+      opacity 0.9s var(--d),
+      transform 1s var(--ease) var(--d);
+  }
+
+  .review-card.is-on {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot));
+  }
+
+  .review-card__stars {
+    color: var(--wine);
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+
+  .review-card blockquote {
+    margin: 0;
+    color: var(--navy-card);
+    font: 400 21px/1.4 var(--font-serif);
+  }
+
+  .review-card figcaption {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .review-card__ini {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: var(--navy-card);
+    color: var(--sand);
+    font: italic 400 17px var(--font-serif);
+  }
+
+  .review-card__who {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--navy-card);
+    font: 400 12px var(--font-sans);
+  }
+
+  .review-card__who strong {
+    font: 600 13px var(--font-sans);
+  }
+
+  .reviews__all {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+  }
+
+  .reviews__all a,
+  .reviews__empty a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--peach);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: gap 0.4s;
+  }
+
+  .reviews__all a:hover {
     gap: 18px;
   }
 
-  .product-reviews__empty {
+  .reviews__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: clamp(40px, 6vw, 72px) 24px;
+    border: 1px dashed rgb(var(--peach-rgb) / 0.35);
+    border-radius: 28px;
+    text-align: center;
+  }
+
+  .reviews__empty-stars {
+    color: rgb(var(--sand-rgb) / 0.35);
+    font-size: 22px;
+    letter-spacing: 6px;
+  }
+
+  .reviews__empty-title {
     margin: 0;
-    padding: 34px;
+    font: 400 clamp(24px, 2.4vw, 34px) / 1.2 var(--font-serif);
+  }
+
+  .reviews__empty-text {
+    max-width: 420px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 300 15px/1.7 var(--font-sans);
+  }
+
+  .reviews__empty a {
+    height: 52px;
+    margin-top: 8px;
+    padding: 0 26px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.5);
     border-radius: 26px;
-    border: 1px dashed rgb(var(--peach-rgb) / 0.3);
-    font: italic 400 22px/1.4 var(--font-serif);
-    color: rgb(var(--white-rgb) / 0.75);
+    color: var(--sand);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .reviews__empty a:hover {
+    background: var(--sand);
+    color: var(--navy);
   }
 </style>

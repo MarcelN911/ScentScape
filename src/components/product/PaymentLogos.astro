@@ -1,0 +1,70 @@
+---
+import { PAYMENT_LOGOS } from '../../data/product.js';
+
+const logos = PAYMENT_LOGOS.map((logo) => ({
+  ...logo,
+  src: logo.file && `/assets/img/pay/${logo.file}`,
+  style: logo.file ? `max-height:${logo.height}px` : `color:${logo.color}`,
+}));
+---
+
+<div class="pay">
+  <span class="pay__label">Medios de pago</span>
+  <div class="pay__list">
+    {logos.map((logo) => (
+      <span class="pay__tile" title={logo.name}>
+        {logo.src ? (
+          <img src={logo.src} alt={logo.name} loading="lazy" style={logo.style} />
+        ) : (
+          <span class="pay__text" style={logo.style}>
+            {logo.name}
+          </span>
+        )}
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .pay {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .pay__label {
+    color: var(--peach);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .pay__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pay__tile {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 96px;
+    height: 46px;
+    padding: 9px 12px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--cream);
+  }
+
+  .pay__tile img {
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .pay__text {
+    font: 700 13px/1 var(--font-sans);
+    letter-spacing: 0.5px;
+  }
+</style>

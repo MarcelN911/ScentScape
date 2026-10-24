@@ -1,0 +1,251 @@
+---
+/*
+ * Linke Seite der Produktseite: großes Bild mit Galerie.
+ * Gibt es Noten, ist das zweite Bild dieselbe Flasche mit dem Notenrad darüber.
+ */
+import NoteWheel from '../../components/product/NoteWheel.astro';
+import RailThumb from '../../components/product/RailThumb.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { imageUrl } from '../../scripts/utils/image.js';
+
+/** @typedef {{ product: object, images: Record<string, string> }} Props */
+const { product, images } = Astro.props;
+const photos = product.images.length ? product.images : ['/assets/img/scentscape-logo.png'];
+const hasWheel = product.ingredients.length > 0;
+const gallery = hasWheel ? [photos[0], photos[0], ...photos.slice(1)] : photos;
+const word = `${product.name} · ${product.name} ·`;
+const thumbs = gallery.map((src, index) => ({
+  src: imageUrl(src, 200),
+  label: `Imagen ${index + 1}`,
+  classes: ['rail__thumb', { 'is-active': index === 0 }],
+  ring: hasWheel && index === 1,
+}));
+---
+
+<div class="stage" data-stage>
+  <div class="stage__word" aria-hidden="true" data-stage-word>
+    {word}
+  </div>
+  <div class="stage__box" data-stage-box data-fly-source data-wheel-slide={hasWheel ? 1 : -1}>
+    {gallery.map((src, index) => (
+      <img
+        class:list={['stage__img', { 'is-active': index === 0 }]}
+        src={imageUrl(src, 1000)}
+        alt={product.name}
+        loading={index === 0 ? 'eager' : 'lazy'}
+        data-stage-img
+      />
+    ))}
+    <span class="stage__shade"></span>
+    <span class="stage__line" aria-hidden="true"></span>
+    <button
+      class="stage__fav"
+      type="button"
+      aria-label="Favorito"
+      data-action="toggle-wish"
+      data-wish-id={product.id}
+    >
+      <Icon name="heart" size={19} strokeWidth={1.6} />
+    </button>
+    {hasWheel && <NoteWheel notes={product.ingredients} images={images} />}
+  </div>
+  {gallery.length > 1 && (
+    <div class="rail">
+      <button class="rail__arrow" type="button" aria-label="Imagen anterior" data-stage-step="-1">
+        ←
+      </button>
+      <div class="rail__thumbs">
+        {thumbs.map((thumb, index) => (
+          <RailThumb thumb={thumb} index={index} />
+        ))}
+      </div>
+      <button class="rail__arrow" type="button" aria-label="Imagen siguiente" data-stage-step="1">
+        →
+      </button>
+    </div>
+  )}
+</div>
+
+<style>
+  .stage {
+    position: relative;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    height: 78vh;
+    padding: 90px 16px 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 55%, rgb(var(--wine-rgb) / 0.55), transparent 72%),
+      var(--navy-deep);
+  }
+
+  .stage__word {
+    position: absolute;
+    left: 0;
+    bottom: 2vh;
+    color: transparent;
+    font: italic 400 clamp(140px, 18vw, 320px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.12);
+    transform: translateX(calc(var(--word-x, 4) * 1vw));
+    pointer-events: none;
+  }
+
+  .stage__box {
+    position: relative;
+    flex: none;
+    width: min(100%, 520px);
+    max-height: 62vh;
+    aspect-ratio: 4 / 4.6;
+    overflow: hidden;
+    border-radius: 26px;
+    background: var(--navy-card);
+    box-shadow:
+      0 0 0 1px rgb(var(--peach-rgb) / 0.35),
+      0 30px 90px rgb(var(--wine-rgb) / 0.35),
+      0 0 120px rgb(var(--peach-rgb) / 0.08);
+    clip-path: inset(100% 0% 0% 0% round 28px);
+    transition: clip-path 1.4s var(--ease-curtain) 0.5s;
+  }
+
+  :global(.is-in) .stage__box {
+    clip-path: inset(0% 0% 0% 0% round 28px);
+  }
+
+  .stage__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    clip-path: inset(0% 0% 0% 100%);
+    transform: scale(1.12);
+    transition:
+      opacity 0.6s,
+      clip-path 1s var(--ease-curtain),
+      transform 1.2s var(--ease);
+  }
+
+  .stage__img.is-active {
+    opacity: 1;
+    clip-path: inset(0% 0% 0% 0%);
+    transform: scale(1.02);
+  }
+
+  .stage__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--navy-deep-rgb) / 0.32) 0%,
+      rgb(var(--navy-deep-rgb) / 0) 24%,
+      rgb(var(--navy-deep-rgb) / 0) 50%,
+      rgb(var(--navy-deep-rgb) / 0.85) 100%
+    );
+    pointer-events: none;
+  }
+
+  .stage__line {
+    position: absolute;
+    inset: 10px;
+    z-index: 1;
+    border: 1px solid rgb(var(--sand-rgb) / 0.28);
+    border-radius: 18px;
+    pointer-events: none;
+  }
+
+  .stage__fav {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.3);
+    border-radius: 23px;
+    background: rgb(var(--navy-rgb) / 0.5);
+    backdrop-filter: blur(8px);
+    color: var(--sand);
+    transition: transform 0.4s var(--ease-pop);
+  }
+
+  .stage__fav:hover {
+    transform: scale(1.15);
+  }
+
+  .stage__fav[aria-pressed='true'] :global(svg) {
+    fill: var(--peach);
+  }
+
+  .rail {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 100%;
+    padding: 8px 10px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.18);
+    border-radius: 24px;
+    background: rgb(var(--navy-rgb) / 0.45);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.8s 1.6s,
+      transform 1s var(--ease) 1.6s;
+  }
+
+  :global(.is-in) .rail {
+    opacity: 1;
+    transform: none;
+  }
+
+  .rail__arrow {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.35);
+    border-radius: 23px;
+    background: rgb(var(--navy-rgb) / 0.45);
+    color: var(--sand);
+    font: 400 16px var(--font-sans);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .rail__arrow:hover {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .rail__thumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 3px;
+    scrollbar-width: none;
+  }
+
+  @media (min-width: 900px) {
+    .stage {
+      position: sticky;
+      height: 100vh;
+      padding: 96px clamp(24px, 3vw, 48px) 22px;
+    }
+
+    .stage__box {
+      width: min(100%, max(300px, calc((100vh - 250px) * 0.87)));
+      max-height: none;
+    }
+  }
+</style>

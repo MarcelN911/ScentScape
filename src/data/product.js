@@ -1,35 +1,34 @@
 /* Inhalte der Produktdetailseite */
 
-/* Galerie: Vorderansicht, zwei Detail-Zooms (Ursprung + Vergrößerung) und die Noten */
-export const GALLERY_SLIDES = [
-  { label: 'Vista frontal' },
-  { label: 'Detalle de la tapa', origin: '50% 12%', scale: 2.4 },
-  { label: 'Detalle de la etiqueta', origin: '50% 64%', scale: 2.1 },
-  { label: 'Sus notas', notes: true },
+export const SHIPPING_ITEMS = [
+  'Envíos a todo Colombia desde Medellín.',
+  'Envío gratis en compras desde $500.000 COP.',
+  'Recibirás la guía de seguimiento por WhatsApp.',
+  'Paga de forma segura en línea o coordina tu pago por WhatsApp.',
 ];
 
-export const GALLERY_AUTOPLAY_MS = 5500;
-
-/* Positionen der Noten-Kreise um die Flasche (Prozent von links / oben) */
-export const ORBIT_POSITIONS = [
-  [18, 24],
-  [82, 22],
-  [12, 60],
-  [88, 58],
-  [28, 88],
-  [72, 88],
+export const ORIGINAL_ITEMS = [
+  'Todas nuestras fragancias son 100 % originales.',
+  'Cada perfume cuenta con verificación de autenticidad.',
 ];
 
-export const SHIPPING_TEXT =
-  'Envíos a todo Colombia. Envío gratis en compras desde $500.000. Al finalizar la compra completas tus datos de envío y confirmamos tu pedido por WhatsApp.';
-
-export const ORIGINAL_TEXT =
-  'Llega sellado de fábrica, con su código de lote impreso en la caja. Puedes verificarlo en la sección Original garantizado o escribiéndonos por WhatsApp.';
-
-export const TRUST_ITEMS = [
-  'Envíos a todo Colombia',
-  'Envío gratis desde $500.000',
-  'Original garantizado',
-  'Sellado de fábrica',
-  'Pago contraentrega',
+/* Logos im Akkordeon "Envíos y pagos". Ohne Datei: Name als Schrift in der Markenfarbe */
+export const PAYMENT_LOGOS = [
+  { name: 'VISA', file: 'visa.svg', height: 16 },
+  { name: 'Mastercard', file: 'mastercard.svg', height: 28 },
+  { name: 'PSE', color: '#1D4F9C' },
+  { name: 'Nequi', file: 'nequi.svg', height: 22 },
+  { name: 'Bancolombia', file: 'bancolombia.svg', height: 14 },
+  { name: 'Daviplata', color: '#E1251B' },
 ];
+
+/* Hintergründe der Bewertungskarten und ihre Neigung in Grad */
+export const REVIEW_CARD_COLORS = [
+  '#F0D2AA',
+  '#EBC193',
+  '#F3DFC1',
+  '#E2BC98',
+  '#EDCBA4',
+  '#F2D9B8',
+];
+export const REVIEW_CARD_TILTS = [-2, 1.6, -1, 2.2, -1.6, 1.2];

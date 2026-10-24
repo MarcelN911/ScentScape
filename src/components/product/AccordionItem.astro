@@ -1,0 +1,100 @@
+---
+/** Eintrag im Akkordeon der Produktseite. @typedef {{ number: string, title: string, open?: boolean }} Props */
+const { number, title, open = false } = Astro.props;
+---
+
+<div class:list={['acc', { 'is-open': open }]} data-accordion-item>
+  <button class="acc__head" type="button" data-accordion-toggle aria-expanded={String(open)}>
+    <span class="acc__n">{number}</span>
+    <span class="acc__title">{title}</span>
+    <span class="acc__plus">+</span>
+  </button>
+  <div class="acc__body">
+    <div class="acc__clip">
+      <div class="acc__inner">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .acc {
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.22);
+  }
+
+  .acc__head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 22px 0;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    text-align: left;
+  }
+
+  .acc__head:hover {
+    color: var(--sand);
+  }
+
+  .acc__n {
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .acc__title {
+    flex: 1;
+    font: 400 clamp(20px, 1.6vw, 26px) var(--font-serif);
+  }
+
+  .acc.is-open .acc__title {
+    font-style: italic;
+  }
+
+  .acc__plus {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 17px;
+    color: var(--peach);
+    font: 300 18px var(--font-sans);
+    transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  .acc.is-open .acc__plus {
+    transform: rotate(45deg);
+  }
+
+  .acc__body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s var(--ease);
+  }
+
+  .acc.is-open .acc__body {
+    grid-template-rows: 1fr;
+  }
+
+  .acc__clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .acc__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 0 26px 30px;
+    opacity: 0;
+    transition: opacity 0.4s 0.1s;
+  }
+
+  .acc.is-open .acc__inner {
+    opacity: 1;
+  }
+</style>

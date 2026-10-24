@@ -1,83 +1,64 @@
-/* Häufige Fragen auf der Startseite. link: optionaler Button unter der Antwort. */
-export const FAQ_GROUPS = [
+/*
+ * Fragen und Antworten.
+ * CHAT_QUESTIONS: Handy-Chat auf Produktseite und Servicios
+ * FAQ_QUESTIONS: Seite "Te asesoramos" (mit Kategorie und optionalem Link)
+ */
+export const CHAT_GREETING =
+  'Hola, somos Sara y Brayan de ScentScape. Elige una pregunta y te respondemos aquí mismo.';
+
+export const CHAT_QUESTIONS = [
+  ['¿Hacen envíos a todo Colombia?', 'Sí. Enviamos a todo Colombia desde Medellín.'],
+  ['¿Desde qué valor el envío es gratis?', 'El envío es gratis en pedidos desde $500.000 COP.'],
+  [
+    '¿Cómo sé qué perfume elegir?',
+    'Completa nuestro test de perfil olfativo y te recomendamos el perfume ideal para ti en minutos. También puedes escribirnos por WhatsApp para una asesoría personalizada.',
+  ],
+  [
+    '¿Qué tamaños están disponibles?',
+    'Cada fragancia muestra sus presentaciones disponibles en su página de producto.',
+  ],
+  ['¿Dónde se encuentra ScentScape?', 'ScentScape nace en Medellín, Colombia, en 2024.'],
+  [
+    '¿Cómo puedo contactarlos?',
+    'Por WhatsApp al +57 321 810 1882 o por Instagram en @Scentscapeparfums_.',
+  ],
+].map(([question, answer]) => ({ question, answer }));
+
+export const FAQ_GREETING =
+  'Hola, somos Sara y Brayan de ScentScape. Toca una pregunta y te respondemos aquí mismo.';
+
+export const FAQ_QUESTIONS = [
   {
-    label: 'Envíos',
-    items: [
-      {
-        question: '¿Hacen envíos a toda Colombia?',
-        answer: 'Sí. Enviamos desde Medellín a cualquier ciudad de Colombia.',
-      },
-      {
-        question: '¿Cuánto cuesta el envío?',
-        answer:
-          'El envío es gratis en compras desde $500.000. Para pedidos menores te confirmamos el valor por WhatsApp según tu ciudad.',
-      },
-      {
-        question: '¿Cuánto tarda en llegar mi pedido?',
-        answer:
-          'Depende de tu ciudad. Al confirmar tu pedido por WhatsApp te indicamos el tiempo estimado de entrega.',
-      },
-    ],
+    category: 'Envíos',
+    question: '¿Hacen envíos a toda Colombia?',
+    answer: 'Sí. Enviamos desde Medellín a cualquier ciudad de Colombia.',
   },
   {
-    label: 'Medios de pago',
-    items: [
-      {
-        question: '¿Qué medios de pago aceptan?',
-        answer:
-          'Nequi, Daviplata, Bancolombia / PSE, tarjeta de crédito o débito con Wompi y pago contraentrega.',
-      },
-      {
-        question: '¿Cómo pago por WhatsApp o en efectivo?',
-        answer:
-          'En el carrito elige “WhatsApp o efectivo”. Se abre WhatsApp con tu pedido y allí acordamos contigo el pago.',
-      },
-      {
-        question: '¿Puedo pagar a cuotas?',
-        answer: 'Muy pronto podrás pagar en 4 cuotas con Addi, sin tarjeta de crédito.',
-      },
-    ],
+    category: 'Envíos',
+    question: '¿Desde qué valor el envío es gratis?',
+    answer:
+      'El envío es gratis en compras desde $500.000. Para pedidos menores te confirmamos el valor por WhatsApp según tu ciudad.',
   },
   {
-    label: 'Originalidad',
-    items: [
-      {
-        question: '¿Los perfumes son originales?',
-        answer:
-          'Sí. Cada perfume llega sellado de fábrica y con su código de lote impreso en la caja.',
-      },
-      {
-        question: '¿Cómo verifico mi perfume?',
-        answer:
-          'Escanea el QR de la tarjeta que viene en el empaque o entra a la sección Original garantizado y sigue los pasos.',
-        link: { label: 'Verificar mi lote', href: '/original/' },
-      },
-    ],
+    category: 'Asesoría',
+    question: '¿Cómo sé qué perfume elegir?',
+    answer:
+      'Completa nuestro test de perfil olfativo y te recomendamos el perfume ideal para ti en minutos. También puedes escribirnos por WhatsApp para una asesoría personalizada.',
+    link: { label: 'Hacer el test', href: '/test-olfativo/' },
   },
   {
-    label: 'Regalos',
-    items: [
-      {
-        question: '¿Puedo enviarlo como regalo?',
-        answer:
-          'Sí. Marca “Es un regalo” en el carrito: añadimos una nota escrita a mano, el paquete va sin precio y puedes elegir la fecha de entrega.',
-      },
-      {
-        question: '¿Tienen gift cards?',
-        answer: 'Sí, una gift card digital con el monto que elijas para comprar en la tienda.',
-        link: { label: 'Ver gift cards', href: '/gift-card/' },
-      },
-    ],
+    category: 'Asesoría',
+    question: '¿Qué tamaños están disponibles?',
+    answer: 'Cada fragancia muestra sus presentaciones disponibles en su página de producto.',
   },
   {
-    label: 'Asesoría',
-    items: [
-      {
-        question: 'No sé qué perfume elegir',
-        answer:
-          'Haz nuestro test olfativo o escríbenos: Sara y Brayan te asesoran en persona por WhatsApp.',
-        link: { label: 'Hacer el test', href: '/#test', action: 'open-quiz' },
-      },
-    ],
+    category: 'ScentScape',
+    question: '¿Dónde se encuentra ScentScape?',
+    answer: 'ScentScape nace en Medellín, Colombia, en 2024.',
+  },
+  {
+    category: 'ScentScape',
+    question: '¿Cómo puedo contactarlos?',
+    answer: 'Por WhatsApp al +57 321 810 1882 o por Instagram en @Scentscapeparfums_.',
   },
 ];

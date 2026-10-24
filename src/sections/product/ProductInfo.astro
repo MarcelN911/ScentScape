@@ -1,0 +1,280 @@
+---
+/* Rechte Seite: Pfad, Titel mit Buchstaben-Einblendung, Marke, Bewertung, Familien, Kaufbereich, Akkordeon. */
+import AccordionItem from '../../components/product/AccordionItem.astro';
+import BuyCard from '../../components/product/BuyCard.astro';
+import PaymentLogos from '../../components/product/PaymentLogos.astro';
+import ProductRating from '../../components/product/ProductRating.astro';
+import { ORIGINAL_ITEMS, SHIPPING_ITEMS } from '../../data/product.js';
+import { labelOf } from '../../scripts/catalog/theme.js';
+
+/** @typedef {{ product: object, reviews: object[] }} Props */
+const { product, reviews } = Astro.props;
+const letters = [...product.name];
+const description =
+  product.plainDescription || 'Pronto agregaremos la descripción de esta fragancia.';
+---
+
+<div class="info">
+  <nav class="info__crumbs" aria-label="Ruta">
+    <a href="/productos/">← Productos</a>
+    <span>/</span>
+    <span class="info__here">{product.name}</span>
+  </nav>
+  <div>
+    <p class="info__eyebrow">
+      <span></span>
+      {labelOf(product)}
+    </p>
+    <h1 class="info__title" aria-label={product.name}>
+      {letters.map((letter, index) => (
+        <span class="info__letter" aria-hidden="true">
+          <span style={`--d:${1100 + index * 40}ms`}>{letter}</span>
+        </span>
+      ))}
+    </h1>
+    <div class="info__meta">
+      {product.brand && <span class="info__brand">{product.brand}</span>}
+      <div class="info__facts">
+        <ProductRating reviews={reviews} />
+        <div class="info__family">
+          <span class="info__family-label">Familia</span>
+          <span class="info__chips">
+            {product.scentFamilies.map((family) => (
+              <span>{family}</span>
+            ))}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info__buy">
+    <BuyCard product={product} />
+  </div>
+  <div class="info__acc" data-accordion>
+    <AccordionItem number="01" title="Descripción" open>
+      <p class="info__text">{description}</p>
+    </AccordionItem>
+    <AccordionItem number="02" title="Envíos y pagos">
+      <ul class="info__list">
+        {SHIPPING_ITEMS.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <PaymentLogos />
+    </AccordionItem>
+    <AccordionItem number="03" title="Original garantizado">
+      <ul class="info__list">
+        {ORIGINAL_ITEMS.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <a class="info__link" href="/original/">
+        Verifica tu perfume →
+      </a>
+    </AccordionItem>
+  </div>
+</div>
+
+<style>
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    min-width: 0;
+    padding: 6vh 24px 10vh;
+  }
+
+  .info__crumbs,
+  .info__eyebrow,
+  .info__meta,
+  .info__acc {
+    opacity: 0;
+    transition: opacity 0.8s var(--fade-delay, 1.3s);
+  }
+
+  .info__crumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 400 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .info__crumbs span {
+    color: rgb(var(--cream-rgb) / 0.35);
+  }
+
+  .info__crumbs .info__here {
+    color: rgb(var(--cream-rgb) / 0.7);
+  }
+
+  .info__eyebrow {
+    --fade-delay: 1.4s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 16px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .info__eyebrow span {
+    display: block;
+    width: 0;
+    height: 1px;
+    background: var(--peach);
+    transition: width 1s var(--ease) 1.4s;
+  }
+
+  .info__title {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    font: 400 clamp(44px, 5vw, 88px) / 1 var(--font-serif);
+  }
+
+  .info__letter {
+    display: inline-block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+  }
+
+  .info__letter span {
+    display: inline-block;
+    white-space: pre;
+    transform: translateY(110%);
+    transition: transform 1s var(--ease) var(--d);
+  }
+
+  .info__meta {
+    --fade-delay: 1.7s;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+  }
+
+  .info__brand {
+    color: var(--sand);
+    font: italic 400 clamp(30px, calc(1.8vw + 8px), 36px) / 1.1 var(--font-serif);
+  }
+
+  .info__facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 14px 0;
+    padding: 14px 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.16);
+  }
+
+  .info__family {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .info__family-label {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+  }
+
+  .info__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .info__chips span {
+    padding: 6px 12px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 14px;
+    color: var(--peach);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .info__buy {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.9s 1.9s,
+      transform 1.1s var(--ease) 1.9s;
+  }
+
+  .info__acc {
+    --fade-delay: 2.2s;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.22);
+  }
+
+  .info__text {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 15px/1.8 var(--font-sans);
+    white-space: pre-line;
+  }
+
+  .info__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .info__list li {
+    display: flex;
+    gap: 12px;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 15px/1.6 var(--font-sans);
+  }
+
+  .info__list li::before {
+    content: '—';
+    color: var(--peach);
+  }
+
+  .info__link {
+    align-self: flex-start;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.5);
+    color: var(--peach);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  :global(.is-in) .info__crumbs,
+  :global(.is-in) .info__eyebrow,
+  :global(.is-in) .info__meta,
+  :global(.is-in) .info__acc,
+  :global(.is-in) .info__buy {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.is-in) .info__eyebrow span {
+    width: 40px;
+  }
+
+  :global(.is-in) .info__letter span {
+    transform: none;
+  }
+
+  @media (min-width: 900px) {
+    .info {
+      padding: 130px clamp(30px, 4.5vw, 80px) 12vh;
+    }
+  }
+</style>

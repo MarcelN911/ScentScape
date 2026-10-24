@@ -1,0 +1,142 @@
+---
+/** Untere Leiste des Chats. @typedef {{ input: 'link' | 'field', href: string }} Props */
+const { input, href } = Astro.props;
+---
+
+<div class="input-bar">
+  <span class="input-bar__plus">+</span>
+  {input === 'link' ? (
+    <a class="input-bar__link" href={href} target="_blank" rel="noopener">
+      Mensaje
+    </a>
+  ) : (
+    <form class="input-bar__form" data-chat-form>
+      <input
+        class="input-bar__field"
+        placeholder="Escribe tu mensaje…"
+        aria-label="Mensaje para WhatsApp"
+        data-chat-input
+      />
+      <button
+        class="input-bar__send"
+        type="submit"
+        aria-label="Enviar por WhatsApp"
+        data-chat-send
+        hidden
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M3 20.5 21 12 3 3.5l2.5 7L15 12l-9.5 1.5z"></path>
+        </svg>
+      </button>
+    </form>
+  )}
+  <span class="input-bar__icons" data-chat-icons>
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      aria-hidden="true"
+    >
+      <path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
+    </svg>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      aria-hidden="true"
+    >
+      <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+      <path d="M5 11a7 7 0 0 0 14 0M12 18v4"></path>
+    </svg>
+  </span>
+</div>
+
+<style>
+  .input-bar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 30px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.12);
+    background: var(--navy-card);
+    color: var(--peach);
+  }
+
+  .input-bar__plus {
+    font:
+      300 26px/1 -apple-system,
+      var(--font-sans);
+  }
+
+  .input-bar__link,
+  .input-bar__field {
+    flex: 1;
+    min-width: 0;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 17px;
+    background: var(--navy-deep);
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 400 14px var(--font-sans);
+  }
+
+  .input-bar__link {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-bar__link:hover {
+    border-color: var(--peach);
+    color: var(--cream);
+  }
+
+  .input-bar__form {
+    display: flex;
+    flex: 1;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .input-bar__field {
+    height: 36px;
+    border-radius: 18px;
+    color: var(--cream);
+    outline: none;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s;
+  }
+
+  .input-bar__field:focus {
+    border-color: var(--peach);
+    box-shadow: 0 0 0 3px rgb(var(--peach-rgb) / 0.15);
+  }
+
+  .input-bar__send {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--whatsapp);
+    color: var(--cream);
+    box-shadow: 0 6px 18px rgb(37 211 102 / 0.45);
+  }
+
+  .input-bar__icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>

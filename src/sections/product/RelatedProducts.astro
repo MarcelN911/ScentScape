@@ -1,49 +1,209 @@
 ---
+/* "También te puede gustar": seitlich scrollbare Karten mit Zähler, Pfeilen und Fortschrittsbalken. */
 import RelatedCard from '../../components/product/RelatedCard.astro';
+import { padNumber } from '../../scripts/utils/format.js';
 
 /** @typedef {{ products: object[] }} Props */
 const { products } = Astro.props;
 ---
 
-<section class="related">
-  <h2 class="container related__title">
-    También te <em>puede gustar</em>
-  </h2>
-  <div class="related__track" data-drag-scroll>
+<section class="related" data-related>
+  <div class="related__word" aria-hidden="true">
+    Descubre · Descubre · Descubre · Descubre ·
+  </div>
+  <div class="related__head">
+    <div>
+      <p class="related__eyebrow">
+        <span></span>Selección para ti
+      </p>
+      <h2 class="related__title">
+        <span class="related__mask">
+          <span class="related__one">También te</span>
+        </span>
+        <span class="related__mask related__mask--pad">
+          <span class="related__two">puede gustar</span>
+        </span>
+      </h2>
+    </div>
+    <div class="related__nav">
+      <div class="related__count">
+        <span data-related-num>01</span>
+        <small>/ {padNumber(products.length)}</small>
+      </div>
+      <div class="related__arrows">
+        <button type="button" aria-label="Anterior" data-related-step="-1">
+          ←
+        </button>
+        <button type="button" aria-label="Siguiente" data-related-step="1">
+          →
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="related__track" data-related-track>
     {products.map((product, index) => (
       <RelatedCard product={product} index={index} />
     ))}
+    <span class="related__end" aria-hidden="true"></span>
+  </div>
+  <div class="related__bar">
+    <span data-related-bar></span>
   </div>
 </section>
 
 <style>
   .related {
-    padding: 20px 0 100px;
+    position: relative;
+    overflow: hidden;
+    padding: 18vh 0 16vh;
+    background:
+      radial-gradient(ellipse 50% 60% at 85% 30%, rgb(var(--wine-rgb) / 0.35), transparent 70%),
+      var(--navy);
+  }
+
+  .related__word {
+    position: absolute;
+    left: 0;
+    top: 6vh;
+    color: transparent;
+    font: italic 400 clamp(120px, 16vw, 280px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.1);
+    transform: translateX(calc(var(--word-x, 6) * 1vw));
+    pointer-events: none;
+  }
+
+  .related__head {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 28px;
+    margin-bottom: 7vh;
+    padding: 0 clamp(20px, 6vw, 96px);
+  }
+
+  .related__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 18px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .related__eyebrow span {
+    display: block;
+    width: calc(var(--line, 10) * 1px);
+    height: 1px;
+    background: var(--peach);
   }
 
   .related__title {
-    margin: 0 auto 26px;
-    font: 500 clamp(38px, 4.6vw, 72px) / 0.95 var(--font-serif);
-    letter-spacing: -0.015em;
+    margin: 0;
+    font: 400 clamp(40px, 5vw, 84px) / 1 var(--font-serif);
   }
 
-  .related__title em {
-    font: italic 400 1.05em/1 var(--font-serif);
-    letter-spacing: 0;
+  .related__mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .related__mask--pad {
+    padding-bottom: 0.08em;
+  }
+
+  .related__one,
+  .related__two {
+    display: block;
+    transform: translateY(calc(var(--t1, 110) * 1%));
+  }
+
+  .related__two {
     color: var(--peach);
+    font-style: italic;
+    transform: translateY(calc(var(--t2, 110) * 1%));
+  }
+
+  .related__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .related__count {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--sand);
+    font: italic 400 34px var(--font-serif);
+  }
+
+  .related__count small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 12px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .related__arrows {
+    display: flex;
+    gap: 10px;
+  }
+
+  .related__arrows button {
+    width: 56px;
+    height: 56px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.45);
+    border-radius: 28px;
+    background: none;
+    color: var(--peach);
+    font: 300 18px var(--font-sans);
+    transition:
+      background-color 0.3s,
+      color 0.3s,
+      transform 0.4s var(--ease-pop);
+  }
+
+  .related__arrows button:hover {
+    background: var(--peach);
+    color: var(--navy);
+    transform: scale(1.08);
   }
 
   .related__track {
+    position: relative;
     display: flex;
-    gap: 18px;
+    gap: 28px;
     overflow-x: auto;
-    padding: 10px var(--gutter) 20px;
+    padding: 40px clamp(20px, 6vw, 96px);
+    scroll-behavior: smooth;
+    scroll-padding-inline: clamp(20px, 6vw, 96px);
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    cursor: grab;
-    user-select: none;
+    perspective: 1400px;
   }
 
-  .related__track.is-dragging {
-    cursor: grabbing;
+  .related__end {
+    flex: none;
+    width: clamp(1px, calc(6vw - 28px), 68px);
+  }
+
+  .related__bar {
+    height: 2px;
+    margin: 0 clamp(20px, 6vw, 96px);
+    overflow: hidden;
+    border-radius: 1px;
+    background: rgb(var(--peach-rgb) / 0.15);
+  }
+
+  .related__bar span {
+    display: block;
+    width: var(--bar, 0%);
+    height: 100%;
+    background: var(--peach);
+    transition: width 0.4s;
   }
 </style>

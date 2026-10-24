@@ -1,0 +1,72 @@
+---
+/** Durchschnitt und Sterne neben der Familie. Ohne Bewertungen erscheint nichts. */
+import { averageRating } from '../../scripts/catalog/reviews.js';
+
+/** @typedef {{ reviews: object[] }} Props */
+const { reviews } = Astro.props;
+const average = averageRating(reviews);
+const count = `${reviews.length} ${reviews.length === 1 ? 'reseña' : 'reseñas'}`;
+---
+
+{reviews.length > 0 && (
+  <a class="rating" href="#resenas">
+    <span class="rating__value">{average.toFixed(1)}</span>
+    <span class="rating__side">
+      <span class="rating__stars">
+        ★★★★★<span style={`width:${Math.round((average / 5) * 100)}%`}>★★★★★</span>
+      </span>
+      <span class="rating__count">{count}</span>
+    </span>
+  </a>
+)}
+
+<style>
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    padding-right: 20px;
+    border-right: 1px solid rgb(var(--peach-rgb) / 0.2);
+    color: var(--cream);
+  }
+
+  .rating:hover {
+    color: var(--sand);
+  }
+
+  .rating__value {
+    font: 400 26px/1 var(--font-serif);
+  }
+
+  .rating__side {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .rating__stars {
+    position: relative;
+    color: rgb(var(--peach-rgb) / 0.3);
+    font-size: 11px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .rating__stars span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    color: var(--peach);
+    white-space: nowrap;
+  }
+
+  .rating__count {
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 400 11px var(--font-sans);
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--peach-rgb) / 0.4);
+    text-underline-offset: 3px;
+  }
+</style>

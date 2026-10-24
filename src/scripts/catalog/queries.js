@@ -12,11 +12,11 @@ export function bestsellers(catalog, limit) {
   return [...catalog].sort((a, b) => popularity(b) - popularity(a)).slice(0, limit);
 }
 
+/* Gleiches Geschlecht (oder Unisex) zählt am meisten, dann gemeinsame Duftfamilien */
 function relatedScore(product, other) {
-  return (
-    (other.family && other.family === product.family ? 2 : 0) +
-    (other.gender === product.gender ? 1 : 0)
-  );
+  const sameGender = other.gender === product.gender || other.gender === 'U' ? 3 : 0;
+  const shared = other.scentFamilies.filter((family) => product.scentFamilies.includes(family));
+  return sameGender + shared.length;
 }
 
 export function relatedTo(product, catalog, limit = 8) {
