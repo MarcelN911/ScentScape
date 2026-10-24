@@ -1,0 +1,312 @@
+---
+import { DENSITIES, GENDER_TABS, SORT_OPTIONS } from '../../data/shop.js';
+import Icon from '../ui/Icon.astro';
+---
+
+<div class="controls">
+  <div class="controls__group">
+    <span class="controls__label">Para</span>
+    <div class="tabs" role="radiogroup" aria-label="Género">
+      <span class="tabs__pill" data-tabs-pill></span>
+      {GENDER_TABS.map((tab) => (
+        <button
+          class="tabs__tab"
+          type="button"
+          role="radio"
+          aria-checked={tab === 'Todos' ? 'true' : 'false'}
+          data-gender-tab={tab}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="controls__search">
+    <label class="field-pill">
+      <Icon name="search" size={15} strokeWidth={1.6} />
+      <input placeholder="Buscar nombre o marca" aria-label="Buscar productos" data-shop-search />
+    </label>
+  </div>
+  <div class="controls__end">
+    <label class="field-pill field-pill--sort">
+      Orden
+      <select aria-label="Ordenar" data-shop-sort>
+        {SORT_OPTIONS.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    </label>
+    <div class="density" role="group" aria-label="Columnas">
+      {DENSITIES.map((density) => (
+        <button
+          class:list={['density__btn', { 'density__btn--row': density.row }]}
+          type="button"
+          aria-label={density.label}
+          aria-pressed={density.value === 3 ? 'true' : 'false'}
+          data-density={density.value}
+        >
+          {Array.from({ length: density.bars }, () => (
+            <span></span>
+          ))}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+<div class="active" data-active-filters>
+  <span class="active__none" data-active-none>
+    Sin filtros activos
+  </span>
+  <div class="active__list" data-active-list></div>
+  <button class="active__clear" type="button" data-shop-clear hidden>
+    Limpiar
+  </button>
+</div>
+
+<style>
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    align-content: flex-start;
+    gap: 14px;
+    min-height: 230px;
+    padding-top: 6px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.14);
+  }
+
+  .controls > * {
+    padding-top: 14px;
+  }
+
+  .controls__group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .controls__label {
+    color: rgb(var(--cream-rgb) / 0.65);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .tabs {
+    position: relative;
+    display: flex;
+    width: fit-content;
+    padding: 4px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 24px;
+  }
+
+  .tabs__pill {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: calc(4px + var(--tab, 0) * 70px);
+    width: 70px;
+    border-radius: 20px;
+    background: var(--peach);
+    transition: left 0.6s cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
+
+  .tabs__tab {
+    position: relative;
+    width: 70px;
+    height: 40px;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.4s;
+  }
+
+  .tabs__tab[aria-checked='true'] {
+    color: var(--navy);
+  }
+
+  .controls__search {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .field-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    padding: 0 18px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 24px;
+    background: var(--navy-deep);
+    color: var(--peach);
+  }
+
+  .field-pill input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    outline: none;
+  }
+
+  .field-pill--sort {
+    font: 400 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .field-pill select {
+    margin-left: 8px;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 400 13px var(--font-sans);
+    letter-spacing: 0;
+    text-transform: none;
+    outline: none;
+  }
+
+  .field-pill option {
+    background: var(--navy-deep);
+  }
+
+  .controls__end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .density {
+    display: none;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 21px;
+    background: var(--navy-deep);
+  }
+
+  .density__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 40px;
+    height: 36px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    color: rgb(var(--cream-rgb) / 0.6);
+    transition: background-color 0.3s;
+  }
+
+  .density__btn--row {
+    flex-direction: row;
+  }
+
+  .density__btn span {
+    width: 16px;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  .density__btn--row span {
+    width: 3px;
+    height: 12px;
+  }
+
+  .density__btn[aria-pressed='true'] {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .active {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    margin-top: -6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .active__none {
+    color: rgb(var(--cream-rgb) / 0.4);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .active__list {
+    display: contents;
+  }
+
+  .active :global(.active__chip) {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 16px;
+    background: none;
+    color: var(--cream);
+    font: 400 12px var(--font-sans);
+  }
+
+  .active :global(.active__chip:hover) {
+    border-color: var(--sand);
+  }
+
+  .active :global(.active__dot) {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--dot);
+  }
+
+  .active :global(.active__x) {
+    color: var(--peach);
+  }
+
+  .active__clear {
+    flex: none;
+    height: 32px;
+    padding: 0 4px;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.5);
+    background: none;
+    color: var(--peach);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 1080px) {
+    .density {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .controls {
+      min-height: 150px;
+    }
+  }
+
+  @media (min-width: 1500px) {
+    .controls {
+      min-height: 80px;
+    }
+  }
+</style>

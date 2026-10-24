@@ -1,37 +1,57 @@
-import { activePanel, applyFilters } from './apply.js';
-import { bindControls, renderControls } from './controls.js';
-import { initEntrance, refreshEntrance } from './entrance.js';
-import { capturePositions, playFlip } from './flip.js';
-import { initListPreview } from './list-preview.js';
-import { createShopState } from './state.js';
+/* Seite "Productos": Rad, Noten, Filter, Raster oder Index mit Vorschau. */
+import { SCENT_FAMILIES } from '../../../data/scent.js';
+import { renderActiveFilters } from './active-filters.js';
+import { bindControls } from './controls.js';
+import { filterEntries } from './filter.js';
+import { initMarquee } from './marquee.js';
+import { bindPreview, renderPreview } from './preview-control.js';
+import { renderProfile } from './profile-view.js';
+import { renderResults } from './results-view.js';
+import { stopReveal } from './reveal.js';
+import { createState, isIndexMode, resetPaging } from './state.js';
+import { renderWheel } from './wheel.js';
 
-function render(root, state) {
-  renderControls(root, state);
-  applyFilters(root, state);
+function render(shop) {
+  const { root, state } = shop;
+  const result = filterEntries(shop.entries, state);
+  const indexMode = isIndexMode(state);
+  renderWheel(root, state, result.base);
+  renderProfile(root, state, result);
+  renderActiveFilters(root, state, shop.update);
+  renderResults(root, result, state, indexMode);
+  shop.visible = result.list.slice(0, state.shown);
+  if (indexMode) renderPreview(shop, shop.visible);
 }
 
-function createUpdater(root, state) {
-  return (changes) => {
-    const positions = capturePositions(activePanel(root, state));
-    Object.assign(state, changes);
-    render(root, state);
-    playFlip(activePanel(root, state), positions);
-    requestAnimationFrame(refreshEntrance);
+/* "removeNote" ist eine Abkürzung der Filter-Chips: diese eine Note aus der Auswahl nehmen */
+function applyChanges(state, changes) {
+  const { removeNote, ...rest } = changes;
+  if (removeNote) rest.notes = new Set([...state.notes].filter((note) => note !== removeNote));
+  Object.assign(state, rest);
+}
+
+function createShop(root) {
+  const data = JSON.parse(root.querySelector('[data-shop-data]').textContent);
+  const shop = { root, state: createState(), entries: data.entries, images: data.images };
+  shop.familyIndex = (name) => SCENT_FAMILIES.findIndex((family) => family.name === name);
+  shop.visibleEntries = () => shop.visible ?? [];
+  shop.update = (changes, { keepPage = false } = {}) => {
+    applyChanges(shop.state, changes);
+    if (!keepPage) resetPaging(shop.state);
+    render(shop);
   };
-}
-
-function focusSearchIfRequested(root) {
-  if (new URLSearchParams(location.search).has('buscar'))
-    root.querySelector('[data-shop-search]').focus();
+  return shop;
 }
 
 export function initShop(signal) {
   const root = document.querySelector('[data-shop]');
   if (!root) return;
-  const state = createShopState();
-  bindControls(root, state, createUpdater(root, state), signal);
-  render(root, state);
-  initEntrance(root, signal);
-  initListPreview(root, signal);
-  focusSearchIfRequested(root);
+  const shop = createShop(root);
+  bindControls(shop, signal);
+  bindPreview(shop, signal);
+  initMarquee(root, signal);
+  addEventListener('resize', () => render(shop), { signal });
+  render(shop);
+  setTimeout(() => root.classList.add('is-in'), 80);
+  signal.addEventListener('abort', stopReveal);
 }

@@ -1,0 +1,120 @@
+---
+import FamilyWheel from '../../components/shop/FamilyWheel.astro';
+import NotesArea from '../../components/shop/NotesArea.astro';
+import ShopControls from '../../components/shop/ShopControls.astro';
+
+/** @typedef {{ images: Record<string, string> }} Props */
+const { images } = Astro.props;
+---
+
+<aside class="profile" aria-label="Perfil olfativo">
+  <div class="profile__wheel">
+    <FamilyWheel images={images} />
+  </div>
+  <div class="profile__side">
+    <p class="profile__eyebrow">
+      <span></span>Perfil olfativo
+    </p>
+    <h2 class="profile__title">
+      <span data-profile-title>Todas las familias</span>
+    </h2>
+    <p class="profile__hint" data-profile-hint>
+      Gira la rueda y elige una familia olfativa. Después puedes afinar con sus notas.
+    </p>
+    <NotesArea images={images} />
+    <ShopControls />
+  </div>
+</aside>
+
+<style>
+  .profile {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: clamp(20px, 3vw, 56px);
+    margin-bottom: 32px;
+    padding: clamp(16px, 2vw, 28px) clamp(16px, 2.4vw, 36px);
+    overflow: hidden;
+    border: 1px solid rgb(var(--peach-rgb) / 0.18);
+    border-radius: 30px;
+    background:
+      radial-gradient(ellipse 45% 90% at 16% 50%, var(--shop-glow), transparent 72%),
+      rgb(var(--navy-deep-rgb) / 0.62);
+    box-shadow: 0 40px 90px rgb(0 0 0 / 0.35);
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      transform 0.9s var(--ease) 0.2s,
+      opacity 0.8s 0.2s,
+      background 1s;
+  }
+
+  :global(.is-in) .profile {
+    opacity: 1;
+    transform: none;
+  }
+
+  .profile__wheel {
+    display: flex;
+    justify-content: center;
+    padding: 12px 56px;
+  }
+
+  .profile__side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .profile__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .profile__eyebrow span {
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .profile__title {
+    margin: 0;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+    font: 400 clamp(30px, 3.2vw, 54px) / 1.1 var(--font-serif);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .profile__title span {
+    transition: color 0.6s;
+  }
+
+  .profile__title.is-family span {
+    color: var(--sand);
+    font-style: italic;
+  }
+
+  .profile__hint {
+    max-width: 560px;
+    min-height: 3.4em;
+    margin: -6px 0 0;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.7 var(--font-sans);
+  }
+
+  @media (min-width: 900px) {
+    .profile {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+  }
+</style>

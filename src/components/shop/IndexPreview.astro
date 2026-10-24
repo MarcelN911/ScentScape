@@ -1,0 +1,346 @@
+---
+/** Feste Vorschau rechts in der Indexansicht. Inhalt füllt scripts/features/shop/preview.js. */
+import Icon from '../ui/Icon.astro';
+---
+
+<aside class="preview" aria-label="Fragancia seleccionada" data-preview>
+  <div class="preview__media" data-fly-source>
+    <img class="preview__image" alt="" data-preview-image />
+    <img class="preview__image preview__image--next" alt="" data-preview-next />
+    <span class="preview__scan" aria-hidden="true" data-preview-scan></span>
+    <span class="preview__shade"></span>
+    <div class="preview__top">
+      <span class="preview__number">
+        N° <span data-preview-number></span>
+      </span>
+      <button
+        class="preview__heart"
+        type="button"
+        aria-label="Favorito"
+        data-action="toggle-wish"
+        data-preview-heart
+      >
+        <Icon name="heart" size={15} strokeWidth={1.6} />
+      </button>
+    </div>
+  </div>
+  <div class="preview__body">
+    <div class="preview__head-mask">
+      <div class="preview__head" data-preview-head>
+        <span class="preview__meta" data-preview-meta></span>
+        <h3 class="preview__name" data-preview-name></h3>
+      </div>
+    </div>
+    <div class="preview__notes" data-preview-notes></div>
+    <div class="preview__sizes">
+      <span class="preview__label">Tamaño</span>
+      <div class="preview__size-list" role="group" aria-label="Tamaño" data-preview-sizes></div>
+    </div>
+    <div class="preview__prices">
+      <span class="preview__roll" data-preview-prices></span>
+      <span class="preview__old" data-preview-old></span>
+    </div>
+    <div class="preview__actions">
+      <button class="preview__add" type="button" data-action="add-to-cart" data-preview-add>
+        Añadir · <span data-preview-size-label></span> <span>→</span>
+      </button>
+      <a class="preview__detail" href="#" data-preview-link>
+        Detalle
+      </a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .preview {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgb(var(--peach-rgb) / 0.22);
+    border-radius: 28px;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, var(--halo, transparent), transparent 70%),
+      rgb(var(--navy-deep-rgb) / 0.75);
+    box-shadow: 0 40px 90px rgb(0 0 0 / 0.45);
+    transition: background 0.8s;
+  }
+
+  .preview__media {
+    position: relative;
+    width: 100%;
+    max-height: 46vh;
+    aspect-ratio: 4 / 3.6;
+    overflow: hidden;
+    background: var(--navy-deep);
+  }
+
+  .preview__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+  }
+
+  .preview__image--next {
+    z-index: 2;
+    clip-path: inset(100% 0% 0% 0%);
+  }
+
+  .preview__scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 3;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sand) 20%, var(--sand) 80%, transparent);
+    box-shadow: 0 0 18px 2px rgb(var(--peach-rgb) / 0.7);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .preview__shade {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--navy-rgb) / 0.35),
+      rgb(var(--navy-rgb) / 0) 30%,
+      rgb(var(--navy-rgb) / 0) 70%,
+      rgb(var(--navy-deep-rgb) / 0.9)
+    );
+    pointer-events: none;
+  }
+
+  .preview__top {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    right: 18px;
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .preview__number {
+    color: var(--sand);
+    font: italic 400 14px var(--font-serif);
+  }
+
+  .preview__heart {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.3);
+    border-radius: 20px;
+    background: rgb(var(--navy-rgb) / 0.45);
+    backdrop-filter: blur(8px);
+    color: var(--sand);
+    transition: transform 0.45s cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+
+  .preview__heart:hover {
+    transform: scale(1.12);
+  }
+
+  .preview__heart[aria-pressed='true'] :global(svg) {
+    fill: var(--peach);
+  }
+
+  .preview__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 4px 24px 24px;
+  }
+
+  .preview__head-mask {
+    overflow: hidden;
+  }
+
+  .preview__head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .preview__meta {
+    color: var(--peach);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .preview__name {
+    margin: 0;
+    font: 400 clamp(28px, 2.4vw, 40px) / 1.02 var(--font-serif);
+    text-wrap: balance;
+  }
+
+  .preview__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .preview__notes :global(.preview__note) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 10px 0 3px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.14);
+    border-radius: 15px;
+    background: rgb(var(--cream-rgb) / 0.06);
+    color: rgb(var(--cream-rgb) / 0.85);
+    font: 400 11px var(--font-sans);
+    white-space: nowrap;
+  }
+
+  .preview__notes :global(.preview__note-dot) {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .preview__notes :global(.preview__note-dot img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview__sizes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+  }
+
+  .preview__label {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .preview__size-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .preview__size-list :global(button) {
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 19px;
+    background: transparent;
+    color: var(--cream);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 0.5px;
+    transition:
+      background-color 0.35s,
+      color 0.35s,
+      border-color 0.35s;
+  }
+
+  .preview__size-list :global(button[aria-pressed='true']) {
+    border-color: var(--peach);
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .preview__prices {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .preview__roll {
+    position: relative;
+    display: block;
+    height: 36px;
+    min-width: 220px;
+    overflow: hidden;
+  }
+
+  .preview__roll :global(span) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--sand);
+    font: italic 400 28px/36px var(--font-serif);
+    font-variant-numeric: lining-nums;
+    white-space: nowrap;
+    transform: translateY(calc(var(--y, 0) * 1%));
+    opacity: var(--o, 1);
+    transition:
+      transform 0.6s var(--ease),
+      opacity 0.4s;
+  }
+
+  .preview__old {
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 300 12px var(--font-sans);
+    text-decoration: line-through;
+  }
+
+  .preview__actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .preview__add {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    border: 0;
+    border-radius: 26px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s;
+  }
+
+  .preview__add:hover {
+    gap: 16px;
+    background: var(--sand);
+  }
+
+  .preview__detail {
+    display: inline-flex;
+    align-items: center;
+    height: 52px;
+    padding: 0 20px;
+    border: 1px solid rgb(var(--cream-rgb) / 0.3);
+    border-radius: 26px;
+    color: var(--cream);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .preview__detail:hover {
+    border-color: var(--cream);
+    color: var(--cream);
+  }
+</style>

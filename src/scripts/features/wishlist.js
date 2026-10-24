@@ -20,7 +20,7 @@ function renderCount(saved) {
   });
 }
 
-function renderHearts() {
+export function renderHearts() {
   const saved = savedHearts();
   document.querySelectorAll('[data-wish-id]').forEach((button) => {
     button.setAttribute('aria-pressed', String(Boolean(saved[button.dataset.wishId])));

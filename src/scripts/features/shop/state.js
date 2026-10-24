@@ -1,17 +1,39 @@
-/* Filterzustand der Produktseite. Startwerte können per URL kommen: ?q=vainilla&familia=Floral */
-export function createShopState() {
+/* Filterzustand der Seite "Productos". Startwerte aus der URL: ?para=dama&familia=Floral&q=khamrah */
+import { GENDER_PARAMS, PAGE_SIZE } from '../../../data/shop.js';
+import { SCENT_FAMILIES } from '../../../data/scent.js';
+
+function familyFromUrl(params) {
+  const value = (params.get('familia') ?? '').toLowerCase();
+  return SCENT_FAMILIES.find((family) => family.name.toLowerCase() === value)?.name ?? null;
+}
+
+const DEFAULTS = {
+  sort: 'dest',
+  density: 3,
+  letter: null,
+  shown: PAGE_SIZE,
+  active: null,
+  wheel: 0,
+};
+
+export function createState() {
   const params = new URLSearchParams(location.search);
   return {
-    family: params.get('familia') ?? '',
-    gender: 'Todos',
+    ...DEFAULTS,
+    gender: GENDER_PARAMS[params.get('para')] ?? 'Todos',
+    family: familyFromUrl(params),
+    notes: new Set(),
     query: params.get('q') ?? '',
-    sort: 'rel',
-    view: 'grid',
+    sizes: {},
   };
 }
 
-export function isFiltered(state) {
-  return Boolean(state.family || state.query.trim() || state.gender !== 'Todos');
+/** Bei jeder Filteränderung: wieder 24 Produkte, Einblenden von vorn */
+export function resetPaging(state) {
+  state.shown = PAGE_SIZE;
 }
 
-export const DEFAULT_FILTERS = { family: '', gender: 'Todos', query: '', sort: 'rel' };
+/** Index-Ansicht mit Vorschau nur auf breiten Bildschirmen */
+export function isIndexMode(state) {
+  return state.density === 1 && innerWidth >= 1080;
+}

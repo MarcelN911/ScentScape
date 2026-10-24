@@ -1,0 +1,99 @@
+---
+/** Eine Familie im Rad: Foto der typischen Note und Name. @typedef {{ bubble: object }} Props */
+const { bubble } = Astro.props;
+const style = `left:${bubble.x}%;top:${bubble.y}%;--color:${bubble.color};--delay:${300 + bubble.index * 70}ms`;
+---
+
+<button
+  class="wheel__bubble"
+  type="button"
+  role="radio"
+  aria-checked="false"
+  aria-label={bubble.name}
+  data-wheel-family={bubble.name}
+  data-wheel-index={bubble.index}
+  style={style}
+>
+  <span class="wheel__upright">
+    <span class="wheel__disc">
+      {bubble.image && <img src={bubble.image} alt="" loading="lazy" />}
+    </span>
+    <span class="wheel__label">{bubble.name}</span>
+  </span>
+</button>
+
+<style>
+  .wheel__bubble {
+    position: absolute;
+    width: var(--bubble);
+    height: var(--bubble);
+    margin: calc(var(--bubble) / -2) 0 0 calc(var(--bubble) / -2);
+    padding: 0;
+    border: 0;
+    background: none;
+    opacity: 0;
+    transform: scale(0);
+    transition:
+      transform 0.8s cubic-bezier(0.3, 1.5, 0.5, 1) var(--delay),
+      opacity 0.6s var(--delay);
+  }
+
+  :global(.is-in) .wheel__bubble {
+    opacity: var(--o, 1);
+    transform: scale(var(--s, 1));
+  }
+
+  .wheel__upright {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotate(calc(var(--wr, 0deg) * -1));
+    transition: transform 1.2s cubic-bezier(0.3, 1.2, 0.4, 1);
+  }
+
+  .wheel__disc {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--color);
+    box-shadow:
+      0 0 0 3px var(--navy),
+      0 0 0 var(--ring, 3px) var(--color),
+      0 20px 40px rgb(0 0 0 / 0.5),
+      0 0 var(--glow, 0px) var(--color);
+    filter: saturate(var(--sat, 1)) brightness(var(--br, 1));
+    transition:
+      box-shadow 0.5s,
+      filter 0.5s;
+  }
+
+  .wheel__disc img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wheel__label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    color: var(--label, var(--cream));
+    font: 400 14px/1 var(--font-serif);
+    white-space: nowrap;
+    transform: translate(-50%, -50%) translate(var(--lx, 0px), var(--ly, 0px));
+    transition: transform 1.2s cubic-bezier(0.3, 1.2, 0.4, 1);
+  }
+
+  .wheel__bubble[aria-checked='true'] {
+    --s: 1.18;
+    --ring: 5px;
+    --glow: 34px;
+    --label: var(--sand);
+  }
+</style>

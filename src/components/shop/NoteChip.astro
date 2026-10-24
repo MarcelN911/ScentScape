@@ -1,0 +1,128 @@
+---
+/** Runde Pille mit Foto der Note, Name und kleiner Zeile darunter (Familie oder Anzahl). */
+/**
+ * @typedef {object} Props
+ * @property {string} name
+ * @property {string} sub
+ * @property {string} color
+ * @property {string} [image]
+ * @property {Record<string, string>} [data] zusätzliche data-Attribute
+ * @property {boolean} [muted] kleine Zeile hell statt in der Familienfarbe
+ */
+const { name, sub, color, image, data = {}, muted = false } = Astro.props;
+---
+
+<button
+  class:list={['note-chip', { 'note-chip--muted': muted }]}
+  type="button"
+  style={`--color:${color}`}
+  {...data}
+>
+  <span class="note-chip__photo">
+    {image && <img src={image} alt="" loading="lazy" draggable="false" />}
+    <span class="note-chip__check">✓</span>
+  </span>
+  <span class="note-chip__text">
+    <span class="note-chip__name">{name}</span>
+    <span class="note-chip__sub" data-chip-sub>
+      {sub}
+    </span>
+  </span>
+</button>
+
+<style>
+  .note-chip {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 16px 0 5px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.22);
+    border-radius: 26px;
+    background: rgb(var(--navy-deep-rgb) / 0.7);
+    transition:
+      transform 0.45s var(--ease-pop),
+      border-color 0.3s,
+      background-color 0.35s,
+      opacity 0.35s;
+  }
+
+  .note-chip:hover {
+    border-color: var(--sand);
+    transform: translateY(-3px);
+  }
+
+  .note-chip__photo {
+    position: relative;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    border-radius: 21px;
+    background: var(--color);
+    box-shadow:
+      0 0 0 2px var(--navy-deep),
+      0 0 0 3px var(--color);
+  }
+
+  .note-chip__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .note-chip__check {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(var(--navy-rgb) / 0.55);
+    color: var(--cream);
+    font: 600 15px var(--font-sans);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .note-chip--muted .note-chip__sub {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font-weight: 400;
+  }
+
+  .note-chip[aria-pressed='true'] {
+    border-color: var(--color);
+    background: color-mix(in srgb, var(--color) 13%, transparent);
+  }
+
+  .note-chip[aria-pressed='true'] .note-chip__check {
+    opacity: 1;
+  }
+
+  .note-chip.is-empty {
+    opacity: 0.45;
+  }
+
+  .note-chip__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .note-chip__name {
+    color: var(--cream);
+    font: 400 16px/1 var(--font-serif);
+    white-space: nowrap;
+  }
+
+  .note-chip__sub {
+    color: var(--color);
+    font: 500 8px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+</style>

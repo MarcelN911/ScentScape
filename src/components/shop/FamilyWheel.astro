@@ -1,0 +1,136 @@
+---
+/*
+ * Rad mit den 8 Duftfamilien. Klick auf eine Familie dreht das Rad, bis sie oben steht.
+ * Positionen in % des Rads; Drehung und Etiketten setzt scripts/features/shop/wheel.js.
+ */
+import { SCENT_FAMILIES } from '../../data/scent.js';
+import WheelBubble from './WheelBubble.astro';
+
+/** @typedef {{ images: Record<string, string> }} Props */
+const { images } = Astro.props;
+const RADIUS = 35;
+const bubbles = SCENT_FAMILIES.map((family, index) => {
+  const angle = ((index * 45 - 90) * Math.PI) / 180;
+  return {
+    ...family,
+    index,
+    x: (50 + Math.cos(angle) * RADIUS).toFixed(2),
+    y: (50 + Math.sin(angle) * RADIUS).toFixed(2),
+    image: images[family.ingredient],
+  };
+});
+---
+
+<div class="wheel" data-wheel>
+  <div class="wheel__ring">
+    <span></span>
+  </div>
+  <div class="wheel__spin" data-wheel-spin>
+    {bubbles.map((bubble) => (
+      <WheelBubble bubble={bubble} />
+    ))}
+  </div>
+  <div class="wheel__center">
+    <span class="wheel__eye" data-wheel-eye>
+      Elige
+    </span>
+    <span class="wheel__name" data-wheel-name>
+      Todas
+    </span>
+    <button class="wheel__clear" type="button" data-shop-clear-family hidden>
+      Ver todas
+    </button>
+  </div>
+</div>
+
+<style>
+  .wheel {
+    --W: clamp(220px, calc(100vw - 170px), 310px);
+    --bubble: calc(var(--W) * 0.18);
+    position: relative;
+    width: var(--W);
+    height: var(--W);
+    margin: 0 auto;
+  }
+
+  .wheel__ring {
+    position: absolute;
+    inset: calc(var(--W) * 0.15);
+    border: 1px dashed rgb(var(--peach-rgb) / 0.3);
+    border-radius: 50%;
+    transform: rotate(var(--wr, 0deg));
+    transition: transform 1.2s cubic-bezier(0.3, 1.2, 0.4, 1);
+  }
+
+  .wheel__ring span {
+    position: absolute;
+    left: 50%;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 5px;
+    background: var(--peach);
+    box-shadow: 0 0 16px var(--peach);
+  }
+
+  .wheel__spin {
+    position: absolute;
+    inset: 0;
+    transform: rotate(var(--wr, 0deg));
+    transition: transform 1.2s cubic-bezier(0.3, 1.2, 0.4, 1);
+  }
+
+  .wheel__center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: calc(var(--W) * 0.34);
+    height: calc(var(--W) * 0.34);
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 35%,
+      var(--center-tint, rgb(var(--wine-rgb) / 0.5)),
+      rgb(var(--navy-deep-rgb) / 0.95) 70%
+    );
+    text-align: center;
+    transform: translate(-50%, -50%) scale(0.4);
+    transition:
+      transform 0.7s cubic-bezier(0.3, 1.5, 0.5, 1),
+      background 0.6s;
+  }
+
+  :global(.is-in) .wheel__center {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .wheel__eye {
+    color: var(--peach);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .wheel__name {
+    color: var(--sand);
+    font: italic 400 19px/1 var(--font-serif);
+  }
+
+  .wheel__clear {
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.5);
+    background: none;
+    color: var(--peach);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,65 +1,67 @@
-/* Verbindet Tabs, Suche, Sortierung, Ansicht und Noten-Band mit dem Filterzustand. */
-import { toPlain } from '../../utils/text.js';
-import { DEFAULT_FILTERS } from './state.js';
+/* Alle Bedienelemente der Seite "Productos" → Änderungen am Zustand. */
+import { turnTo } from './wheel.js';
 
-function markActive(root, selector, attribute, value) {
-  root.querySelectorAll(selector).forEach((element) => {
-    element.classList.toggle('is-active', element.getAttribute(attribute) === value);
-  });
+/** Familie wählen; noch einmal tippen nimmt sie wieder weg. */
+export function pickFamily(shop, family, index) {
+  if (shop.state.family === family) return shop.update({ family: null, notes: new Set() });
+  shop.update({ family, notes: new Set(), wheel: turnTo(shop.state.wheel, index) });
 }
 
-export function renderControls(root, state) {
-  markActive(root, '[data-filter-family]', 'data-filter-family', state.family);
-  markActive(root, '[data-filter-gender]', 'data-filter-gender', state.gender);
-  markActive(root, '[data-shop-view]', 'data-shop-view', state.view);
-  root.querySelectorAll('[data-ribbon-note]').forEach((note) => {
-    note.classList.toggle('is-active', toPlain(note.dataset.ribbonNote) === toPlain(state.query));
-  });
-  root.querySelector('[data-shop-search]').value = state.query;
-  root.querySelector('[data-shop-search-clear]').hidden = !state.query;
-  root.querySelector('[data-shop-sort]').value = state.sort;
+function toggleNote(shop, note) {
+  const notes = new Set(shop.state.notes);
+  if (notes.has(note)) notes.delete(note);
+  else notes.add(note);
+  shop.update({ notes });
 }
 
-function onEach(root, selector, handler, signal) {
-  root.querySelectorAll(selector).forEach((element) => {
-    element.addEventListener('click', () => handler(element), { signal });
-  });
-}
-
-const BUTTON_FILTERS = [
-  ['[data-filter-family]', (tab) => ({ family: tab.dataset.filterFamily })],
-  ['[data-filter-gender]', (tab) => ({ gender: tab.dataset.filterGender })],
-  ['[data-shop-view]', (button) => ({ view: button.dataset.shopView })],
-  ['[data-shop-clear]', () => ({ ...DEFAULT_FILTERS })],
+/* Klickziele und was sie tun. Reihenfolge zählt: das erste passende gewinnt. */
+const CLICKS = [
+  [
+    '[data-wheel-family]',
+    (shop, el) => pickFamily(shop, el.dataset.wheelFamily, Number(el.dataset.wheelIndex)),
+  ],
+  [
+    '[data-pick-note]',
+    (shop, el) => {
+      const family = el.dataset.pickFamily;
+      if (shop.state.family !== family) pickFamily(shop, family, shop.familyIndex(family));
+      shop.update({ notes: new Set([el.dataset.pickNote]) });
+    },
+  ],
+  ['[data-toggle-note]', (shop, el) => toggleNote(shop, el.dataset.toggleNote)],
+  ['[data-notes-all]', (shop) => shop.update({ notes: new Set() })],
+  ['[data-shop-clear-family]', (shop) => shop.update({ family: null, notes: new Set() })],
+  ['[data-gender-tab]', (shop, el) => shop.update({ gender: el.dataset.genderTab })],
+  [
+    '[data-density]',
+    (shop, el) => shop.update({ density: Number(el.dataset.density), letter: null }),
+  ],
+  ['[data-letter]', (shop, el) => shop.update({ letter: el.dataset.letter || null })],
+  [
+    '[data-shop-clear]',
+    (shop) => shop.update({ gender: 'Todos', family: null, notes: new Set(), query: '' }),
+  ],
+  [
+    '[data-more-button]',
+    (shop) => shop.update({ shown: shop.state.shown + 24 }, { keepPage: true }),
+  ],
 ];
 
-function bindButtons(root, update, signal) {
-  BUTTON_FILTERS.forEach(([selector, changesFor]) => {
-    onEach(root, selector, (element) => update(changesFor(element)), signal);
-  });
+function handleClick(shop, event) {
+  for (const [selector, action] of CLICKS) {
+    const element = event.target.closest(selector);
+    if (element) return action(shop, element);
+  }
+  return undefined;
 }
 
-function ribbonQuery(note, state) {
-  const isActive = toPlain(note.dataset.ribbonNote) === toPlain(state.query);
-  return isActive ? '' : note.dataset.ribbonNote;
-}
-
-function bindRibbon(root, state, update, signal) {
-  onEach(root, '[data-ribbon-note]', (note) => update({ query: ribbonQuery(note, state) }), signal);
-}
-
-function bindFields(root, update, signal) {
+export function bindControls(shop, signal) {
+  const { root } = shop;
+  root.addEventListener('click', (event) => handleClick(shop, event), { signal });
   const search = root.querySelector('[data-shop-search]');
-  search.addEventListener('input', () => update({ query: search.value }), { signal });
+  search.value = shop.state.query;
+  search.addEventListener('input', () => shop.update({ query: search.value }), { signal });
   root
-    .querySelector('[data-shop-search-clear]')
-    .addEventListener('click', () => update({ query: '' }), { signal });
-  const sort = root.querySelector('[data-shop-sort]');
-  sort.addEventListener('change', () => update({ sort: sort.value }), { signal });
-}
-
-export function bindControls(root, state, update, signal) {
-  bindButtons(root, update, signal);
-  bindRibbon(root, state, update, signal);
-  bindFields(root, update, signal);
+    .querySelector('[data-shop-sort]')
+    .addEventListener('change', (event) => shop.update({ sort: event.target.value }), { signal });
 }

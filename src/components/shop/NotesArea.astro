@@ -1,0 +1,173 @@
+---
+/*
+ * Zwei Ebenen an derselben Stelle:
+ * ohne Familie ein endloses Band mit allen 16 Noten (ziehbar, langsamer beim Hovern),
+ * mit Familie die Noten dieser Familie zum Verfeinern.
+ */
+import { INGREDIENTS, SCENT_FAMILIES, scentColor } from '../../data/scent.js';
+import NoteChip from './NoteChip.astro';
+
+/** @typedef {{ images: Record<string, string> }} Props */
+const { images } = Astro.props;
+const loop = [...INGREDIENTS, ...INGREDIENTS].map((note, index) => ({
+  note,
+  data: {
+    'data-pick-note': note.name,
+    'data-pick-family': note.family,
+    'aria-hidden': index >= INGREDIENTS.length ? 'true' : undefined,
+    tabindex: index >= INGREDIENTS.length ? '-1' : undefined,
+  },
+}));
+const toggleData = (note) => ({
+  'data-toggle-note': note.name,
+  'data-note-family': note.family,
+  'aria-pressed': 'false',
+  hidden: true,
+});
+const familyNotes = SCENT_FAMILIES.flatMap((family) =>
+  INGREDIENTS.filter((note) => note.family === family.name).map((note) => ({
+    note,
+    color: family.color,
+    data: toggleData(note),
+  })),
+);
+---
+
+<div class="notes-area" data-notes-area>
+  <div class="notes-area__layer notes-area__layer--band" data-notes-band>
+    <span class="notes-area__label">Notas · toca una para empezar</span>
+    <div class="notes-area__viewport" data-marquee>
+      <div class="notes-area__track" data-marquee-track>
+        {loop.map(({ note, data }) => (
+          <NoteChip
+            name={note.name}
+            sub={note.family}
+            color={scentColor(note.family)}
+            image={images[note.name]}
+            data={data}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="notes-area__layer notes-area__layer--family" data-notes-family>
+    <span class="notes-area__label notes-area__label--family">
+      Notas de <em data-family-name></em> · opcional
+    </span>
+    <div class="notes-area__list">
+      <button class="notes-area__all" type="button" data-notes-all aria-pressed="true">
+        Todas
+      </button>
+      {familyNotes.map(({ note, color, data }) => (
+        <NoteChip
+          name={note.name}
+          sub="0 perfumes"
+          muted
+          color={color}
+          image={images[note.name]}
+          data={data}
+        />
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .notes-area {
+    position: relative;
+    height: 104px;
+  }
+
+  .notes-area__layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    transition:
+      opacity 0.5s,
+      transform 0.6s var(--ease);
+  }
+
+  .notes-area__layer--family {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition-delay: 0.1s;
+  }
+
+  .notes-area.has-family .notes-area__layer--band {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+  .notes-area.has-family .notes-area__layer--family {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .notes-area__label {
+    color: rgb(var(--cream-rgb) / 0.65);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .notes-area__label em {
+    color: var(--sand);
+    font: italic 400 16px var(--font-serif);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .notes-area__viewport {
+    position: relative;
+    overflow: hidden;
+    padding: 3px 0;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+
+  .notes-area__viewport.is-grabbing {
+    cursor: grabbing;
+  }
+
+  .notes-area__track {
+    display: flex;
+    gap: 10px;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .notes-area__list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 3px 2px;
+    scrollbar-width: none;
+  }
+
+  .notes-area__all {
+    flex: none;
+    height: 52px;
+    padding: 0 20px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 26px;
+    background: transparent;
+    color: var(--cream);
+    font: 400 16px var(--font-serif);
+    transition: all 0.35s;
+  }
+
+  .notes-area__all[aria-pressed='true'] {
+    border-color: var(--peach);
+    background: rgb(var(--peach-rgb) / 0.14);
+  }
+</style>

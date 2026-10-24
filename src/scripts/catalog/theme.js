@@ -16,6 +16,12 @@ export function metaLineOf(product) {
 }
 
 const EYEBROWS = { D: 'Perfume para Damas', C: 'Perfume para Caballeros', U: 'Perfume unisex' };
+const LABELS = { D: 'Perfume para Dama', C: 'Perfume para Caballero', U: 'Perfume unisex' };
+
+/** Zeile über dem Namen in Shop und Produktseite: "Perfume para Dama" */
+export function labelOf(product) {
+  return LABELS[product.gender];
+}
 
 export function eyebrowOf(product) {
   return EYEBROWS[product.gender];
