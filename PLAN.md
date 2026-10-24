@@ -189,7 +189,7 @@ Braucht Arbeit in nexomar, auf der Seite ist alles vorbereitet:
 
 ## Was ich noch brauche
 
-- [ ] Hero-Video (Vorlage: `uploads/hero5.mp4`)
+- [x] Hero-Video (`public/assets/video/hero.mp4`)
 - [ ] Musik-Dateien für die Playlist (4 Titel: Noche en El Poblado, Oud & Ámbar, Brisa de Bergamota, Terciopelo)
 - [ ] Bild für „Original garantizado“ (Litografie der versiegelten Box)
 - [ ] Feldnamen von Familie und Noten in der nexomar-API (sobald dort committet)

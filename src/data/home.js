@@ -1,7 +1,6 @@
 /* Inhalte der Startseite */
 
-/* Bis das Video aus der Vorlage (hero5.mp4) da ist, läuft eines der vorhandenen Reels. */
-export const HERO_VIDEO = '/assets/video/video4.mp4';
+export const HERO_VIDEO = '/assets/video/hero.mp4';
 
 export const HERO_MARQUEE = [
   'Envíos a todo Colombia',
