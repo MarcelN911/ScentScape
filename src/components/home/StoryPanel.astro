@@ -1,0 +1,228 @@
+---
+/*
+ * Großes Panel der Startseite (Test Olfativo, Gift Card): wird beim Scrollen von unten aufgedeckt,
+ * die Überschrift gleitet aus einer Maske, rechts steht eine Grafik (Slot "visual").
+ * Alle bewegten Werte kommen als CSS-Variablen aus scripts/features/home/story.js.
+ */
+/**
+ * @typedef {object} Props
+ * @property {'test' | 'gift'} kind
+ * @property {string} eyebrow
+ * @property {string} first   erste Zeile der Überschrift
+ * @property {string} second  zweite Zeile, kursiv
+ * @property {string} word    großes Kontur-Wort im Hintergrund
+ * @property {string} text
+ * @property {string} cta
+ * @property {string} href
+ * @property {string} background
+ */
+const { kind, eyebrow, first, second, word, text, cta, href, background } = Astro.props;
+---
+
+<section class:list={['story', `story--${kind}`]} data-story={kind}>
+  <div class="story__pin" data-story-pin>
+    <slot name="intro" />
+    <div class="story__panel" style={`background:${background}`}>
+      <div class="story__word" aria-hidden="true">
+        {word}
+      </div>
+      <div class="story__grid">
+        <div class="story__text">
+          <p class="story__eyebrow">
+            <span class="story__line"></span>
+            {eyebrow}
+          </p>
+          <h3 class="story__title">
+            <span class="story__mask">
+              <span class="story__first">{first}</span>
+            </span>
+            <span class="story__mask story__mask--pad">
+              <span class="story__second">{second}</span>
+            </span>
+          </h3>
+          <p class="story__copy">{text}</p>
+          <div class="story__actions">
+            <a class="story__cta" href={href}>
+              {cta} <span>→</span>
+            </a>
+          </div>
+        </div>
+        <div class="story__visual">
+          <slot name="visual" />
+        </div>
+      </div>
+    </div>
+    <slot name="bar" />
+  </div>
+</section>
+
+<style>
+  .story {
+    position: relative;
+    background: var(--navy);
+  }
+
+  .story--test {
+    height: 320vh;
+  }
+
+  .story--gift {
+    height: 200vh;
+  }
+
+  .story__pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--navy);
+  }
+
+  .story__panel {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    clip-path: inset(var(--clip, 100%) 0 0 0);
+  }
+
+  .story__word {
+    position: absolute;
+    left: 0;
+    bottom: -3vh;
+    color: transparent;
+    font: italic 400 clamp(140px, 24vw, 400px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.16);
+    transform: translateX(calc(var(--wx, 6) * 1vw));
+    pointer-events: none;
+  }
+
+  .story__grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 3vw;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 9vh 24px 4vh;
+  }
+
+  .story__text {
+    position: relative;
+    z-index: 2;
+    order: 2;
+  }
+
+  .story__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 22px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .story__line {
+    display: block;
+    width: calc(var(--line, 20) * 1px);
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .story__title {
+    margin: 0;
+    font: 400 clamp(36px, min(8vw, 15vh), 170px) / 0.95 var(--font-serif);
+  }
+
+  .story__mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .story__mask--pad {
+    padding-bottom: 0.08em;
+  }
+
+  .story__first,
+  .story__second {
+    display: block;
+    transform: translateY(calc(var(--ty1, 110) * 1%));
+  }
+
+  .story__second {
+    color: var(--peach);
+    font-style: italic;
+    transform: translateY(calc(var(--ty2, 110) * 1%));
+  }
+
+  .story__copy,
+  .story__actions {
+    opacity: var(--dop, 0);
+    transform: translateY(calc(var(--dy, 30) * 1px));
+  }
+
+  .story__copy {
+    max-width: 520px;
+    margin: min(30px, 3.4vh) 0 0;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 clamp(15px, 1.1vw, 19px) / 1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .story__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: min(34px, 4vh);
+  }
+
+  .story__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    height: 56px;
+    padding: 0 30px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s;
+  }
+
+  .story__cta:hover {
+    gap: 22px;
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .story__visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: min(30vh, 260px);
+    perspective: 1300px;
+    transform: translate(calc(var(--vx, 0) * 1px), calc(var(--vy, 0) * 1px));
+  }
+
+  @media (min-width: 760px) {
+    .story__grid {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+      padding: 9vh clamp(80px, 7vw, 150px) 7vh clamp(20px, 6vw, 110px);
+    }
+
+    .story__text {
+      order: 0;
+    }
+
+    .story__visual {
+      height: min(78vh, 820px);
+    }
+  }
+</style>

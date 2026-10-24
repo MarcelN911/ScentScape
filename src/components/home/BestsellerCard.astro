@@ -1,29 +1,25 @@
 ---
-import ProductStage from '../product/ProductStage.astro';
-import { themeOf, topNotesOf } from '../../scripts/catalog/theme.js';
+import { priceFromText } from '../../scripts/catalog/sizes.js';
 import { cartItemJson } from '../../scripts/cart/cart-item.js';
-import { formatCOP, padNumber } from '../../scripts/utils/format.js';
+import { padNumber } from '../../scripts/utils/format.js';
 import { imageUrl } from '../../scripts/utils/image.js';
-import { capitalize } from '../../scripts/utils/text.js';
+import FamilyChips from '../ui/FamilyChips.astro';
 
 /** @typedef {{ product: object, index: number }} Props */
 const { product, index } = Astro.props;
-const image = imageUrl(product.images[0], 700);
-const notes = topNotesOf(product).map(capitalize).join(' · ');
+const image = imageUrl(product.images[0], 900);
+const notes = product.ingredients.slice(0, 3).join(' · ');
 ---
 
-<article class="best-card stage-host" data-cursor="Ver" data-best-card>
-  {product.hasCoverPhoto ? (
-    <div class="best-card__photo">
-      <img src={image} alt={product.name} draggable="false" data-best-photo />
-    </div>
-  ) : (
-    <ProductStage image={image} alt={product.name} theme={themeOf(product)} />
-  )}
+<article class="best-card" data-best-card data-fly-source>
+  <div class="best-card__photo">
+    <img src={image} alt={product.name} draggable="false" data-best-photo />
+  </div>
+  <div class="best-card__shade" aria-hidden="true"></div>
   <a class="best-card__link" href={`/producto/${product.slug}/`} aria-label={product.name}></a>
   <div class="inner-line" aria-hidden="true"></div>
   <span class="best-card__rank">{padNumber(index + 1)}</span>
-  <span class="best-card__tag">{product.family ?? product.brand}</span>
+  <FamilyChips families={product.scentFamilies} class="best-card__chips" />
   <div class="best-card__bottom">
     <div class="best-card__text">
       {notes && (
@@ -34,7 +30,7 @@ const notes = topNotesOf(product).map(capitalize).join(' · ');
       )}
       <h3 class="best-card__name">{product.name.toLowerCase()}</h3>
       <p class="best-card__price">
-        {formatCOP(product.price)} COP<span class="best-card__cta">Descubrir →</span>
+        {priceFromText(product)} COP<span class="best-card__cta">Descubrir →</span>
       </p>
     </div>
     <button
@@ -89,8 +85,22 @@ const notes = topNotesOf(product).map(capitalize).join(' · ');
     transform: scale(1.07);
   }
 
+  .best-card__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--navy-deep-rgb) / 0.28) 0%,
+      rgb(var(--navy-deep-rgb) / 0) 26%,
+      rgb(var(--navy-deep-rgb) / 0) 52%,
+      rgb(var(--navy-deep-rgb) / 0.82) 100%
+    );
+    pointer-events: none;
+  }
+
   .best-card__photo img {
     position: absolute;
+    max-width: none;
     top: 0;
     left: -5%;
     width: 110%;
@@ -106,7 +116,7 @@ const notes = topNotesOf(product).map(capitalize).join(' · ');
   }
 
   .best-card__rank,
-  .best-card__tag,
+  :global(.best-card__chips),
   .best-card__bottom {
     position: absolute;
     z-index: 3;
@@ -119,15 +129,10 @@ const notes = topNotesOf(product).map(capitalize).join(' · ');
     color: var(--sand);
   }
 
-  .best-card__tag {
-    top: 24px;
-    right: 24px;
-    padding: 8px 12px;
-    border-radius: var(--radius-pill);
-    background: rgb(var(--navy-deep-rgb) / 0.45);
-    font: 600 10px/1 var(--font-sans);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+  :global(.best-card__chips) {
+    top: 22px;
+    right: 22px;
+    left: 70px;
   }
 
   .best-card__bottom {

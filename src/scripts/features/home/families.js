@@ -10,21 +10,29 @@ function findParts(section) {
     stage: section.querySelector('[data-families-stage]'),
     names: [...section.querySelectorAll('[data-family-index]')],
     bottles: [...section.querySelectorAll('[data-family-bottle]')],
-    details: [...section.querySelectorAll('[data-family-detail]')],
+    descs: [...section.querySelectorAll('[data-family-desc]')],
     number: section.querySelector('[data-families-number]'),
+    line: section.querySelector('[data-families-line]'),
+    title: section.querySelector('[data-families-title]'),
   };
+}
+
+function markLayers(elements, active) {
+  elements.forEach((element, index) => {
+    element.classList.toggle('is-active', index === active);
+    element.classList.toggle('is-after', index > active);
+  });
 }
 
 function showFamily(parts, active) {
   parts.names.forEach((name, index) => name.classList.toggle('is-active', index === active));
-  parts.details.forEach((detail, index) => (detail.hidden = index !== active));
-  parts.bottles.forEach((bottle, index) => {
-    bottle.classList.toggle('is-active', index === active);
-    bottle.classList.toggle('is-after', index > active);
-  });
-  const name = parts.names[active];
-  parts.stage.style.setProperty('--family-glow', name.dataset.familyGlow);
+  markLayers(parts.bottles, active);
+  markLayers(parts.descs, active);
+  const { familyGlow, familyLine, familyId } = parts.names[active].dataset;
+  parts.stage.style.setProperty('--family-glow', familyGlow);
   parts.number.textContent = padNumber(active + 1);
+  parts.line.textContent = familyLine;
+  parts.title.textContent = familyId;
 }
 
 function scrollToFamily(section, index, count) {

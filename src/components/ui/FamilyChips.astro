@@ -1,0 +1,49 @@
+---
+/** Bis zu zwei Duftfamilien als Glas-Pillen mit leuchtendem Punkt (oben rechts auf Produktkarten). */
+/** @typedef {{ families: string[], class?: string }} Props */
+const { families, class: className } = Astro.props;
+---
+
+<div class:list={['chips', className]}>
+  {families.slice(0, 2).map((family) => (
+    <span class="chip">
+      <span class="chip__dot"></span>
+      {family}
+    </span>
+  ))}
+</div>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 30px;
+    padding: 0 14px 0 11px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: var(--radius-pill);
+    background: rgb(var(--navy-rgb) / 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--sand);
+    font: 500 10px/1 var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .chip__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--peach);
+    box-shadow: 0 0 10px 2px rgb(var(--peach-rgb) / 0.7);
+  }
+</style>

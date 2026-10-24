@@ -1,0 +1,74 @@
+---
+/** Eine Stufe der Pyramide im Bereich "Test Olfativo". @typedef {{ tier: import('../../data/home.js').PYRAMID_TIERS[number] }} Props */
+const { tier } = Astro.props;
+const shape = `width:${tier.width}%;clip-path:${tier.clip};background:${tier.background};color:${tier.color}`;
+---
+
+<div class="pyramid__row" data-tier>
+  <div class="pyramid__shape-wrap">
+    <div class="pyramid__shape" style={shape}>
+      {tier.label}
+    </div>
+  </div>
+  <div class="pyramid__notes">
+    <span class="pyramid__line"></span>
+    <span class="pyramid__text">{tier.notes}</span>
+  </div>
+</div>
+
+<style>
+  .pyramid__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+    opacity: var(--e, 0);
+    transform: translateY(calc((1 - var(--e, 0)) * 60px));
+  }
+
+  .pyramid__shape-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .pyramid__shape {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: clamp(64px, 14vh, 150px);
+    padding-bottom: 12px;
+    font: 500 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: filter 0.4s;
+  }
+
+  /* Untereinander ist die Grafik nur 260px hoch: niedrigere Stufen, damit nichts über den Text ragt */
+  @media (max-width: 759px) {
+    .pyramid__shape {
+      height: clamp(44px, 7.5vh, 64px);
+      padding-bottom: 6px;
+    }
+  }
+
+  .pyramid__shape:hover {
+    filter: brightness(1.18);
+  }
+
+  .pyramid__notes {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .pyramid__line {
+    width: calc(var(--e, 0) * 40px);
+    height: 1px;
+    background: rgb(var(--peach-rgb) / 0.6);
+  }
+
+  .pyramid__text {
+    color: var(--sand);
+    font: italic 400 clamp(16px, 1.7vw, 30px) / 1.3 var(--font-serif);
+  }
+</style>

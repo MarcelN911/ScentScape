@@ -14,9 +14,6 @@ import { padNumber } from '../../scripts/utils/format.js';
           <span class="line-mask">
             <span data-reveal="mask">ScentScape</span>
           </span>
-          <span class="line-mask">
-            <em data-reveal="mask">en video</em>
-          </span>
         </h2>
         <div class="reel__now">
           <p class="reel__count">
@@ -37,7 +34,7 @@ import { padNumber } from '../../scripts/utils/format.js';
           <button class="reel__arrow" type="button" data-reel-step="1" aria-label="Siguiente">
             →
           </button>
-          <button class="btn btn--primary btn--lg" type="button" data-reel-open>
+          <button class="reel__sound" type="button" data-reel-open>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
               <path d="M7 4l13 8-13 8z"></path>
             </svg>
@@ -67,7 +64,14 @@ import { padNumber } from '../../scripts/utils/format.js';
     --video-spread: 62%;
     position: relative;
     height: 190vh;
-    background: linear-gradient(180deg, var(--navy) 0%, #1b1634 30%, #3a0a24 78%, var(--wine) 100%);
+    background: linear-gradient(
+      180deg,
+      #161a32 0%,
+      #1b1634 30%,
+      #3a0a24 72%,
+      #531019 90%,
+      #11142b 100%
+    );
   }
 
   .reel__pin {
@@ -162,6 +166,23 @@ import { padNumber } from '../../scripts/utils/format.js';
     background: none;
     color: var(--peach);
     font: 400 22px/1 var(--font-sans);
+  }
+
+  .reel__sound {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .reel__sound:hover {
+    background: var(--sand);
   }
 
   .reel__arrow:hover {

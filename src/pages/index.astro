@@ -2,45 +2,39 @@
 import VideoModal from '../components/home/VideoModal.astro';
 import { BESTSELLER_SLUGS } from '../data/home.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCatalog, getReviews } from '../scripts/catalog/load.js';
+import { getCatalog } from '../scripts/catalog/load.js';
 import { bestsellers, findBySlug } from '../scripts/catalog/queries.js';
 import Bestsellers from '../sections/home/Bestsellers.astro';
-import Discover from '../sections/home/Discover.astro';
-import Faq from '../sections/home/Faq.astro';
 import Families from '../sections/home/Families.astro';
+import GiftStory from '../sections/home/GiftStory.astro';
 import HomeHero from '../sections/home/HomeHero.astro';
-import HomeReviews from '../sections/home/HomeReviews.astro';
+import HomeIntro from '../sections/home/HomeIntro.astro';
+import TestStory from '../sections/home/TestStory.astro';
 import VideoReel from '../sections/home/VideoReel.astro';
 
 const catalog = await getCatalog();
-const reviews = await getReviews();
 const picked = BESTSELLER_SLUGS.map((slug) => findBySlug(catalog, slug)).filter(Boolean);
 const favorites = picked.length ? picked : bestsellers(catalog, BESTSELLER_SLUGS.length);
 const moreCount = Math.floor((catalog.length - favorites.length) / 10) * 10;
-const names = favorites.slice(0, 6).map((product) => product.name.toLowerCase());
 ---
 
 <BaseLayout
   title="ScentScape · Perfumes en Medellín | Envíos a todo Colombia"
   description="Perfumes para dama, caballero y unisex en Medellín. Compra por WhatsApp, envío gratis desde $500.000 y envíos a todo Colombia."
+  curtainMode="none"
+  wordmark="scroll"
 >
+  <HomeIntro />
   <main class="home" data-home>
-    <HomeHero names={names} />
+    <HomeHero />
     <Bestsellers products={favorites} moreCount={moreCount} />
-    <Discover products={favorites} reviews={reviews} />
-    <Families catalog={catalog} />
+    <TestStory />
+    <Families />
+    <GiftStory />
     <VideoReel />
-    <HomeReviews reviews={reviews} />
-    <Faq />
     <VideoModal />
   </main>
 </BaseLayout>
-
-<style>
-  .home :global(.hero__band--wine) {
-    text-transform: capitalize;
-  }
-</style>
 
 <script>
   import { onPage } from '../scripts/core/lifecycle.js';

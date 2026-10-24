@@ -1,0 +1,100 @@
+---
+import StoryPanel from '../../components/home/StoryPanel.astro';
+import { PYRAMID_TIERS } from '../../data/home.js';
+import PyramidRow from '../../components/home/PyramidRow.astro';
+---
+
+<StoryPanel
+  kind="test"
+  eyebrow="Encuentra tu fragancia"
+  first="Test"
+  second="Olfativo"
+  word="Olfativo · Olfativo ·"
+  text="Responde unas preguntas sobre las notas que te gustan y te recomendamos tu fragancia ideal según la pirámide olfativa."
+  cta="Hacer el test"
+  href="/test-olfativo/"
+  background="radial-gradient(ellipse 55% 70% at 74% 50%,rgba(83,16,25,.55),transparent 70%),#161A32"
+>
+  <div class="story-intro" slot="intro">
+    <p class="story-intro__eyebrow">Experiencia ScentScape</p>
+    <h2 class="story-intro__title">
+      Más que
+      <br />
+      <span>un perfume.</span>
+    </h2>
+    <p class="story-intro__hint">Desliza</p>
+  </div>
+  <div class="pyramid" slot="visual">
+    {PYRAMID_TIERS.map((tier) => (
+      <PyramidRow tier={tier} />
+    ))}
+  </div>
+  <div class="story-bar" slot="bar">
+    <span></span>
+  </div>
+</StoryPanel>
+
+<style>
+  .story-intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: var(--intro-op, 1);
+    transform: scale(var(--intro-scale, 1));
+  }
+
+  .story-intro__eyebrow {
+    margin: 0 0 18px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  .story-intro__title {
+    margin: 0;
+    font: 400 clamp(48px, 8vw, 140px) / 0.95 var(--font-serif);
+  }
+
+  .story-intro__title span {
+    color: var(--peach);
+    font-style: italic;
+  }
+
+  .story-intro__hint {
+    margin: 28px 0 0;
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .pyramid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(100%, 820px);
+  }
+
+  .story-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    height: 2px;
+    background: rgb(var(--peach-rgb) / 0.12);
+    opacity: var(--bar-op, 0);
+  }
+
+  .story-bar span {
+    display: block;
+    width: calc(var(--bar, 0) * 1%);
+    height: 100%;
+    background: var(--peach);
+  }
+</style>

@@ -1,3 +1,5 @@
+import { formatCOP } from '../utils/format.js';
+
 function toSize(presentation) {
   const ml = parseInt(presentation.etiqueta, 10) || 0;
   const price = Number(presentation.precio) || 0;
@@ -18,4 +20,10 @@ export function effectivePrice(size) {
 
 export function lowestPrice(sizes) {
   return Math.min(...sizes.map(effectivePrice));
+}
+
+/** "desde $120.000" bei mehreren Größen, sonst "$120.000" */
+export function priceFromText(product) {
+  const price = formatCOP(product.price);
+  return product.sizes.length > 1 ? `desde ${price}` : price;
 }

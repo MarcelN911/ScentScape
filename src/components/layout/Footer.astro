@@ -51,7 +51,7 @@ const columns = [...FOOTER_COLUMNS, contact];
       ))}
     </div>
   </div>
-  <div class="footer__mark" data-wordmark aria-hidden="true">
+  <div class="footer__mark" data-footer-mark aria-hidden="true">
     {'SCENTSCAPE'.split('').map((letter, index) => (
       <span style={`--delay:${index * 55}ms`}>{letter}</span>
     ))}
@@ -181,8 +181,13 @@ const columns = [...FOOTER_COLUMNS, contact];
     transition: transform 1.1s var(--ease) var(--delay);
   }
 
-  :global(.js) .footer__mark:not(.is-revealed) span {
+  :global(.js) .footer__mark:not(.is-revealed, .is-scroll) span {
     transform: translateY(105%);
+  }
+
+  .footer__mark.is-scroll span {
+    transform: translateY(calc(var(--y, 105) * 1%));
+    transition: transform 0.25s linear;
   }
 
   .footer__bottom {
@@ -238,13 +243,9 @@ const columns = [...FOOTER_COLUMNS, contact];
 
 <script>
   import { registerAction } from '../../scripts/core/actions.js';
+  import { onPage } from '../../scripts/core/lifecycle.js';
+  import { initWordmark } from '../../scripts/layout/wordmark.js';
 
-  const mark = document.querySelector('[data-wordmark]');
-  const reveal = ([entry], observer) => {
-    if (!entry.isIntersecting) return;
-    mark.classList.add('is-revealed');
-    observer.disconnect();
-  };
-  new IntersectionObserver(reveal, { threshold: 0.2 }).observe(mark);
+  onPage(initWordmark);
   registerAction('scroll-top', () => scrollTo({ top: 0, behavior: 'smooth' }));
 </script>

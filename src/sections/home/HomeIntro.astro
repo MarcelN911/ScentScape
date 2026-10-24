@@ -1,0 +1,181 @@
+---
+/*
+ * Intro der Startseite: Das Logo steht 3 Sekunden, dann zoomt die Kamera durch das "O" ins Video.
+ * Das Logo ist dabei ein Loch in der dunklen Fläche (SVG-Maske), dahinter läuft schon das Hero-Video.
+ */
+const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
+---
+
+<div class="intro" data-intro aria-hidden="true">
+  <svg class="intro__svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" data-intro-svg>
+    <defs>
+      <radialGradient id="intro-veil" gradientUnits="userSpaceOnUse" cx="800" cy="430" r="980">
+        <stop offset="0" stop-color="#1F2344"></stop>
+        <stop offset=".55" stop-color="#12152B"></stop>
+        <stop offset="1" stop-color="#03040a"></stop>
+      </radialGradient>
+      <linearGradient id="intro-sheen" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#FFF4E0" stop-opacity="0"></stop>
+        <stop offset=".5" stop-color="#FFF4E0" stop-opacity=".85"></stop>
+        <stop offset="1" stop-color="#FFF4E0" stop-opacity="0"></stop>
+      </linearGradient>
+      <mask
+        id="intro-portal"
+        maskUnits="userSpaceOnUse"
+        x="-4000"
+        y="-4000"
+        width="9600"
+        height="8900"
+      >
+        <rect x="-4000" y="-4000" width="9600" height="8900" fill="#FFFCF2"></rect>
+        <g data-intro-zoom>
+          <image class="intro__fade" href="/assets/img/scentscape-logo-black.png" {...LOGO} />
+        </g>
+      </mask>
+      <mask id="intro-logo" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">
+        <g data-intro-zoom>
+          <image href="/assets/img/scentscape-logo-white.png" {...LOGO} />
+        </g>
+      </mask>
+    </defs>
+    <rect
+      x="-4000"
+      y="-4000"
+      width="9600"
+      height="8900"
+      fill="url(#intro-veil)"
+      mask="url(#intro-portal)"
+    ></rect>
+    <g data-intro-zoom data-intro-logo>
+      <image class="intro__fade" href="/assets/img/scentscape-logo.png" {...LOGO} />
+    </g>
+    <g mask="url(#intro-logo)" data-intro-logo data-intro-sheen>
+      <rect
+        x="-500"
+        y="180"
+        width="320"
+        height="520"
+        fill="url(#intro-sheen)"
+        transform="skewX(-18)"
+      >
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          additive="sum"
+          values="0 0;2600 0;2600 0"
+          keyTimes="0;.4;1"
+          dur="7s"
+          begin="2s"
+          repeatCount="indefinite"
+        ></animateTransform>
+      </rect>
+    </g>
+    <line x1="800" y1="664" x2="800" y2="664" stroke="#F0BE91" stroke-width="1" data-intro-fine>
+      <animate
+        attributeName="x1"
+        from="800"
+        to="600"
+        dur="1.6s"
+        begin="1s"
+        fill="freeze"
+        calcMode="spline"
+        keySplines=".2 .8 .2 1"
+        keyTimes="0;1"
+      ></animate>
+      <animate
+        attributeName="x2"
+        from="800"
+        to="1000"
+        dur="1.6s"
+        begin="1s"
+        fill="freeze"
+        calcMode="spline"
+        keySplines=".2 .8 .2 1"
+        keyTimes="0;1"
+      ></animate>
+    </line>
+    <text class="intro__claim" x="800" y="712" text-anchor="middle">
+      Elegancia · Carácter · Distinción
+    </text>
+  </svg>
+  <div class="intro__row" data-intro-fine>
+    <span>
+      <i></i>Est. 2024
+    </span>
+    <span>
+      Medellín · Colombia<i></i>
+    </span>
+  </div>
+</div>
+
+<style>
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-intro);
+    display: none;
+    cursor: pointer;
+  }
+
+  :global(.js) .intro {
+    display: block;
+  }
+
+  .intro.is-done {
+    display: none;
+  }
+
+  .intro__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+
+  .intro__fade,
+  .intro__claim {
+    opacity: 0;
+    transition: opacity 1.8s ease 0.2s;
+  }
+
+  .intro__claim {
+    fill: var(--peach);
+    font: 400 13px var(--font-sans);
+    letter-spacing: 9px;
+    text-transform: uppercase;
+    transition: opacity 1.4s ease 1.6s;
+  }
+
+  .intro.is-lit .intro__fade,
+  .intro.is-lit .intro__claim {
+    opacity: 1;
+  }
+
+  .intro__row {
+    position: absolute;
+    left: clamp(20px, 4vw, 64px);
+    right: clamp(20px, 4vw, 64px);
+    bottom: 76px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(var(--sand-rgb) / 0.7);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .intro__row span {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .intro__row i {
+    width: 28px;
+    height: 1px;
+    background: var(--peach);
+  }
+</style>

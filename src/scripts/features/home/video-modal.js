@@ -7,18 +7,48 @@ function findModalParts() {
     modal,
     player: modal.querySelector('[data-video-player]'),
     caption: modal.querySelector('[data-video-caption]'),
+    ago: modal.querySelectorAll('[data-video-ago]'),
+    likes: modal.querySelector('[data-video-likes]'),
+    like: modal.querySelector('[data-video-like]'),
     prev: modal.querySelector('[data-video-step="-1"]'),
     next: modal.querySelector('[data-video-step="1"]'),
   };
 }
 
+/* Likes und Alter des Beitrags wie in der Vorlage: je Video etwas mehr */
+function renderLikes(parts, index) {
+  const liked = parts.like.getAttribute('aria-pressed') === 'true';
+  parts.likes.textContent = 120 + index * 37 + (liked ? 1 : 0);
+}
+
+/* Mit Ton, wenn der Browser es erlaubt, sonst stumm */
+function playWithSound(player) {
+  player.muted = false;
+  player.play().catch(() => {
+    player.muted = true;
+    player.play().catch(() => {});
+  });
+}
+
 function show(parts, index) {
   const video = VIDEOS[index];
   parts.player.src = video.src;
-  parts.player.play().catch(() => {});
+  playWithSound(parts.player);
   parts.caption.textContent = video.caption;
+  parts.ago.forEach((element) => (element.textContent = `Hace ${index + 2} días`));
+  parts.like.setAttribute('aria-pressed', 'false');
+  renderLikes(parts, index);
   parts.prev.hidden = index === 0;
   parts.next.hidden = index === VIDEOS.length - 1;
+}
+
+function bindLike(modal, signal) {
+  const { like } = modal.parts;
+  const toggle = () => {
+    like.setAttribute('aria-pressed', String(like.getAttribute('aria-pressed') !== 'true'));
+    renderLikes(modal.parts, modal.current);
+  };
+  like.addEventListener('click', toggle, { signal });
 }
 
 function openModal(modal, index) {
@@ -62,6 +92,7 @@ export function createVideoModal(onToggle, signal) {
   const modal = { parts: findModalParts(), current: 0, onToggle };
   bindClosing(modal, signal);
   bindSteps(modal, signal);
+  bindLike(modal, signal);
   signal.addEventListener('abort', () => closeModal(modal));
   return (index) => openModal(modal, index);
 }

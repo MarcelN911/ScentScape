@@ -1,13 +1,12 @@
-/* Text im Hero gleitet beim Herunterscrollen nach unten und blendet aus. */
-import { gsap } from '../../effects/gsap.js';
+/* Hero-Text gleitet beim Scrollen nach oben und blendet aus. Läuft innerhalb von withGsap(). */
+import { onScrollProgress } from '../../effects/scroll.js';
 
 export function animateHero() {
   const hero = document.querySelector('[data-hero]');
-  if (!hero) return;
-  gsap.to(hero.querySelector('[data-hero-text]'), {
-    y: 90,
-    opacity: -0.3,
-    ease: 'none',
-    scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
+  const text = hero?.querySelector('[data-hero-text]');
+  if (!text) return;
+  onScrollProgress(hero, { start: 'top top', end: 'bottom top' }, (progress) => {
+    text.style.transform = `translateY(${(progress * 90).toFixed(1)}px)`;
+    text.style.opacity = (1 - progress * 1.3).toFixed(3);
   });
 }
