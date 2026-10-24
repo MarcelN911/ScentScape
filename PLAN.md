@@ -22,7 +22,8 @@ Weil die Seite statisch gebaut wird, entstehen Produktseiten beim Build. Ablauf 
 
 1. GitHub Action baut die Seite und lädt `dist/` per FTP zu Hostinger hoch.
 2. nexomar ruft beim Speichern eines Produkts einen GitHub-Webhook auf (`repository_dispatch`), dann baut die Seite neu.
-3. Preise, Verfügbarkeit und Bewertungen lädt die Seite zusätzlich live im Browser, sie sind also immer aktuell.
+3. Preise, Verfügbarkeit und Bewertungen sind so aktuell wie der letzte Build. Der Rabattcode und die Bestellung
+   laufen live gegen nexomar (der Server rechnet die Preise selbst nach).
 
 ### Slugs aus dem Produktnamen
 
@@ -55,24 +56,55 @@ Werden von `npm run check` automatisch geprüft:
 
 ```
 src/
-  layouts/       BaseLayout.astro (Head, SEO, Nav, Footer, Warenkorb)
-  components/    Nav, MegaMenu, Footer, CartDrawer, Toast, Curtain, Cursor,
-                 MusicPlayer, ProductCard, ProductRow, QuizModal, VideoModal …
-  sections/      home/ · product/ · shop/
-  pages/         index, productos, producto/[slug], nosotros, original, gift-card,
-                 catalogo, checkout, resenas, contacto, terminos, privacidad, 404
+  layouts/       BaseLayout.astro (Head, SEO, Header, Footer, Warenkorb, Test olfativo)
+  components/    kleine Bausteine, nach Bereich: layout/ cart/ product/ shop/ home/ quiz/ gift/ …
+  sections/      größere Abschnitte einer Seite: home/ product/ shop/ checkout/ pages/
+  pages/         index, productos, producto/[slug], checkout, nosotros, original, gift-card,
+                 catalogo (+ imprimir), resenas, contacto, terminos, privacidad, 404, data/quiz.json
+  data/          Texte und feste Listen (Familien, FAQ, Navigation, Gift Card …)
   scripts/
-    api/         client, products, reviews, orders
-    cart/        store, pricing, discount, shipping, whatsapp, render
-    effects/     reveal, scroll-progress, horizontal-track, families-pin, video-fan,
-                 curtain, cursor, tilt, magnet, parallax
-    features/    search, filters, quiz, gift-card, lot-check, chat-demo, faq, music
-    utils/       format, text, dom, slug
-  styles/        tokens, base, typography, buttons, animations …
+    core/        Seiten-Lebenszyklus, Events, Klick-Aktionen
+    api/         Zugriff auf nexomar
+    catalog/     Produkte laden, aufbereiten, Slugs, Abfragen
+    cart/        Warenkorb, Preise, Rabattcodes (+ ui/ für den Drawer)
+    checkout/    Formular, WhatsApp-Nachricht, Bestellung speichern
+    effects/     GSAP, Scroll-Fortschritt, Einblenden, Parallax, Kippen
+    features/    home/ shop/ product/ quiz/ gift-card/ review-form/ music/ …
+    layout/      Header, Vorhang, Mauszeiger
+    seo/         schema.org-Daten
+    utils/       format, text, image, whatsapp, storage, motion
+  styles/        tokens, base, typography, buttons, surfaces, animations
+integrations/    erzeugt beim Build sitemap.xml, robots.txt, .htaccess
 public/assets/   Logos, Bilder, Videos, Musik
-tools/           Hilfsskripte (z. B. check-lines.js)
+tools/           Hilfsskripte (check-lines.js)
 legacy/          alte Seite, nur als Vorlage
 ```
+
+## Deploy (Hostinger)
+
+Die GitHub Action `.github/workflows/deploy.yml` baut die Seite und lädt `dist/` per FTP hoch.
+Sie startet bei jedem Push auf `main`, per Knopf („Run workflow“) und wenn nexomar sie anstößt.
+
+**Einmalig einrichten** (GitHub → Settings → Secrets and variables → Actions):
+
+| Secret           | Inhalt                                                 |
+| ---------------- | ------------------------------------------------------ |
+| `FTP_SERVER`     | FTP-Host aus Hostinger (z. B. `ftp.scentscape.com.co`) |
+| `FTP_USERNAME`   | FTP-Benutzer                                           |
+| `FTP_PASSWORD`   | FTP-Passwort                                           |
+| `FTP_SERVER_DIR` | optional, Standard `public_html/`                      |
+
+**nexomar stößt den Build an**, wenn ein Produkt gespeichert wird:
+
+```
+POST https://api.github.com/repos/MarcelN911/ElixirS-B/dispatches
+Authorization: Bearer <GitHub-Token mit Recht "Contents: write" für dieses Repo>
+Accept: application/vnd.github+json
+
+{ "event_type": "nexomar-update" }
+```
+
+Den Token nur auf dem nexomar-Server speichern, nie im Browser-Code.
 
 ## Phasen
 
@@ -139,17 +171,20 @@ legacy/          alte Seite, nur als Vorlage
 
 ### Phase 7: Neue Funktionen mit Backend
 
-- [ ] Gift Card als echtes Produkt mit Code
-- [ ] Wompi (Karte/PSE)
-- [ ] Addi (4 Raten)
+Braucht Arbeit in nexomar, auf der Seite ist alles vorbereitet:
+
+- [ ] Gift Card als echtes Produkt mit Code (heute: Bestellung über WhatsApp, Code wird von Hand erstellt)
+- [ ] Wompi (Karte/PSE): nexomar erstellt den Zahlungslink, die Seite leitet nach dem Checkout dorthin.
+      Heute schickt der Checkout „Tarjeta“ als Wunsch per WhatsApp, ihr sendet den Link von Hand.
+- [ ] Addi (4 Raten): wie Wompi; danach `ADDI_ENABLED` in `src/scripts/config.js` auf `true`
 
 ### Phase 8: Feinschliff und Livegang
 
-- [ ] Handy-Ansichten, reduzierte Bewegung, Tastaturbedienung
-- [ ] Performance: Cloudinary-Größen, Videos erst laden, wenn man hinscrollt
-- [ ] alte URLs weiterleiten (`.htaccess`; `producto.html?id=…` → `/producto/<slug>/`)
-- [ ] `sitemap.xml` + `robots.txt` automatisch erzeugen
-- [ ] GitHub Action: Build + FTP-Upload zu Hostinger, Webhook von nexomar
+- [x] Handy-Ansichten, reduzierte Bewegung, Tastaturbedienung
+- [x] Performance: Cloudinary-Größen, Videos im Karussell nur mit Metadaten vorladen
+- [x] alte URLs weiterleiten (`.htaccess`; `producto.html?id=…` → `/producto/<slug>/`)
+- [x] `sitemap.xml` + `robots.txt` automatisch erzeugen
+- [x] GitHub Action: Build + FTP-Upload zu Hostinger, Webhook von nexomar (Secrets fehlen noch)
 - [ ] `redesign` in `main` zusammenführen, live schalten
 
 ## Was ich noch brauche
@@ -158,3 +193,12 @@ legacy/          alte Seite, nur als Vorlage
 - [ ] Musik-Dateien für die Playlist (4 Titel: Noche en El Poblado, Oud & Ámbar, Brisa de Bergamota, Terciopelo)
 - [ ] Bild für „Original garantizado“ (Litografie der versiegelten Box)
 - [ ] Feldnamen von Familie und Noten in der nexomar-API (sobald dort committet)
+- [ ] FTP-Zugang als GitHub-Secrets, Webhook in nexomar
+
+## Vor dem Livegang klären
+
+- Términos sagt „fragancias inspiradas en marcas de lujo“, die Vorlage verspricht „Original garantizado,
+  sellado de fábrica, código de lote“. Beides zusammen geht nicht, eins muss angepasst werden.
+- Privacidad sagt „ningún dato es almacenado“, aber Bestellungen und Bewertungen werden in nexomar gespeichert.
+- Términos, Medios de pago: Platzhalter „[Otros medios … completar]“ ersetzen.
+- Gift Card „Válida por 12 meses“ und „+100 clientes“ bestätigen.

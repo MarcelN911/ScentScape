@@ -30,6 +30,7 @@ function render() {
 async function openQuiz() {
   quiz.root.hidden = false;
   document.documentElement.classList.add('is-locked');
+  quiz.root.querySelector('.quiz__close').focus();
   await loadProducts();
   render();
 }

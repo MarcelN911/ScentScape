@@ -187,6 +187,10 @@ const images = Object.fromEntries(
     background: var(--sand);
   }
 
+  .cart-button :global(svg) {
+    flex: none;
+  }
+
   .cart-button__count {
     display: grid;
     place-items: center;
@@ -197,6 +201,17 @@ const images = Object.fromEntries(
     background: var(--navy);
     color: var(--peach);
     font: 700 11px/1 var(--font-sans);
+  }
+
+  /* Schmale Handys: Logo bekommt den freien Platz, damit Player und Warenkorb es nicht überdecken */
+  @media (max-width: 519px) {
+    .site-header__inner {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .site-header__logo img {
+      height: 26px;
+    }
   }
 
   @media (min-width: 820px) {

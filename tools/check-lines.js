@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { extname, join } from 'node:path';
 
 const MAX_LINES = 400;
-const ROOTS = ['src', 'tools'];
+const ROOTS = ['src', 'tools', 'integrations'];
 const EXTENSIONS = new Set(['.astro', '.css', '.js', '.mjs']);
 
 function collectFiles(dir) {

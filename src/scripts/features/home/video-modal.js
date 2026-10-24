@@ -26,6 +26,7 @@ function openModal(modal, index) {
   show(modal.parts, index);
   modal.parts.modal.hidden = false;
   document.documentElement.classList.add('is-locked');
+  modal.parts.modal.querySelector('[data-video-close]').focus();
   modal.onToggle(true);
 }
 

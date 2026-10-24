@@ -2,14 +2,13 @@
  * Einblenden beim Scrollen:
  *   data-reveal="up"   gleitet von unten herein
  *   data-reveal="mask" gleitet aus einer Maske (.line-mask) nach oben
- *   data-delay="120"   Verzögerung in ms
+ * Verzögerung: style="--reveal-delay:120ms" direkt am Element.
  */
 function revealTarget(element) {
   return element.dataset.reveal === 'mask' ? element.parentElement : element;
 }
 
 function reveal(element) {
-  element.style.setProperty('--reveal-delay', `${element.dataset.delay ?? 0}ms`);
   element.classList.add('is-revealed');
 }
 
