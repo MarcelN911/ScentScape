@@ -1,175 +1,35 @@
 ---
-import StepItem from '../components/pages/StepItem.astro';
-import { ORIGINAL_IMAGE, ORIGINAL_STEPS } from '../data/original.js';
+import PageIntro from '../components/page/PageIntro.astro';
+import SplitPage from '../components/page/SplitPage.astro';
+import { ORIGINAL_TITLE } from '../data/original.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LotCheck from '../sections/pages/LotCheck.astro';
-import { whatsappUrl } from '../scripts/utils/whatsapp.js';
-
-const ROMAN = ['I', 'II', 'III', 'IV'];
-const advisorUrl = whatsappUrl(
-  'Hola ScentScape, tengo una pregunta sobre la originalidad de mi perfume.',
-);
+import LotForm from '../sections/original/LotForm.astro';
+import OriginalStage from '../sections/original/OriginalStage.astro';
 ---
 
 <BaseLayout
-  title="Original garantizado | ScentScape"
-  description="Cada perfume ScentScape llega sellado de fábrica y con su código de lote. Así puedes comprobarlo en menos de un minuto."
+  title="Original garantizado | Verifica tu perfume · ScentScape"
+  description="Cada perfume ScentScape llega sellado de fábrica y con su código de lote. Escríbelo y te confirmamos su origen."
+  curtainX="47.619%"
 >
-  <main class="original">
-    <section class="original__hero hatch">
-      <div class="original__hero-grid">
-        <div>
-          <p class="eyebrow original__eyebrow">Desde el QR de tu tarjeta</p>
-          <h1 class="display original__title">
-            Original <em>garantizado.</em>
-          </h1>
-          <p class="original__lead">
-            Cada perfume ScentScape llega sellado de fábrica y con su código de lote impreso en la
-            caja. Aquí te mostramos cómo comprobarlo en menos de un minuto.
-          </p>
-          <div class="original__actions">
-            <a class="btn btn--primary btn--lg" href="#verificar">
-              Verificar mi lote
-            </a>
-            <a class="btn btn--outline btn--lg" href={advisorUrl} target="_blank" rel="noopener">
-              Hablar con un asesor
-            </a>
-          </div>
-        </div>
-        <div class="original__visual frame">
-          {ORIGINAL_IMAGE ? (
-            <img src={ORIGINAL_IMAGE} alt="Caja sellada con código de lote" />
-          ) : (
-            <p class="original__placeholder hatch">
-              Ilustración litográfica · caja sellada con código de lote
-            </p>
-          )}
-        </div>
-      </div>
-    </section>
-
-    <section class="container original__steps">
-      <div class="original__steps-head">
-        <h2 class="display display--md">
-          Cómo llega <em>tu perfume</em>
-        </h2>
-        <span class="original__rule"></span>
-        <span class="original__star">✦</span>
-      </div>
-      <div class="original__step-grid">
-        {ORIGINAL_STEPS.map((step, index) => (
-          <StepItem step={step} number={ROMAN[index]} />
-        ))}
-      </div>
-    </section>
-
-    <LotCheck />
+  <main data-original-page>
+    <SplitPage word="Original · Original ·" glow="rgb(38 44 99 / .55)">
+      <OriginalStage slot="stage" />
+      <PageIntro
+        crumb="Original Garantizado"
+        eyebrow="Servicio 04 · Autenticidad"
+        title={ORIGINAL_TITLE}
+        label="Verifica tu perfume."
+        lead="Cada perfume ScentScape llega sellado de fábrica, con su código de lote en la caja. Escríbelo y te confirmamos el origen."
+      />
+      <LotForm />
+    </SplitPage>
   </main>
 </BaseLayout>
 
-<style>
-  .original__hero {
-    --hatch-alpha: 0.045;
-    padding: clamp(130px, 13vw, 190px) var(--gutter) clamp(60px, 7vw, 100px);
-    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .original__hero-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
-    align-items: center;
-    gap: clamp(30px, 5vw, 80px);
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  .original__eyebrow {
-    margin-bottom: 22px;
-  }
-
-  .original__title {
-    --display-size: clamp(56px, 8vw, 136px);
-    --display-leading: 0.88;
-    margin-bottom: 26px;
-  }
-
-  .original__title em {
-    display: block;
-  }
-
-  .original__lead {
-    max-width: 520px;
-    margin: 0 0 30px;
-    font: 400 18px/1.6 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.78);
-    text-wrap: pretty;
-  }
-
-  .original__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .original__visual {
-    width: 100%;
-    max-height: 640px;
-    aspect-ratio: 4 / 5;
-    padding: 16px;
-    border-radius: 0;
-    outline-offset: -9px;
-  }
-
-  .original__visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .original__placeholder {
-    display: grid;
-    place-items: center;
-    height: 100%;
-    margin: 0;
-    padding: 30px;
-    font: italic 400 20px/1.4 var(--font-serif);
-    text-align: center;
-    color: rgb(var(--peach-rgb) / 0.6);
-  }
-
-  .original__steps {
-    max-width: 1500px;
-    padding-block: clamp(70px, 8vw, 120px);
-  }
-
-  .original__steps-head {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: clamp(30px, 4vw, 50px);
-  }
-
-  .original__rule {
-    flex: 1;
-    height: 1px;
-    background: rgb(var(--peach-rgb) / 0.25);
-  }
-
-  .original__star {
-    font-size: 14px;
-    color: var(--peach);
-  }
-
-  .original__step-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-    gap: clamp(18px, 2.5vw, 36px);
-  }
-</style>
-
 <script>
   import { onPage } from '../scripts/core/lifecycle.js';
-  import { initLotCheck } from '../scripts/features/lot-check.js';
+  import { initOriginalPage } from '../scripts/features/original/page.js';
 
-  onPage(initLotCheck);
+  onPage(initOriginalPage);
 </script>

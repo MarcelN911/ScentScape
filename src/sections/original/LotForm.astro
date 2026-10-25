@@ -1,0 +1,194 @@
+---
+/*
+ * Formular "Código de lote": Eingabe mit Knopf, danach Bestätigung per WhatsApp.
+ * Darunter die Stellen, an denen der Code zu finden ist. Bedienung: scripts/features/original/page.js
+ */
+import WhatsAppIcon from '../../components/ui/WhatsAppIcon.astro';
+import { LOT_MAX, LOT_SPOTS } from '../../data/original.js';
+import { padNumber } from '../../scripts/utils/format.js';
+---
+
+<form class="form-card reveal-late lot-form" style="--late:1.9s" data-lot-form novalidate>
+  <label class="field-group">
+    <span class="field-label">Código de lote</span>
+    <span class="lot-form__field" data-lot-field>
+      <input
+        name="lot"
+        placeholder="Ej. 3B21A"
+        maxlength={LOT_MAX}
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="lot-error"
+      />
+      <button type="submit" disabled data-lot-submit>
+        Verificar
+      </button>
+    </span>
+  </label>
+  <p class="lot-form__error" id="lot-error" role="alert" data-lot-error hidden>
+    Revisa el código: solo letras y números, entre 4 y 14 caracteres.
+  </p>
+  <div class="lot-form__result" data-lot-result hidden>
+    <span class="lot-form__tag">
+      ✓ Código <span data-lot-code></span> recibido
+    </span>
+    <p>Envíalo por WhatsApp y te confirmamos el origen y la fecha de producción de tu perfume.</p>
+    <a class="lot-form__wa" href="#" target="_blank" rel="noopener" data-lot-whatsapp>
+      <WhatsAppIcon size={16} />
+      Confirmar por WhatsApp
+    </a>
+  </div>
+</form>
+<div class="lot-spots reveal-late" style="--late:2.1s">
+  <span class="field-label">Dónde encontrar el código</span>
+  <div class="lot-spots__grid">
+    {LOT_SPOTS.map((spot, index) => (
+      <div class="lot-spots__card">
+        <span class="lot-spots__number">{padNumber(index + 1)}</span>
+        <span class="lot-spots__title">{spot.title}</span>
+        <span class="lot-spots__text">{spot.text}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .lot-form__field {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 28px;
+    background: var(--field);
+    transition: border-color 0.4s;
+  }
+
+  .lot-form__field.is-ready {
+    border-color: rgb(var(--peach-rgb) / 0.7);
+  }
+
+  .lot-form__field.is-received {
+    border-color: var(--peach);
+  }
+
+  .lot-form__field.is-invalid {
+    border-color: var(--error-strong);
+  }
+
+  .lot-form__field input {
+    flex: 1;
+    min-width: 0;
+    height: 56px;
+    padding: 0 22px;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font:
+      400 16px ui-monospace,
+      Menlo,
+      monospace;
+    letter-spacing: 2px;
+    outline: none;
+  }
+
+  .lot-form__field button {
+    flex: none;
+    padding: 0 20px;
+    border: 0;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+  }
+
+  .lot-form__field button:disabled {
+    background: rgb(var(--peach-rgb) / 0.35);
+    cursor: not-allowed;
+  }
+
+  .lot-form__error {
+    margin: 0;
+    color: var(--error);
+    font: 300 13px/1.6 var(--font-sans);
+  }
+
+  .lot-form__result {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.2);
+  }
+
+  .lot-form__tag {
+    color: var(--peach);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .lot-form__result p {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 15px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .lot-form__wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 24px;
+    border: 1px solid rgb(37 211 102 / 0.6);
+    border-radius: 26px;
+    color: var(--cream);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+  }
+
+  .lot-form__wa:hover {
+    background: rgb(37 211 102 / 0.14);
+    color: var(--cream);
+  }
+
+  .lot-spots {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lot-spots__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .lot-spots__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 18px;
+  }
+
+  .lot-spots__number {
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .lot-spots__title {
+    font: 400 19px/1.1 var(--font-serif);
+  }
+
+  .lot-spots__text {
+    color: rgb(var(--cream-rgb) / 0.65);
+    font: 300 13px/1.6 var(--font-sans);
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+/*
+ * Schild der Seite "Original garantizado": Umriss zeichnet sich beim Laden,
+ * beim Prüfen läuft eine Scanlinie darüber, danach erscheint der Haken.
+ * Zustände über Klassen am Seitenwurzel: .is-scanning, .is-received
+ */
+---
+
+<div class="shield">
+  <svg viewBox="0 0 24 27" fill="none" aria-hidden="true">
+    <path
+      class="shield__outline"
+      d="M12 1l10 3.6v7.2c0 6.6-4.3 11.8-10 13.8C6.3 23.6 2 18.4 2 11.8V4.6z"
+      pathLength="80"
+    ></path>
+    <path
+      class="shield__inner"
+      d="M12 4.2l7.4 2.7v5.2c0 4.9-3.2 8.8-7.4 10.3-4.2-1.5-7.4-5.4-7.4-10.3V6.9z"
+    ></path>
+    <path class="shield__check" d="M7.5 13.5l3 3 6-6.5" pathLength="20"></path>
+  </svg>
+  <span class="shield__scan"></span>
+</div>
+
+<style>
+  .shield {
+    position: relative;
+    width: min(56vw, 220px);
+    aspect-ratio: 24 / 27;
+  }
+
+  .shield svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 0 0 transparent);
+    transition: filter 0.8s;
+  }
+
+  .shield__outline,
+  .shield__inner {
+    stroke: rgb(var(--peach-rgb) / 0.55);
+    transition:
+      stroke 0.6s,
+      fill 0.8s;
+  }
+
+  .shield__outline {
+    fill: rgb(var(--peach-rgb) / 0);
+    stroke-width: 0.4;
+    stroke-dasharray: 80;
+    stroke-dashoffset: 80;
+    transition:
+      stroke-dashoffset 2.2s cubic-bezier(0.6, 0, 0.2, 1) 0.6s,
+      stroke 0.6s,
+      fill 0.8s;
+  }
+
+  .shield__inner {
+    stroke-width: 0.2;
+    opacity: 0.5;
+  }
+
+  .shield__check {
+    stroke: var(--sand);
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    opacity: 0;
+    transition:
+      stroke-dashoffset 0.7s var(--ease) 0.2s,
+      opacity 0.2s 0.2s;
+  }
+
+  .shield__scan {
+    position: absolute;
+    left: -14%;
+    right: -14%;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sand), transparent);
+    box-shadow: 0 0 18px 2px rgb(var(--sand-rgb) / 0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  :global(.is-in) .shield__outline {
+    stroke-dashoffset: 0;
+  }
+
+  :global(.is-scanning) .shield__outline,
+  :global(.is-scanning) .shield__inner {
+    stroke: var(--peach);
+  }
+
+  :global(.is-scanning) .shield__scan {
+    top: 100%;
+    opacity: 1;
+    transition:
+      top 1.7s cubic-bezier(0.6, 0, 0.4, 1),
+      opacity 0.3s;
+  }
+
+  :global(.is-received) .shield svg {
+    filter: drop-shadow(0 0 30px rgb(var(--peach-rgb) / 0.55));
+  }
+
+  :global(.is-received) .shield__outline {
+    fill: rgb(var(--peach-rgb) / 0.16);
+    stroke: var(--sand);
+  }
+
+  :global(.is-received) .shield__inner {
+    stroke: var(--sand);
+  }
+
+  :global(.is-received) .shield__check {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+</style>
