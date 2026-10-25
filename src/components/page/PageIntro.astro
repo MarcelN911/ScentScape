@@ -6,6 +6,7 @@
 /**
  * @typedef {object} Props
  * @property {string} [crumb]  Pfad "← Inicio / …" (ohne crumb kein Pfad)
+ * @property {{ label: string, href: string }} [parent]  Zwischenstufe im Pfad, z. B. Servicios
  * @property {string} eyebrow
  * @property {[string, boolean][]} title
  * @property {string} label    vollständiger Titel für Screenreader
@@ -15,6 +16,7 @@
  */
 const {
   crumb,
+  parent,
   eyebrow,
   title,
   label,
@@ -33,6 +35,8 @@ const words = title.map(([text, italic]) => ({
   <nav class="intro-crumbs" aria-label="Ruta">
     <a href="/">← Inicio</a>
     <span>/</span>
+    {parent && <a href={parent.href}>{parent.label}</a>}
+    {parent && <span>/</span>}
     <span class="intro-crumbs__here">{crumb}</span>
   </nav>
 )}

@@ -1,0 +1,100 @@
+---
+import ContactList from '../components/chat/ContactList.astro';
+import PhoneMock from '../components/chat/PhoneMock.astro';
+import FaqList from '../components/faq/FaqList.astro';
+import PageIntro from '../components/page/PageIntro.astro';
+import SplitPage from '../components/page/SplitPage.astro';
+import { FAQ_GREETING, FAQ_QUESTIONS } from '../data/faq.js';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const questions = FAQ_QUESTIONS.map(({ question, answer }) => ({ question, answer }));
+---
+
+<BaseLayout
+  title="Te asesoramos | Preguntas frecuentes · ScentScape"
+  description="Envíos, cómo elegir tu perfume y cómo encontrarnos. Si tu pregunta no está aquí, Sara y Brayan te responden por WhatsApp."
+  curtainX="55.556%"
+>
+  <main data-faq-page>
+    <SplitPage
+      word="Preguntas · Preguntas ·"
+      glow="rgb(83 16 25 / .55)"
+      ratio="minmax(0, 1.25fr) minmax(0, 1fr)"
+      stageGap="22px"
+    >
+      <div class="faq-stage reveal-late" slot="stage" style="--late:0.5s">
+        <div class="faq-stage__aside">
+          <p>¿Tu pregunta no está en la lista? Escríbenos directamente.</p>
+          <ContactList size="lg" bordered={false} />
+        </div>
+        <PhoneMock greeting={FAQ_GREETING} input="field" />
+      </div>
+      <PageIntro
+        crumb="Te asesoramos"
+        parent={{ label: 'Servicios', href: '/servicios/' }}
+        eyebrow="Preguntas frecuentes"
+        title={[
+          ['Te ', false],
+          ['asesoramos', true],
+        ]}
+        label="Te asesoramos"
+        size="clamp(48px, 5.4vw, 92px)"
+        lead="Envíos, cómo elegir tu perfume y cómo encontrarnos. Si tu pregunta no está aquí, Sara y Brayan te responden en persona por WhatsApp."
+      />
+      <FaqList />
+    </SplitPage>
+    <script type="application/json" data-chat-data set:html={JSON.stringify(questions)} />
+  </main>
+</BaseLayout>
+
+<style>
+  .faq-stage {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 3vw, 56px);
+    max-width: 100%;
+    --phone-height: min(760px, calc(100vh - 100px), 180vw);
+    --phone-min: 0px;
+  }
+
+  .faq-stage__aside {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 22px;
+    order: 1;
+    width: clamp(160px, 15vw, 220px);
+    min-width: 0;
+  }
+
+  .faq-stage__aside p {
+    margin: 0;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.22);
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.6 var(--font-sans);
+  }
+
+  @media (min-width: 1200px) {
+    .faq-stage__aside {
+      order: 0;
+    }
+
+    .faq-stage {
+      flex-wrap: nowrap;
+      --phone-height: min(900px, calc(100vh - 70px), calc((55vw - 370px) * 2.1));
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initFaqPage } from '../scripts/features/faq/index.js';
+
+  onPage(initFaqPage);
+</script>

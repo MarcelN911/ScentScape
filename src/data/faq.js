@@ -1,7 +1,7 @@
 /*
  * Fragen und Antworten.
  * CHAT_QUESTIONS: Handy-Chat auf Produktseite und Servicios
- * FAQ_QUESTIONS: Seite "Te asesoramos" (mit Kategorie und optionalem Link)
+ * FAQ_QUESTIONS: Seite "Te asesoramos" (mit Kategorie)
  */
 export const CHAT_GREETING =
   'Hola, somos Sara y Brayan de ScentScape. Elige una pregunta y te respondemos aquí mismo.';
@@ -44,7 +44,6 @@ export const FAQ_QUESTIONS = [
     question: '¿Cómo sé qué perfume elegir?',
     answer:
       'Completa nuestro test de perfil olfativo y te recomendamos el perfume ideal para ti en minutos. También puedes escribirnos por WhatsApp para una asesoría personalizada.',
-    link: { label: 'Hacer el test', href: '/test-olfativo/' },
   },
   {
     category: 'Asesoría',
