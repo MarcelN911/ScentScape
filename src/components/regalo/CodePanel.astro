@@ -1,0 +1,117 @@
+---
+/* Code der Gift Card zum Kopieren und als QR-Code für die Kasse in der Tienda. */
+---
+
+<div class="code-panel" data-regalo-code-panel>
+  <div class="code-panel__text">
+    <span class="code-panel__label">Código</span>
+    <span class="code-panel__code" data-regalo-code></span>
+    <button class="code-panel__copy" type="button" data-regalo-copy>
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        aria-hidden="true"
+      >
+        <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+        <path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path>
+      </svg>
+      <span data-regalo-copy-label>Copiar</span>
+    </button>
+  </div>
+  <div class="code-panel__qr">
+    <svg
+      role="img"
+      aria-label="Código QR de la tarjeta"
+      shape-rendering="crispEdges"
+      data-regalo-qr
+    >
+      <path fill-rule="evenodd"></path>
+    </svg>
+  </div>
+</div>
+
+<style>
+  .code-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 24px 24px 28px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 28px;
+    background: var(--panel);
+  }
+
+  .code-panel__text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .code-panel__label {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .code-panel__code {
+    overflow-wrap: anywhere;
+    color: var(--sand);
+    font: 500 clamp(18px, 1.7vw, 24px) var(--font-sans);
+    font-variant-numeric: lining-nums;
+    letter-spacing: 0.18em;
+  }
+
+  .code-panel__copy {
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 22px;
+    background: transparent;
+    color: var(--sand);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .code-panel__copy:hover,
+  .code-panel__copy.is-copied {
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .code-panel__qr {
+    width: 132px;
+    height: 132px;
+    padding: 12px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.28);
+    border-radius: 18px;
+    background: var(--navy);
+  }
+
+  .code-panel__qr svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: var(--peach);
+  }
+
+  @media (max-width: 480px) {
+    .code-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

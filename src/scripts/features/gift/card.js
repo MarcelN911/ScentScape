@@ -17,10 +17,9 @@ const SWEEP = [
   { transform: 'translateX(320%) skewX(-18deg)' },
 ];
 
-/** Schweben und Glanz; gibt eine Funktion zum Stoppen zurück */
-export function startIdle(card) {
+/** Schweben und Glanz; gibt eine Funktion zum Stoppen zurück. float: was schwebt (Standard: die Karte) */
+export function startIdle(card, float = card.querySelector('[data-gift-float]')) {
   if (prefersReducedMotion()) return () => {};
-  const float = card.querySelector('[data-gift-float]');
   const sweep = card.querySelector('[data-gift-sweep]');
   const animations = [
     float.animate(FLOAT, { duration: 6500, iterations: Infinity, easing: 'ease-in-out' }),

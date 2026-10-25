@@ -1,0 +1,166 @@
+---
+/*
+ * Linke Bühne der Seite "Regalo": Umschlag mit der Gift Card darin.
+ * Bis zum Ende der Öffnung steht sie in der Mitte des Bildschirms, danach rückt sie nach links.
+ */
+import Envelope from '../../components/regalo/Envelope.astro';
+import GiftCard from '../../components/gift/GiftCard.astro';
+import { formatCOP } from '../../scripts/utils/format.js';
+
+/** @typedef {{ gift: object }} Props */
+const { gift } = Astro.props;
+const nines = formatCOP(gift.amount).replace(/\d/g, '9');
+---
+
+<div class="regalo-stage">
+  <div class="regalo-stage__inner">
+    <div class="regalo-stage__box" data-regalo-float>
+      <Envelope to={gift.to} from={gift.from} />
+      <div class="regalo-stage__card" data-regalo-card>
+        <GiftCard
+          color={gift.color}
+          front={{ amount: nines, to: gift.to, from: gift.from }}
+          back={{ message: gift.message, code: '', valid: '' }}
+        />
+      </div>
+    </div>
+    <div class="regalo-stage__controls">
+      <span class="regalo-stage__hint">
+        <i></i>Haz clic para abrir<i></i>
+      </span>
+      <button class="flip-btn regalo-stage__flip" type="button" tabindex="-1" data-regalo-flip>
+        <span class="flip-btn__icon">↻</span>
+        <span data-regalo-flip-label>Ver frente</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .regalo-stage {
+    position: relative;
+    top: 0;
+    height: 86vh;
+  }
+
+  .regalo-stage__inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 90px clamp(24px, 4vw, 72px) 40px;
+    transform: translateX(var(--shift, 0%));
+    transition: transform 1.6s cubic-bezier(0.65, 0, 0.25, 1);
+  }
+
+  .regalo-stage__box {
+    position: relative;
+    width: min(100%, 580px);
+    aspect-ratio: 1.586;
+    container-type: inline-size;
+    opacity: 0;
+    transition: opacity 1.2s 0.7s;
+  }
+
+  .regalo-stage__card {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transform: translateY(0%) scale(0.9);
+    transition: transform 1.5s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+
+  .regalo-stage__card :global(.gift-card) {
+    --odo-speed: 1.6s;
+
+    width: 100%;
+  }
+
+  .regalo-stage__controls {
+    display: grid;
+    place-items: center;
+    height: 44px;
+    opacity: 0;
+    transition: opacity 1s 1.4s;
+  }
+
+  .regalo-stage__hint,
+  .regalo-stage__flip {
+    grid-area: 1 / 1;
+  }
+
+  .regalo-stage__hint {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    transition: opacity 0.6s;
+    pointer-events: none;
+  }
+
+  .regalo-stage__hint i {
+    width: 28px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .regalo-stage__flip {
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.8s 0.9s,
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  :global(.is-in) .regalo-stage__box,
+  :global(.is-in) .regalo-stage__controls {
+    opacity: 1;
+  }
+
+  :global(.is-p1) .regalo-stage__hint {
+    opacity: 0;
+  }
+
+  :global(.is-p2) .regalo-stage__card {
+    transform: translateY(-52%) scale(0.9);
+  }
+
+  :global(.is-p3) .regalo-stage__card {
+    transform: none;
+  }
+
+  :global(.is-p4) .regalo-stage__card {
+    z-index: 8;
+  }
+
+  :global(.is-p5) .regalo-stage__card {
+    cursor: pointer;
+  }
+
+  :global(.is-p5) .regalo-stage__flip {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 900px) {
+    .regalo-stage {
+      position: sticky;
+      height: 100vh;
+    }
+
+    .regalo-stage__inner {
+      --shift: 50%;
+    }
+
+    :global(.is-p5) .regalo-stage__inner {
+      --shift: 0%;
+    }
+  }
+</style>

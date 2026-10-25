@@ -16,9 +16,11 @@ const { color, message, code, valid, faded = false } = Astro.props;
     <div class="back__row">
       <span class="back__code">
         <small>Código</small>
-        <span>{code}</span>
+        <span data-gift-code>{code}</span>
       </span>
-      <span class="back__valid">{valid}</span>
+      <span class="back__valid" data-gift-valid>
+        {valid}
+      </span>
     </div>
   </div>
 </div>
@@ -70,10 +72,26 @@ const { color, message, code, valid, faded = false } = Astro.props;
   }
 
   .back__message {
+    display: -webkit-box;
     margin: 0;
+    overflow: hidden;
     overflow-wrap: anywhere;
-    font: italic 400 clamp(16px, 3.9cqw, 22px) / 1.35 var(--font-serif);
+    font: italic 400 clamp(12px, 3.9cqw, 22px) / 1.35 var(--font-serif);
     text-wrap: pretty;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
+
+  @container (max-width: 420px) {
+    .back__content {
+      padding-top: 24%;
+    }
+
+    .back__message {
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
   }
 
   .back__message.is-faded {

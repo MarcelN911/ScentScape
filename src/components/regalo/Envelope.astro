@@ -1,0 +1,254 @@
+---
+/*
+ * Umschlag um die Gift Card: Rückwand, Lasche mit Siegel und vordere Tasche mit Namen.
+ * Die Lasche klappt auf, danach rutscht der Umschlag nach unten weg (Klassen .is-p1 … am Seitenwurzel).
+ */
+/** @typedef {{ to: string, from: string }} Props */
+const { to, from } = Astro.props;
+---
+
+<div class="envelope">
+  <div class="envelope__body">
+    <span></span>
+  </div>
+  <div class="envelope__flap">
+    <div class="envelope__flap-face">
+      <span class="envelope__flap-light"></span>
+      <span class="envelope__flap-rings"></span>
+    </div>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0L50 100L100 0" vector-effect="non-scaling-stroke"></path>
+    </svg>
+    <span class="envelope__seal" aria-hidden="true">
+      S
+    </span>
+  </div>
+  <div class="envelope__pocket">
+    <div class="envelope__pocket-face">
+      <span class="envelope__pocket-light"></span>
+      <span class="envelope__pocket-frame"></span>
+      <div class="envelope__names">
+        <span class="envelope__to">
+          Para <span data-regalo-to>{to}</span>
+        </span>
+        <span class="envelope__from">
+          <i></i>De parte de <span data-regalo-from>{from}</span>
+          <i></i>
+        </span>
+      </div>
+    </div>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0L50 50L100 0" vector-effect="non-scaling-stroke"></path>
+    </svg>
+  </div>
+  <button
+    class="envelope__open"
+    type="button"
+    aria-label={`Abrir el regalo de ${from}`}
+    data-regalo-open
+  ></button>
+</div>
+
+<style>
+  .envelope {
+    position: absolute;
+    inset: -7% -5%;
+  }
+
+  .envelope__body,
+  .envelope__pocket {
+    position: absolute;
+    inset: 0;
+    transform: translateY(var(--env-y, 0));
+    opacity: var(--env-o, 1);
+    transition:
+      transform 1.3s cubic-bezier(0.6, 0, 0.3, 1),
+      opacity 0.9s 0.25s;
+  }
+
+  .envelope__body {
+    z-index: 1;
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--gift-bg);
+    box-shadow: 0 50px 100px rgb(0 0 0 / 0.55);
+  }
+
+  .envelope__body span {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.38);
+  }
+
+  .envelope__flap {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 5;
+    height: 58%;
+    transform-origin: 50% 0;
+    transform: translateY(var(--env-y, 0)) perspective(1400px) rotateX(var(--flap-r, 0deg));
+    opacity: var(--env-o, 1);
+    transition:
+      transform 1s cubic-bezier(0.5, 0, 0.2, 1),
+      opacity 0.9s 0.25s;
+  }
+
+  .envelope__flap-face {
+    position: absolute;
+    inset: 0;
+    background: var(--gift-bg);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transition: filter 0.6s;
+  }
+
+  .envelope__flap-light,
+  .envelope__flap-rings,
+  .envelope__pocket-light {
+    position: absolute;
+    inset: 0;
+  }
+
+  .envelope__flap-light {
+    background: linear-gradient(180deg, rgb(var(--cream-rgb) / 0.1), rgb(0 0 0 / 0.22));
+  }
+
+  .envelope__flap-rings {
+    opacity: 0.5;
+    background: repeating-radial-gradient(
+      circle at 50% -40%,
+      transparent 0 22px,
+      var(--line) 22px 23px
+    );
+    mask-image: linear-gradient(180deg, #000, transparent 80%);
+  }
+
+  .envelope svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .envelope__seal {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f6e3c6, #c9a06e 55%, #b88d58);
+    box-shadow:
+      0 6px 16px rgb(0 0 0 / 0.4),
+      inset 0 0 0 3px rgb(var(--cream-rgb) / 0.18),
+      inset 0 0 0 5px rgb(0 0 0 / 0.12);
+    color: rgb(61 2 17 / 0.75);
+    font: italic 400 28px/1 var(--font-serif);
+    transform: translate(-50%, -62%);
+    transition: opacity 0.35s;
+  }
+
+  .envelope__pocket {
+    z-index: 3;
+  }
+
+  .envelope__pocket-face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--gift-bg);
+    color: var(--ink);
+    clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .envelope__pocket-light {
+    background:
+      radial-gradient(120% 90% at 50% 120%, rgb(var(--cream-rgb) / 0.1), transparent 60%),
+      linear-gradient(180deg, rgb(0 0 0 / 0.12), transparent 50%);
+  }
+
+  .envelope__pocket-frame {
+    position: absolute;
+    inset: 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+  }
+
+  .envelope__names {
+    position: absolute;
+    inset: auto 0 13%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .envelope__to {
+    color: var(--amount);
+    font: italic 400 clamp(26px, 6.4cqw, 40px) / 1.15 var(--font-serif);
+  }
+
+  .envelope__from {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font: 600 9px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .envelope__from i {
+    width: 18px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .envelope__open {
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    padding: 0;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    cursor: pointer;
+  }
+
+  .envelope:has(.envelope__open:hover) .envelope__flap {
+    --flap-r: 14deg;
+  }
+
+  :global(.is-p1) .envelope__flap {
+    --flap-r: 180deg;
+  }
+
+  :global(.is-p1) .envelope__seal {
+    opacity: 0;
+  }
+
+  :global(.is-p1) .envelope__open {
+    display: none;
+  }
+
+  :global(.is-flap) .envelope__flap {
+    z-index: 0;
+  }
+
+  :global(.is-flap) .envelope__flap-face {
+    filter: brightness(0.8);
+  }
+
+  :global(.is-p3) .envelope {
+    --env-y: 68cqw;
+    --env-o: 0;
+    pointer-events: none;
+  }
+</style>

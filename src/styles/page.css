@@ -193,3 +193,37 @@
   background: var(--sand);
   color: var(--navy);
 }
+
+/* Kleiner Knopf unter einer Karte: "Ver reverso" / "Ver frente" */
+.flip-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid rgb(var(--peach-rgb) / 0.4);
+  border-radius: 22px;
+  background: none;
+  color: var(--sand);
+  font: 500 11px var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    opacity 0.8s;
+}
+
+.flip-btn:hover {
+  background: var(--sand);
+  color: var(--navy);
+}
+
+.flip-btn__icon {
+  display: inline-block;
+  transition: transform 0.8s var(--ease);
+}
+
+.is-back .flip-btn__icon {
+  transform: rotate(180deg);
+}

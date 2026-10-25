@@ -1,0 +1,44 @@
+---
+/* Eine Zeile "Bezeichnung … Wert" mit Trennlinie, z. B. "Válida hasta el · 18 oct 2027". */
+/** @typedef {{ label: string, value?: string, hook?: string }} Props */
+const { label, value = '', hook } = Astro.props;
+---
+
+<div class="info-row" data-regalo-row={hook}>
+  <span class="info-row__label">{label}</span>
+  <span class="info-row__value" data-regalo-value={hook}>
+    {value}
+  </span>
+</div>
+
+<style>
+  .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+  }
+
+  .info-row:last-child {
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.18);
+  }
+
+  .info-row__label {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .info-row__value {
+    font: 400 22px var(--font-serif);
+    font-variant-numeric: lining-nums;
+  }
+
+  .info-row:first-child .info-row__value {
+    color: var(--sand);
+  }
+</style>

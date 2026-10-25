@@ -37,8 +37,8 @@ const back = {
       ></button>
     ))}
   </div>
-  <button class="gift-stage__flip" type="button" data-gift-flip>
-    <span class="gift-stage__flip-icon">↻</span>
+  <button class="flip-btn" type="button" data-gift-flip>
+    <span class="flip-btn__icon">↻</span>
     <span data-gift-flip-label>Ver reverso</span>
   </button>
 </div>
@@ -119,37 +119,5 @@ const back = {
       0 0 0 2px var(--navy-deep),
       0 0 0 4px var(--peach);
     transform: scale(1.06);
-  }
-
-  .gift-stage__flip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 44px;
-    padding: 0 20px;
-    border: 1px solid rgb(var(--peach-rgb) / 0.4);
-    border-radius: 22px;
-    background: none;
-    color: var(--sand);
-    font: 500 11px var(--font-sans);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-  }
-
-  .gift-stage__flip:hover {
-    background: var(--sand);
-    color: var(--navy);
-  }
-
-  .gift-stage__flip-icon {
-    display: inline-block;
-    transition: transform 0.8s var(--ease);
-  }
-
-  :global(.is-back) .gift-stage__flip-icon {
-    transform: rotate(180deg);
   }
 </style>

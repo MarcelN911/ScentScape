@@ -19,6 +19,7 @@ import '../styles/global.css';
  * @property {boolean} [bare]    ohne Navigation und Footer (z. B. Druckversion)
  * @property {string} [curtainX]  Lage der Lichtlinie im Vorhang ab 900px Breite, z. B. '47.619%'
  * @property {'line' | 'row' | 'none'} [curtainMode] senkrechte Linie, waagerechte Linie oder keine
+ * @property {boolean} [header]  Navigation anzeigen (Regalo zeigt nur das Logo)
  * @property {boolean} [footer]  Footer anzeigen (Regalo hat keinen)
  * @property {'reveal' | 'scroll'} [wordmark] SCENTSCAPE im Footer: einmal einblenden oder mit dem Scroll hochfahren
  */
@@ -31,6 +32,7 @@ const {
   bare = false,
   curtainX = '50%',
   curtainMode = 'line',
+  header = true,
   footer = true,
   wordmark = 'reveal',
 } = Astro.props;
@@ -66,8 +68,8 @@ const ogImage = new URL(image, Astro.site);
     {!bare && (
       <>
         <ScrollProgress />
-        <Header />
-        <MobileMenu />
+        {header && <Header />}
+        {header && <MobileMenu />}
       </>
     )}
     <slot />
