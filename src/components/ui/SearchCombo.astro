@@ -1,0 +1,228 @@
+---
+/*
+ * Suchfeld mit Vorschlagsliste (Lupe links, Haken oder ✕ rechts).
+ * Die Vorschläge zeichnet scripts/features/reviews/combo.js.
+ */
+/**
+ * @typedef {object} Props
+ * @property {string} name
+ * @property {string} placeholder
+ * @property {string} label
+ * @property {string} empty      Text, wenn nichts passt
+ * @property {'pill' | 'field'} [shape]
+ */
+const { name, placeholder, label, empty, shape = 'pill' } = Astro.props;
+const listId = `${name}-list`;
+---
+
+<div class:list={['combo', `combo--${shape}`]} data-combo={name}>
+  <svg
+    class="combo__icon"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="7"></circle>
+    <path d="M20 20l-3.5-3.5"></path>
+  </svg>
+  <input
+    class="combo__input"
+    name={name}
+    type="search"
+    role="combobox"
+    aria-label={label}
+    aria-expanded="false"
+    aria-controls={listId}
+    aria-autocomplete="list"
+    placeholder={placeholder}
+    autocomplete="off"
+    data-combo-input
+  />
+  <button class="combo__clear" type="button" aria-label="Borrar búsqueda" hidden data-combo-clear>
+    ✕
+  </button>
+  <span class="combo__check" aria-hidden="true" hidden data-combo-check>
+    ✓
+  </span>
+  <div class="combo__list" id={listId} role="listbox" data-combo-list></div>
+  <template data-combo-option>
+    <button class="combo__option" type="button" role="option" tabindex="-1">
+      <img alt="" />
+      <span class="combo__text">
+        <span class="combo__title"></span>
+        <span class="combo__meta"></span>
+      </span>
+    </button>
+  </template>
+  <span class="combo__empty" hidden data-combo-empty>
+    {empty}
+  </span>
+</div>
+
+<style>
+  .combo {
+    position: relative;
+    z-index: 5;
+  }
+
+  .combo__icon {
+    position: absolute;
+    left: 20px;
+    top: 19px;
+    color: var(--peach);
+    pointer-events: none;
+  }
+
+  .combo__input {
+    width: 100%;
+    height: 56px;
+    padding: 0 52px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 28px;
+    background: rgb(var(--navy-rgb) / 0.5);
+    color: var(--cream);
+    font: 400 15px var(--font-sans);
+    outline: none;
+    transition:
+      border-color 0.3s,
+      background-color 0.3s;
+  }
+
+  .combo--field .combo__input {
+    padding-right: 20px;
+    border-radius: 18px;
+    background: var(--field);
+  }
+
+  .combo__input:focus,
+  .combo.is-picked .combo__input {
+    border-color: var(--peach);
+  }
+
+  .combo__input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .combo__clear,
+  .combo__check {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 18px;
+  }
+
+  .combo__clear {
+    background: rgb(var(--peach-rgb) / 0.12);
+    color: var(--sand);
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+
+  .combo__clear:hover {
+    background: rgb(var(--peach-rgb) / 0.25);
+  }
+
+  .combo__check {
+    top: 14px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 600 13px var(--font-sans);
+    pointer-events: none;
+  }
+
+  .combo__list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 22px;
+    background: rgb(var(--navy-deep-rgb) / 0.97);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 0.25s,
+      transform 0.3s var(--ease);
+  }
+
+  .combo.is-open .combo__list {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .combo__list :global(.combo__option) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--cream);
+    text-align: left;
+    transition: background-color 0.2s;
+  }
+
+  .combo__list :global(.combo__option:hover),
+  .combo__list :global(.combo__option.is-active) {
+    background: rgb(var(--peach-rgb) / 0.12);
+  }
+
+  .combo__list :global(img) {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgb(var(--sand-rgb) / 0.08);
+    object-fit: cover;
+  }
+
+  .combo__list :global(.combo__text) {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .combo__list :global(.combo__title) {
+    overflow: hidden;
+    font: 400 17px var(--font-serif);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .combo__list :global(.combo__meta) {
+    flex: none;
+    color: rgb(var(--sand-rgb) / 0.75);
+    font: 400 12px var(--font-sans);
+    white-space: nowrap;
+  }
+
+  .combo__empty {
+    display: block;
+    padding-top: 10px;
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 300 13px var(--font-sans);
+  }
+</style>

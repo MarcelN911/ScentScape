@@ -21,14 +21,3 @@ export const PAYMENT_LOGOS = [
   { name: 'Bancolombia', file: 'bancolombia.svg', height: 14 },
   { name: 'Daviplata', color: '#E1251B' },
 ];
-
-/* Hintergründe der Bewertungskarten und ihre Neigung in Grad */
-export const REVIEW_CARD_COLORS = [
-  '#F0D2AA',
-  '#EBC193',
-  '#F3DFC1',
-  '#E2BC98',
-  '#EDCBA4',
-  '#F2D9B8',
-];
-export const REVIEW_CARD_TILTS = [-2, 1.6, -1, 2.2, -1.6, 1.2];

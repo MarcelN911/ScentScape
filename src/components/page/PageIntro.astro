@@ -5,14 +5,23 @@
  */
 /**
  * @typedef {object} Props
- * @property {string} crumb
+ * @property {string} [crumb]  Pfad "← Inicio / …" (ohne crumb kein Pfad)
  * @property {string} eyebrow
  * @property {[string, boolean][]} title
  * @property {string} label    vollständiger Titel für Screenreader
  * @property {string} [lead]
  * @property {string} [size]   Schriftgröße des Titels
+ * @property {'h1' | 'h2'} [as]  Überschriftenebene
  */
-const { crumb, eyebrow, title, label, lead, size = 'clamp(44px, 5vw, 88px)' } = Astro.props;
+const {
+  crumb,
+  eyebrow,
+  title,
+  label,
+  lead,
+  size = 'clamp(44px, 5vw, 88px)',
+  as: Heading = 'h1',
+} = Astro.props;
 let count = 0;
 const words = title.map(([text, italic]) => ({
   italic,
@@ -20,17 +29,19 @@ const words = title.map(([text, italic]) => ({
 }));
 ---
 
-<nav class="intro-crumbs" aria-label="Ruta">
-  <a href="/">← Inicio</a>
-  <span>/</span>
-  <span class="intro-crumbs__here">{crumb}</span>
-</nav>
+{crumb && (
+  <nav class="intro-crumbs" aria-label="Ruta">
+    <a href="/">← Inicio</a>
+    <span>/</span>
+    <span class="intro-crumbs__here">{crumb}</span>
+  </nav>
+)}
 <div>
   <p class="intro-eyebrow">
     <span></span>
     {eyebrow}
   </p>
-  <h1 class="intro-title" aria-label={label} style={`font-size:${size}`}>
+  <Heading class="intro-title" aria-label={label} style={`font-size:${size}`}>
     {words.map((word) => (
       <span class:list={['intro-title__word', { 'is-italic': word.italic }]} aria-hidden="true">
         {word.letters.map((item) => (
@@ -40,7 +51,7 @@ const words = title.map(([text, italic]) => ({
         ))}
       </span>
     ))}
-  </h1>
+  </Heading>
   {lead && <p class="intro-lead">{lead}</p>}
 </div>
 

@@ -1,0 +1,300 @@
+---
+/*
+ * Oberer Teil der Seite "Reseñas": Titel, Suche nach Fragancia, Übersicht der Sterne
+ * und ein 3D-Karussell, das sich langsam dreht (← → beschleunigen oder wechseln die Richtung).
+ */
+import ReviewSlide from '../../components/reviews/ReviewSlide.astro';
+import ReviewSummary from '../../components/reviews/ReviewSummary.astro';
+import SearchCombo from '../../components/ui/SearchCombo.astro';
+
+/** @typedef {{ reviews: object[] }} Props */
+const { reviews } = Astro.props;
+---
+
+<section class="wall" id="todas">
+  <div class="wall__word" aria-hidden="true">
+    Reseñas · Reseñas · Reseñas
+  </div>
+  <div class="wall__inner">
+    <div class="wall__head">
+      <div class="wall__intro reveal-late" style="--late:0.5s">
+        <h1 class="wall__title">Reseñas</h1>
+        <p class="wall__lead">
+          Cuéntanos tu experiencia y califica tu fragancia. Tu opinión ayuda a otros clientes a
+          elegir.
+        </p>
+        <a class="wall__write" href="#escribir" data-review-write>
+          Escribir reseña <span>→</span>
+        </a>
+        <div class="wall__search">
+          <SearchCombo
+            name="review-search"
+            placeholder="Buscar reseñas por fragancia"
+            label="Buscar reseñas por fragancia"
+            empty="Ninguna fragancia con reseñas coincide."
+          />
+          <span class="wall__result" data-review-result></span>
+        </div>
+      </div>
+      <div class="reveal-late" style="--late:0.8s">
+        <ReviewSummary reviews={reviews} />
+      </div>
+    </div>
+    <div
+      class="carousel"
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Reseñas de clientes"
+      data-carousel
+    >
+      <div class="carousel__track" data-carousel-track></div>
+      <ReviewSlide />
+    </div>
+    <p class="wall__empty" data-review-empty hidden>
+      No hay reseñas con este filtro todavía.
+    </p>
+    <div class="controls" data-carousel-controls>
+      <div class="controls__row">
+        <button
+          class="controls__arrow"
+          type="button"
+          aria-label="Girar a la izquierda"
+          data-carousel-step="-1"
+        >
+          ←
+        </button>
+        <div class="controls__count">
+          <span class="controls__now" data-carousel-now>
+            01
+          </span>
+          <span class="controls__bar">
+            <span data-carousel-bar></span>
+          </span>
+          <span class="controls__total" data-carousel-total>
+            00
+          </span>
+        </div>
+        <button
+          class="controls__arrow controls__arrow--next"
+          type="button"
+          aria-label="Girar a la derecha"
+          data-carousel-step="1"
+        >
+          →
+        </button>
+      </div>
+      <span class="controls__hint">Usa ← → para cambiar la dirección y girar más rápido</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wall {
+    position: relative;
+    overflow: hidden;
+    padding: 150px var(--gutter) 22vh;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.15);
+    background:
+      radial-gradient(ellipse 50% 60% at 50% 70%, rgb(var(--peach-rgb) / 0.08), transparent 70%),
+      linear-gradient(180deg, var(--navy-deep), var(--navy-ink));
+  }
+
+  .wall__word {
+    position: absolute;
+    left: 0;
+    bottom: -0.18em;
+    color: transparent;
+    font: italic 400 clamp(160px, 20vw, 340px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.1);
+    pointer-events: none;
+  }
+
+  .wall__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(36px, 5vh, 56px);
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  .wall__head {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+    gap: clamp(32px, 5vw, 80px);
+  }
+
+  .wall__intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .wall__title {
+    margin: 0;
+    color: var(--sand);
+    font: italic 400 clamp(80px, 9vw, 150px) / 0.9 var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .wall__lead {
+    max-width: 520px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.82);
+    font: 300 17px/1.75 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .wall__write {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+    padding: 0 26px;
+    border-radius: 26px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s;
+  }
+
+  .wall__write:hover {
+    gap: 18px;
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .wall__search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .wall__search > :global(.combo) {
+    flex: 1 1 300px;
+    z-index: 20;
+  }
+
+  .wall__result {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 12px var(--font-sans);
+    letter-spacing: 1px;
+  }
+
+  .carousel {
+    --card-w: min(300px, 78vw);
+    position: relative;
+    height: 400px;
+    margin: 0 calc(-1 * var(--gutter));
+    overflow: hidden;
+    perspective: 1600px;
+    perspective-origin: 50% 45%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  }
+
+  .carousel__track {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .wall__empty {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.65);
+    font: 300 15px var(--font-sans);
+    text-align: center;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: -8px;
+  }
+
+  .controls__row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .controls__arrow {
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.45);
+    border-radius: 50%;
+    background: none;
+    color: var(--sand);
+    font-size: 18px;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .controls__arrow--next {
+    background: rgb(var(--peach-rgb) / 0.12);
+  }
+
+  .controls__arrow:hover {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .controls__count {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 150px;
+  }
+
+  .controls__now {
+    color: var(--sand);
+    font: italic 400 22px/1 var(--font-serif);
+  }
+
+  .controls__bar {
+    flex: 1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: rgb(var(--peach-rgb) / 0.18);
+  }
+
+  .controls__bar span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--peach);
+  }
+
+  .controls__total {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .controls__hint {
+    color: rgb(var(--cream-rgb) / 0.45);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 900px) {
+    .carousel {
+      --card-w: 380px;
+      height: 460px;
+    }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+/* Unterer Teil der Seite "Reseñas": links die Live-Vorschau, rechts das Formular. */
+import PageIntro from '../../components/page/PageIntro.astro';
+import SplitPage from '../../components/page/SplitPage.astro';
+import ReviewPreview from '../../components/reviews/ReviewPreview.astro';
+import { REVIEW_TITLE } from '../../data/reviews.js';
+import ReviewForm from './ReviewForm.astro';
+---
+
+<div class="write" id="escribir" data-review-write-section>
+  <SplitPage glow="rgb(83 16 25 / .55)" stageGap="22px">
+    <ReviewPreview slot="stage" />
+    <PageIntro
+      as="h2"
+      eyebrow="Comparte tu experiencia"
+      title={REVIEW_TITLE}
+      label="Escribe tu reseña"
+      lead="Solo toma un minuto. Mientras escribes, a la izquierda ves cómo quedará tu reseña."
+    />
+    <ReviewForm />
+  </SplitPage>
+</div>
+
+<style>
+  .write {
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.15);
+  }
+</style>

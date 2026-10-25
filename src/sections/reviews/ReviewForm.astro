@@ -1,0 +1,235 @@
+---
+/*
+ * Formular "Escribe tu reseña": Sterne, Fragancia, Name, Ciudad, WhatsApp, Text.
+ * Geht an nexomar und erscheint nach der Prüfung. Bedienung: scripts/features/reviews/form.js
+ */
+import SearchCombo from '../../components/ui/SearchCombo.astro';
+import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
+---
+
+<form class="form-card reveal-late review-form" style="--late:1.9s" data-review-form novalidate>
+  <div class="field-group">
+    <span class="field-label">01 · Tu calificación</span>
+    <div class="review-form__rating">
+      <div class="review-form__stars" role="radiogroup" aria-label="Calificación" data-star-picker>
+        {[1, 2, 3, 4, 5].map((value) => (
+          <button
+            class="review-form__star"
+            type="button"
+            role="radio"
+            aria-checked="false"
+            aria-label={`${value} — ${RATING_LABELS[value]}`}
+            data-star={value}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+      <span class="review-form__rate" data-star-label>
+        {RATING_LABELS[0]}
+      </span>
+    </div>
+  </div>
+  <div class="field-group">
+    <span class="field-label">02 · ¿Qué fragancia compraste?</span>
+    <SearchCombo
+      name="review-product"
+      placeholder="Buscar perfume por nombre o marca…"
+      label="Buscar perfume"
+      empty="No encontramos ese perfume. Prueba con otro nombre."
+      shape="field"
+    />
+  </div>
+  <div class="review-form__people">
+    <label class="field-group">
+      <span class="field-label">03 · Nombre</span>
+      <input
+        class="text-input"
+        name="name"
+        maxlength={REVIEW_LIMITS.name}
+        placeholder="Ej. Valentina R."
+        autocomplete="name"
+      />
+    </label>
+    <label class="field-group">
+      <span class="field-label">04 · Ciudad</span>
+      <input
+        class="text-input"
+        name="city"
+        maxlength={REVIEW_LIMITS.city}
+        placeholder="Ej. Medellín"
+        autocomplete="address-level2"
+      />
+    </label>
+    <label class="field-group">
+      <span class="field-label">05 · WhatsApp</span>
+      <input
+        class="text-input"
+        name="phone"
+        type="tel"
+        inputmode="tel"
+        maxlength={REVIEW_LIMITS.phone}
+        placeholder="No se publica"
+        autocomplete="tel"
+      />
+    </label>
+  </div>
+  <label class="field-group">
+    <span class="review-form__split">
+      <span class="field-label">06 · Tu reseña</span>
+      <span class="review-form__count" data-review-count>
+        0 / {REVIEW_LIMITS.text}
+      </span>
+    </span>
+    <textarea
+      class="text-input review-form__text"
+      name="text"
+      maxlength={REVIEW_LIMITS.text}
+      rows="4"
+      placeholder="¿Cómo te fue con tu perfume, el envío y la atención?"
+    ></textarea>
+  </label>
+  <div class="review-form__end">
+    <button class="submit-btn" type="submit" disabled data-review-submit>
+      <span data-review-submit-label>Publicar reseña</span> <span>→</span>
+    </button>
+    <span class="form-hint" role="status" data-review-hint></span>
+  </div>
+</form>
+<div class="form-card review-thanks" hidden data-review-thanks>
+  <span class="review-thanks__icon">✓</span>
+  <h3 class="review-thanks__title">
+    ¡Gracias, <em data-review-thanks-name></em>!
+  </h3>
+  <p>Recibimos tu reseña. La publicaremos después de revisarla.</p>
+  <div class="review-thanks__actions">
+    <button class="outline-btn" type="button" data-review-again>
+      Escribir otra
+    </button>
+    <a class="submit-btn review-thanks__shop" href="/productos/">
+      Ver productos <span>→</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .review-form__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .review-form__stars {
+    display: flex;
+    gap: 4px;
+  }
+
+  .review-form__star {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: rgb(var(--sand-rgb) / 0.22);
+    font-size: 34px;
+    line-height: 1;
+    transform: scale(0.9) rotate(-12deg);
+    transition:
+      color 0.25s,
+      transform 0.45s cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+
+  .review-form__star.is-on {
+    color: var(--sand);
+    transform: scale(1.05);
+  }
+
+  .review-form__star.is-top {
+    transform: scale(1.2);
+  }
+
+  .review-form__rate {
+    min-width: 120px;
+    color: var(--sand);
+    font: italic 400 22px var(--font-serif);
+  }
+
+  .review-form__people {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  .review-form__split {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .review-form__count {
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 400 11px var(--font-sans);
+  }
+
+  .review-form__count.is-near {
+    color: var(--sand);
+  }
+
+  .review-form__text {
+    min-height: 130px;
+    padding: 18px 20px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+
+  .review-form__end {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .review-thanks {
+    align-items: flex-start;
+    gap: 20px;
+    padding: 36px 28px;
+    border-color: rgb(var(--peach-rgb) / 0.35);
+  }
+
+  .review-thanks__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 400 28px var(--font-sans);
+  }
+
+  .review-thanks__title {
+    margin: 0;
+    font: 400 clamp(32px, 3vw, 48px) / 1.05 var(--font-serif);
+  }
+
+  .review-thanks__title em {
+    color: var(--peach);
+  }
+
+  .review-thanks p {
+    max-width: 420px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 15px/1.7 var(--font-sans);
+  }
+
+  .review-thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .review-thanks__shop {
+    padding: 0 24px;
+  }
+</style>

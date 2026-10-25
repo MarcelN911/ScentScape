@@ -5,7 +5,7 @@
  */
 /**
  * @typedef {object} Props
- * @property {string} word        großes Kontur-Wort unten in der Bühne
+ * @property {string} [word]      großes Kontur-Wort unten in der Bühne
  * @property {string} [glow]      Farbe des Lichtscheins (kann per JS über --glow wechseln)
  * @property {string} [gap]       Abstand der Blöcke rechts
  * @property {string} [ratio]     Spaltenverhältnis ab 900px
@@ -26,9 +26,11 @@ const {
 >
   <div class="split__grid">
     <div class="split__stage" data-split-stage>
-      <div class="split__word" aria-hidden="true">
-        {word}
-      </div>
+      {word && (
+        <div class="split__word" aria-hidden="true">
+          {word}
+        </div>
+      )}
       <slot name="stage" />
     </div>
     <div class="split__info">

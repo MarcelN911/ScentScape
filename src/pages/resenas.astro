@@ -1,126 +1,32 @@
 ---
-import ReviewCard from '../components/review/ReviewCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCatalog, getReviews } from '../scripts/catalog/load.js';
-import { averageRating, starsOf } from '../scripts/catalog/reviews.js';
-import { formatRating } from '../scripts/utils/format.js';
-import ReviewForm from '../sections/pages/ReviewForm.astro';
+import { reviewEntryOf, reviewProductOf } from '../scripts/catalog/review-entry.js';
+import ReviewsWall from '../sections/reviews/ReviewsWall.astro';
+import WriteReview from '../sections/reviews/WriteReview.astro';
 
 const reviews = await getReviews();
-const productNames = (await getCatalog()).map((product) => product.name);
-const average = averageRating(reviews);
+const data = {
+  reviews: reviews.map(reviewEntryOf),
+  products: (await getCatalog()).map(reviewProductOf),
+};
 ---
 
 <BaseLayout
-  title="Reseñas | ScentScape"
-  description="Opiniones reales de clientes de ScentScape en toda Colombia. Cuéntanos qué te pareció tu perfume."
+  title="Reseñas | Opiniones de clientes · ScentScape"
+  description="Opiniones de clientes de ScentScape en toda Colombia. Cuéntanos tu experiencia y califica tu fragancia."
+  curtainX="47.619%"
 >
-  <main class="reviews-page">
-    <section class="reviews-page__hero hatch">
-      <div class="reviews-page__hero-grid">
-        <div>
-          <p class="eyebrow reviews-page__eyebrow">ScentScape · Medellín, Colombia</p>
-          <h1 class="display display--lg">
-            ¿A qué te <em>huele</em> tu perfume?
-          </h1>
-          <p class="reviews-page__lead">
-            Tu reseña ayuda a otras personas a elegir su próximo perfume y nos ayuda a seguir
-            mejorando.
-          </p>
-        </div>
-        {reviews.length > 0 && (
-          <div class="reviews-page__score">
-            <span class="reviews-page__average">{formatRating(average)}</span>
-            <span class="reviews-page__summary">
-              <span class="reviews-page__stars">{starsOf(average)}</span>
-              <span>{reviews.length} reseñas de clientes</span>
-            </span>
-          </div>
-        )}
-      </div>
-    </section>
-    <section class="container reviews-page__body">
-      <ReviewForm productNames={productNames} />
-      <div class="reviews-page__list">
-        {reviews.map((review, index) => (
-          <ReviewCard review={review} index={index} />
-        ))}
-      </div>
-    </section>
+  <main data-reviews-page>
+    <ReviewsWall reviews={reviews} />
+    <WriteReview />
+    <script type="application/json" data-reviews-data set:html={JSON.stringify(data)} />
   </main>
 </BaseLayout>
 
-<style>
-  .reviews-page__hero {
-    padding: clamp(130px, 13vw, 180px) var(--gutter) clamp(50px, 6vw, 80px);
-    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .reviews-page__hero-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 30px;
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  .reviews-page__eyebrow {
-    margin-bottom: 20px;
-  }
-
-  .reviews-page__lead {
-    max-width: 520px;
-    margin: 24px 0 0;
-    font: 400 17px/1.6 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.78);
-  }
-
-  .reviews-page__score {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .reviews-page__average {
-    font: 500 72px/1 var(--font-serif);
-    color: var(--peach);
-  }
-
-  .reviews-page__summary {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font: 500 12px/1 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.6);
-  }
-
-  .reviews-page__stars {
-    font-size: 18px;
-    letter-spacing: 3px;
-    color: var(--gold);
-  }
-
-  .reviews-page__body {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
-    align-items: start;
-    gap: clamp(24px, 4vw, 56px);
-    max-width: 1500px;
-    padding-block: clamp(60px, 7vw, 110px);
-  }
-
-  .reviews-page__list {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-</style>
-
 <script>
   import { onPage } from '../scripts/core/lifecycle.js';
-  import { initReviewForm } from '../scripts/features/review-form/index.js';
+  import { initReviewsPage } from '../scripts/features/reviews/index.js';
 
-  onPage(initReviewForm);
+  onPage(initReviewsPage);
 </script>

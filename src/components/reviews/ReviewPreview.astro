@@ -1,0 +1,264 @@
+---
+/* Live-Vorschau der Bewertung: zeigt beim Tippen, wie die Karte aussehen wird. */
+---
+
+<p class="preview-label reveal-late" style="--late:1.6s">
+  <span class="preview-label__dot"></span>
+  <span data-preview-label>Vista previa en vivo</span>
+</p>
+<div class="preview-wrap" data-preview>
+  <article class="preview">
+    <div class="preview__top">
+      <span class="preview__stars" aria-hidden="true">
+        {[1, 2, 3, 4, 5].map((index) => (
+          <span style={`--i:${index - 1}`} data-preview-star>
+            ★
+          </span>
+        ))}
+      </span>
+      <span class="preview__rate" data-preview-rate>
+        SC
+      </span>
+    </div>
+    <blockquote class="preview__text is-empty" data-preview-text>
+      “Tu reseña aparecerá aquí mientras escribes…”
+    </blockquote>
+    <div class="preview__product is-empty" data-preview-product>
+      <span class="preview__thumb">
+        <img alt="" hidden data-preview-image />
+      </span>
+      <span class="preview__product-text">
+        <small>Fragancia</small>
+        <em data-preview-product-name>Elige tu fragancia</em>
+      </span>
+    </div>
+    <footer class="preview__who">
+      <span class="preview__ini" data-preview-ini>
+        ?
+      </span>
+      <span class="preview__person">
+        <strong class="is-empty" data-preview-name>
+          Tu nombre
+        </strong>
+        <span data-preview-city>Tu ciudad</span>
+      </span>
+    </footer>
+  </article>
+  <span class="preview__badge">✓ Enviada</span>
+</div>
+
+<style>
+  .preview-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: var(--sand);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .preview-label__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--peach);
+    transition: background-color 0.4s;
+  }
+
+  :global(.is-sent) .preview-label__dot {
+    background: var(--whatsapp);
+  }
+
+  .preview-wrap {
+    position: relative;
+    width: min(100%, 600px);
+    transform: rotate(var(--tilt, 0deg)) scale(var(--bump, 1));
+    transition: transform 0.6s var(--ease-pop);
+  }
+
+  .preview {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: clamp(28px, 3vw, 44px);
+    border-radius: 28px;
+    background: linear-gradient(160deg, #f7eee2, #ebd7ba);
+    box-shadow:
+      0 60px 120px rgb(0 0 0 / 0.55),
+      0 0 0 1px rgb(var(--peach-rgb) / 0.25);
+    color: var(--navy-card);
+    clip-path: inset(100% 0% 0% 0% round 28px);
+    transition: clip-path 1.4s var(--ease-curtain) 0.5s;
+  }
+
+  :global(.is-in) .preview {
+    clip-path: inset(0% 0% 0% 0% round 28px);
+  }
+
+  .preview__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .preview__stars {
+    display: flex;
+    gap: 6px;
+  }
+
+  .preview__stars span {
+    display: inline-block;
+    color: rgb(var(--wine-rgb) / 0.18);
+    font-size: 24px;
+    line-height: 1;
+    transform: scale(0.85);
+    transition:
+      color 0.3s,
+      transform 0.5s cubic-bezier(0.3, 1.8, 0.5, 1);
+    transition-delay: calc(var(--i) * 0.04s);
+  }
+
+  .preview__stars span.is-on {
+    color: var(--wine);
+    transform: scale(1.1);
+  }
+
+  .preview__rate {
+    color: var(--wine);
+    font: 400 12px var(--font-serif);
+    letter-spacing: 3px;
+  }
+
+  .preview__text {
+    min-height: 3.75em;
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--navy-card);
+    font: italic 400 clamp(22px, 2vw, 30px) / 1.25 var(--font-serif);
+    text-wrap: pretty;
+    transition: color 0.3s;
+  }
+
+  .preview__text.is-empty,
+  .preview__person strong.is-empty {
+    color: rgb(var(--navy-card-rgb) / 0.4);
+  }
+
+  .preview__product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    border-radius: 20px;
+    background: rgb(var(--navy-card-rgb) / 0.06);
+    transition: opacity 0.4s;
+  }
+
+  .preview__product.is-empty {
+    opacity: 0.45;
+  }
+
+  .preview__thumb {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--navy-card);
+  }
+
+  .preview__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview__product-text,
+  .preview__person {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .preview__product-text small {
+    color: var(--wine);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .preview__product-text em {
+    overflow: hidden;
+    font: italic 400 18px/1.1 var(--font-serif);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .preview__who {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(var(--navy-card-rgb) / 0.12);
+  }
+
+  .preview__ini {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background: var(--navy-card);
+    color: var(--sand);
+    font: italic 400 20px var(--font-serif);
+  }
+
+  .preview__person strong {
+    color: var(--navy-card);
+    font: 500 16px var(--font-sans);
+  }
+
+  .preview__person span {
+    color: rgb(var(--navy-card-rgb) / 0.6);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .preview__badge {
+    position: absolute;
+    right: 22px;
+    top: -18px;
+    padding: 9px 16px;
+    border-radius: 18px;
+    background: var(--wine);
+    box-shadow: 0 12px 30px rgb(var(--wine-rgb) / 0.5);
+    color: var(--sand);
+    font: 600 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: scale(0.4) rotate(6deg);
+    transition:
+      opacity 0.4s,
+      transform 0.7s cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+
+  :global(.is-sent) .preview-wrap {
+    --tilt: -2deg;
+    --bump: 1.03;
+  }
+
+  :global(.is-sent) .preview__badge {
+    opacity: 1;
+    transform: rotate(6deg);
+  }
+</style>
