@@ -1,0 +1,97 @@
+---
+/* Burdeos-Karte mit Ringen am Ende von Nosotros und Contacto: Titel, Text und WhatsApp-Knopf. */
+import { WHATSAPP_NUMBER } from '../../scripts/config.js';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+
+/** @typedef {{ title: string, text: string, cta: string, late?: string }} Props */
+const { title, text, cta, late = '2.2s' } = Astro.props;
+---
+
+<div class="wine-cta reveal-late" style={`--late:${late}`}>
+  <span class="wine-cta__rings"></span>
+  <span class="wine-cta__frame"></span>
+  <h3 class="wine-cta__title">{title}</h3>
+  <p class="wine-cta__text">{text}</p>
+  <a class="wine-cta__btn" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">
+    <WhatsAppIcon size={16} color="var(--navy)" />
+    {cta} <span>→</span>
+  </a>
+</div>
+
+<style>
+  .wine-cta {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    overflow: hidden;
+    padding: clamp(28px, 3vw, 44px);
+    border-radius: 28px;
+    background: linear-gradient(150deg, #6e1824, var(--wine) 60%, #3d0211);
+    box-shadow: 0 40px 80px rgb(0 0 0 / 0.45);
+  }
+
+  .wine-cta__rings,
+  .wine-cta__frame {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .wine-cta__rings {
+    inset: 0;
+    opacity: 0.45;
+    background: repeating-radial-gradient(
+      circle at 115% -15%,
+      transparent 0 22px,
+      rgb(240 210 170 / 0.4) 22px 23px
+    );
+    mask-image: linear-gradient(200deg, #000, transparent 60%);
+  }
+
+  .wine-cta__frame {
+    inset: 12px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.35);
+    border-radius: 18px;
+  }
+
+  .wine-cta__title {
+    position: relative;
+    margin: 0;
+    color: #f6e3c6;
+    font: italic 400 clamp(32px, 3vw, 48px) / 1.05 var(--font-serif);
+  }
+
+  .wine-cta__text {
+    position: relative;
+    max-width: 460px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.88);
+    font: 300 15px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .wine-cta__btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 28px;
+    border-radius: 28px;
+    background: var(--sand);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s;
+  }
+
+  .wine-cta__btn:hover {
+    gap: 18px;
+    background: var(--cream);
+    color: var(--navy);
+  }
+</style>

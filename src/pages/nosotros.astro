@@ -1,234 +1,35 @@
 ---
-import ValueCard from '../components/pages/ValueCard.astro';
-import { ABOUT_VALUES, ABOUT_WORDS } from '../data/about.js';
+import FilmCard from '../components/about/FilmCard.astro';
+import PageIntro from '../components/page/PageIntro.astro';
+import SplitPage from '../components/page/SplitPage.astro';
+import { ABOUT_TITLE } from '../data/about.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const ROMAN = ['I', 'II', 'III'];
-const words = [...ABOUT_WORDS, ...ABOUT_WORDS, ABOUT_WORDS[0]];
+import AboutStory from '../sections/about/AboutStory.astro';
 ---
 
 <BaseLayout
-  title="Quiénes somos | ScentScape · Medellín"
-  description="ScentScape nace en Medellín en 2024 con una visión clara: elegancia, carácter y distinción en cada fragancia."
+  title="Nosotros | Quiénes somos · ScentScape"
+  description="ScentScape nace en Medellín en 2024: perfumes que representan elegancia, carácter y distinción, con una atención cercana y personalizada."
+  curtainX="47.619%"
 >
-  <main class="about">
-    <section class="about__hero hatch">
-      <div class="about__year" aria-hidden="true" data-parallax="-60">
-        2024
-      </div>
-      <div class="about__hero-grid">
-        <div>
-          <p class="eyebrow about__eyebrow" data-reveal="up">
-            ScentScape · Medellín, Colombia
-          </p>
-          <h1 class="display display--xl about__title">
-            <span class="line-mask">
-              <span data-reveal="mask">Quiénes</span>
-            </span>
-            <span class="line-mask">
-              <em data-reveal="mask" style="--reveal-delay:140ms">
-                Somos
-              </em>
-            </span>
-          </h1>
-        </div>
-        <p class="about__intro" data-reveal="up" style="--reveal-delay:240ms">
-          ScentScape nace en Medellín en 2024 con una visión clara: elegancia, carácter y distinción
-          en cada fragancia.
-        </p>
-      </div>
-    </section>
-
-    <section class="container about__story">
-      <p class="eyebrow about__eyebrow" data-reveal="up">
-        Nuestra historia
-      </p>
-      <h2 class="display display--md about__heading">
-        <span class="line-mask">
-          <span data-reveal="mask">Una visión convertida</span>
-        </span>
-        <span class="line-mask">
-          <em data-reveal="mask" style="--reveal-delay:120ms">
-            en experiencia
-          </em>
-        </span>
-      </h2>
-      <div class="about__columns">
-        <p class="about__lead" data-reveal="up">
-          <strong>ScentScape</strong> nace en 2024 como una propuesta enfocada en elevar la forma en
-          que se perciben y se viven las fragancias. Más que una tienda, es un espacio diseñado para
-          quienes entienden que el aroma es una extensión de su identidad.
-        </p>
-        <div class="about__body">
-          <p data-reveal="up" style="--reveal-delay:120ms">
-            Fundada en <strong>Medellín</strong>, la marca surge con una visión clara: ofrecer
-            perfumes que representen <strong>elegancia, carácter y distinción</strong>. Creemos en
-            el lujo como una experiencia que resalta la autenticidad y el detalle en cada elección.
-          </p>
-          <p data-reveal="up" style="--reveal-delay:220ms">
-            Cada fragancia es cuidadosamente seleccionada, priorizando su calidad, proyección y
-            durabilidad. Nos enfocamos en brindar una experiencia cercana y personalizada,
-            entendiendo que cada cliente busca algo más que un aroma, busca una forma de expresarse.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <div class="about__band" aria-hidden="true">
-      <div class="about__words" data-drift="-24">
-        {words.map((word, index) => (
-          <>
-            {index > 0 && <span class="about__star">✦</span>}
-            <span>{word}</span>
-          </>
-        ))}
-      </div>
-    </div>
-
-    <section class="container about__values">
-      <p class="eyebrow about__eyebrow" data-reveal="up">
-        Lo que nos define
-      </p>
-      <h2 class="display display--md about__heading">
-        <span class="line-mask">
-          <span data-reveal="mask">
-            Nuestros <em>valores</em>
-          </span>
-        </span>
-      </h2>
-      <div class="about__value-grid">
-        {ABOUT_VALUES.map((value, index) => (
-          <ValueCard value={value} number={ROMAN[index]} index={index} />
-        ))}
-      </div>
-    </section>
+  <main data-intro-page>
+    <SplitPage word="Medellín · Medellín ·" glow="rgb(83 16 25 / .5)" gap="56px">
+      <FilmCard slot="stage" />
+      <PageIntro
+        crumb="Nosotros"
+        eyebrow="ScentScape · Medellín, Colombia"
+        title={ABOUT_TITLE}
+        label="Quiénes Somos"
+        size="clamp(48px, 5.6vw, 100px)"
+      />
+      <AboutStory />
+    </SplitPage>
   </main>
 </BaseLayout>
 
-<style>
-  .about {
-    position: relative;
-    overflow: hidden;
-  }
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initIntroPage } from '../scripts/features/intro-page.js';
 
-  .about__hero {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: max(92vh, 620px);
-    padding: clamp(130px, 13vw, 180px) var(--gutter) clamp(60px, 7vw, 100px);
-    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .about__year {
-    position: absolute;
-    right: -2vw;
-    top: clamp(90px, 10vw, 140px);
-    font: 500 clamp(180px, 30vw, 520px) / 0.8 var(--font-serif);
-    letter-spacing: -0.04em;
-    color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.14);
-    pointer-events: none;
-  }
-
-  .about__hero-grid {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
-    align-items: end;
-    gap: clamp(30px, 5vw, 80px);
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  .about__eyebrow {
-    margin-bottom: 18px;
-  }
-
-  .about__title {
-    --display-size: clamp(64px, 10vw, 180px);
-    letter-spacing: -0.02em;
-  }
-
-  .about__intro {
-    justify-self: end;
-    max-width: 440px;
-    margin: 0;
-    padding-left: 22px;
-    border-left: 1px solid rgb(var(--peach-rgb) / 0.35);
-    font: italic 400 clamp(20px, 1.8vw, 26px) / 1.45 var(--font-serif);
-    color: rgb(var(--white-rgb) / 0.82);
-    text-wrap: pretty;
-  }
-
-  .about__story,
-  .about__values {
-    max-width: 1500px;
-    padding-block: clamp(80px, 9vw, 140px);
-  }
-
-  .about__heading {
-    max-width: 1100px;
-    margin-bottom: clamp(30px, 4vw, 56px);
-  }
-
-  .about__columns {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-    align-items: start;
-    gap: clamp(30px, 5vw, 90px);
-  }
-
-  .about__lead {
-    margin: 0;
-    font: 400 clamp(22px, 2.1vw, 30px) / 1.4 var(--font-serif);
-    color: var(--sand);
-    text-wrap: pretty;
-  }
-
-  .about__lead strong,
-  .about__body strong {
-    font-weight: 600;
-    color: var(--white);
-  }
-
-  .about__body {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    padding-top: 26px;
-    border-top: 1px solid rgb(var(--peach-rgb) / 0.25);
-  }
-
-  .about__body p {
-    margin: 0;
-    font: 400 16px/1.75 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.78);
-    text-wrap: pretty;
-  }
-
-  .about__band {
-    padding: 18px 0;
-    overflow: hidden;
-    border-block: 1px solid rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .about__words {
-    display: flex;
-    gap: 40px;
-    font: italic 400 clamp(36px, 4.4vw, 68px) / 1 var(--font-serif);
-    white-space: nowrap;
-    color: var(--peach);
-  }
-
-  .about__star {
-    color: rgb(var(--peach-rgb) / 0.4);
-  }
-
-  .about__value-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    gap: 16px;
-  }
-</style>
+  onPage(initIntroPage);
+</script>

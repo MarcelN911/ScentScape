@@ -1,128 +1,90 @@
 ---
-import ContactCard from '../components/pages/ContactCard.astro';
-import { CONTACT_CHANNELS } from '../data/contact.js';
+import ChannelCard from '../components/contact/ChannelCard.astro';
+import ContactPass from '../components/contact/ContactPass.astro';
+import PageIntro from '../components/page/PageIntro.astro';
+import SplitPage from '../components/page/SplitPage.astro';
+import WineCta from '../components/page/WineCta.astro';
+import { CONTACT_CHANNELS, CONTACT_TITLE } from '../data/contact.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { whatsappUrl } from '../scripts/utils/whatsapp.js';
-
-const orderUrl = whatsappUrl('Hola ScentScape, quiero hacer un pedido.');
 ---
 
 <BaseLayout
-  title="Contacto | ScentScape · Medellín"
-  description="Escríbenos por WhatsApp, Instagram o correo. Te asesoramos, confirmamos disponibilidad y coordinamos el envío."
+  title="Contacto | WhatsApp, Instagram y correo · ScentScape"
+  description="Escríbenos por WhatsApp al +57 321 810 1882, en Instagram o por correo. ScentScape, Medellín, con envíos a todo Colombia."
+  curtainX="47.619%"
 >
-  <main class="contact">
-    <section class="contact__hero hatch">
-      <div class="contact__inner">
-        <p class="eyebrow contact__eyebrow">ScentScape · Medellín, Colombia</p>
-        <h1 class="display display--xl">
-          Contáct<em>anos</em>
-        </h1>
-        <p class="contact__lead">
+  <main data-intro-page>
+    <SplitPage word="Contacto · Contacto ·" glow="rgb(83 16 25 / .5)" gap="56px">
+      <ContactPass slot="stage" />
+      <PageIntro
+        crumb="Contacto"
+        eyebrow="ScentScape · Medellín, Colombia"
+        title={CONTACT_TITLE}
+        label="Contáctanos"
+        size="clamp(48px, 5.6vw, 100px)"
+      />
+      <section class="channels reveal-late" style="--late:1.8s">
+        <p class="channels__eyebrow">Canales de contacto</p>
+        <h2 class="channels__title">Estamos aquí para ti</h2>
+        <p class="channels__lead">
           La forma más rápida de comunicarte con nosotros es por WhatsApp. También puedes
           escribirnos al correo.
         </p>
-      </div>
-    </section>
-    <section class="container contact__channels">
-      {CONTACT_CHANNELS.map((channel, index) => (
-        <ContactCard channel={channel} index={index} />
-      ))}
-    </section>
-    <section class="container contact__cta">
-      <div class="contact__cta-box frame hatch">
-        <h2 class="display display--sm">
-          ¿Listo para hacer <em>tu pedido?</em>
-        </h2>
-        <p>
-          Escríbenos directamente por WhatsApp. Te asesoramos, confirmamos disponibilidad y
-          coordinamos el envío.
-        </p>
-        <a class="contact__whatsapp" href={orderUrl} target="_blank" rel="noopener">
-          <span>
-            <img src="/assets/img/whatsapp_white.svg" alt="" width="18" height="18" />
-          </span>
-          Iniciar pedido
-        </a>
-      </div>
-    </section>
+        <div class="channels__grid">
+          {CONTACT_CHANNELS.map((channel) => (
+            <ChannelCard channel={channel} />
+          ))}
+        </div>
+      </section>
+      <WineCta
+        title="¿Listo para hacer tu pedido?"
+        text="Escríbenos directamente por WhatsApp. Te asesoramos, confirmamos disponibilidad y coordinamos el envío."
+        cta="Iniciar pedido"
+      />
+    </SplitPage>
   </main>
 </BaseLayout>
 
 <style>
-  .contact__hero {
-    padding: clamp(130px, 13vw, 180px) var(--gutter) clamp(60px, 7vw, 100px);
-    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .contact__inner {
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  .contact__eyebrow {
-    margin-bottom: 20px;
-  }
-
-  .contact__lead {
-    max-width: 520px;
-    margin: 26px 0 0;
-    font: 400 18px/1.6 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.78);
-  }
-
-  .contact__channels {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-    gap: 16px;
-    max-width: 1500px;
-    padding-block: clamp(60px, 7vw, 100px) 0;
-  }
-
-  .contact__cta {
-    max-width: 1500px;
-    padding-block: clamp(40px, 5vw, 70px) clamp(80px, 9vw, 130px);
-  }
-
-  .contact__cta-box {
+  .channels {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 18px;
-    padding: clamp(28px, 5vw, 64px);
-    border-radius: 0;
   }
 
-  .contact__cta-box p {
-    max-width: 560px;
+  .channels__eyebrow {
     margin: 0;
-    font: 400 16px/1.6 var(--font-sans);
-    color: rgb(var(--white-rgb) / 0.78);
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
   }
 
-  .contact__whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    height: 58px;
-    padding: 0 26px 0 8px;
-    border-radius: var(--radius-pill);
-    background: var(--whatsapp);
-    color: var(--white);
-    font: 700 15px/1 var(--font-sans);
-    box-shadow: 0 14px 34px rgb(37 211 102 / 0.3);
+  .channels__title {
+    margin: 0;
+    font: 400 clamp(30px, 2.8vw, 46px) / 1.1 var(--font-serif);
+    text-wrap: balance;
   }
 
-  .contact__whatsapp:hover {
-    color: var(--white);
+  .channels__lead {
+    max-width: 520px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 16px/1.7 var(--font-sans);
+    text-wrap: pretty;
   }
 
-  .contact__whatsapp span {
+  .channels__grid {
     display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgb(14 17 36 / 0.25);
+    grid-template-columns: repeat(auto-fill, minmax(max(260px, calc(50% - 6px)), 1fr));
+    gap: 12px;
+    padding-top: 10px;
   }
 </style>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initIntroPage } from '../scripts/features/intro-page.js';
+
+  onPage(initIntroPage);
+</script>

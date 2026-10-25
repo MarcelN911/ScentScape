@@ -1,0 +1,102 @@
+---
+/* Karte eines Kontaktwegs: Symbol, Bezeichnung, Wert, Text und Link. */
+import Icon from '../ui/Icon.astro';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+
+/** @typedef {{ channel: object }} Props */
+const { channel } = Astro.props;
+---
+
+<div class="channel">
+  <span class="channel__icon">
+    {channel.icon === 'whatsapp' ? (
+      <WhatsAppIcon size={22} />
+    ) : (
+      <Icon name={channel.icon} size={22} strokeWidth={1.5} />
+    )}
+  </span>
+  <span class="channel__text">
+    <small>{channel.label}</small>
+    <strong>{channel.value}</strong>
+    <span>{channel.text}</span>
+  </span>
+  <a href={channel.href} target="_blank" rel="noopener">
+    {channel.cta} <span>→</span>
+  </a>
+</div>
+
+<style>
+  .channel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 22px;
+    background: var(--panel);
+    transition:
+      border-color 0.4s,
+      transform 0.5s var(--ease-pop);
+  }
+
+  .channel:hover {
+    border-color: var(--peach);
+    transform: translateY(-4px);
+  }
+
+  .channel__icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 24px;
+    background: rgb(var(--navy-rgb) / 0.5);
+    color: var(--peach);
+  }
+
+  .channel__text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .channel__text small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .channel__text strong {
+    overflow-wrap: anywhere;
+    color: var(--sand);
+    font: 400 22px/1.2 var(--font-serif);
+  }
+
+  .channel__text span {
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.65 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .channel a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    margin-top: auto;
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      gap 0.4s,
+      color 0.3s;
+  }
+
+  .channel a:hover {
+    gap: 16px;
+  }
+</style>

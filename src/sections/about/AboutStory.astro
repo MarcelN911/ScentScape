@@ -1,0 +1,144 @@
+---
+/* Rechte Spalte von "Nosotros": Geschichte, Werte und "¿Hablamos?". */
+import WineCta from '../../components/page/WineCta.astro';
+import { ABOUT_VALUES } from '../../data/about.js';
+import { padNumber } from '../../scripts/utils/format.js';
+---
+
+<section class="story reveal-late" style="--late:1.8s">
+  <p class="story__eyebrow">Nuestra historia</p>
+  <h2 class="story__title">Una visión convertida en experiencia</h2>
+  <p class="story__lead">
+    <strong>ScentScape</strong> nace en 2024 como una propuesta enfocada en elevar la forma en que
+    se perciben y se viven las fragancias. Más que una tienda, es un espacio diseñado para quienes
+    entienden que el aroma es una extensión de su identidad.
+  </p>
+  <div class="story__columns">
+    <p>
+      Fundada en <strong>Medellín</strong>, la marca surge con una visión clara: ofrecer perfumes
+      que representen <strong>elegancia, carácter y distinción</strong>. Creemos en el lujo como una
+      experiencia que resalta la autenticidad y el detalle en cada elección.
+    </p>
+    <p>
+      Cada fragancia es cuidadosamente seleccionada, priorizando su calidad, proyección y
+      durabilidad. Nos enfocamos en brindar una experiencia cercana y personalizada, entendiendo que
+      cada cliente busca algo más que un aroma, busca una forma de expresarse.
+    </p>
+  </div>
+</section>
+<section class="story reveal-late" style="--late:2s">
+  <p class="story__eyebrow">Lo que nos define</p>
+  <h2 class="story__title">Nuestros valores</h2>
+  <div class="story__values">
+    {ABOUT_VALUES.map((value, index) => (
+      <div class="value">
+        <span class="value__n">{padNumber(index + 1)}</span>
+        <p class="value__title">{value.title}</p>
+        <p class="value__text">{value.text}</p>
+      </div>
+    ))}
+  </div>
+</section>
+<WineCta
+  title="¿Hablamos?"
+  text="Escríbenos por WhatsApp y con gusto te ayudamos a encontrar la fragancia perfecta para ti o para regalar."
+  cta="Escríbenos ahora"
+/>
+
+<style>
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .story__eyebrow {
+    margin: 0;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .story__title {
+    margin: 0;
+    font: 400 clamp(30px, 2.8vw, 46px) / 1.1 var(--font-serif);
+    text-wrap: balance;
+  }
+
+  .story__lead {
+    max-width: 620px;
+    margin: 6px 0 0;
+    color: var(--cream);
+    font: 400 clamp(18px, 1.4vw, 22px) / 1.6 var(--font-serif);
+    text-wrap: pretty;
+  }
+
+  .story__lead strong {
+    color: var(--sand);
+    font-weight: 500;
+  }
+
+  .story__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    padding-top: 10px;
+  }
+
+  .story__columns p {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 15px/1.75 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .story__columns strong {
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  .story__values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .value {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 22px;
+    background: var(--panel);
+    transition:
+      border-color 0.4s,
+      transform 0.5s var(--ease-pop);
+  }
+
+  .value:hover {
+    border-color: var(--peach);
+    transform: translateY(-4px);
+  }
+
+  .value__n {
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .value__title {
+    margin: 0;
+    color: var(--sand);
+    font: 400 22px/1.15 var(--font-serif);
+  }
+
+  .value__text {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+</style>
