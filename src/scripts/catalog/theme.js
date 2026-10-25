@@ -27,10 +27,6 @@ export function eyebrowOf(product) {
   return EYEBROWS[product.gender];
 }
 
-export function sizesTextOf(product) {
-  return product.sizes.map((size) => size.label).join(' · ');
-}
-
 export function topNotesOf(product, count = 3) {
   if (product.notes) return product.notes.flat().slice(0, count);
   return findFamily(product.family)?.notes.slice(0, count) ?? [];

@@ -1,0 +1,124 @@
+---
+/*
+ * Deckblatt des Catálogo Digital (Burdeos mit Ringen). Alle Größen in cqw,
+ * deshalb passt es als kleine Vorschau genauso wie als ganze PDF-Seite.
+ */
+import { CATALOG_YEAR } from '../../data/catalog.js';
+
+/** @typedef {{ collection: string, count: number, client?: string }} Props */
+const { collection, count, client = 'ti' } = Astro.props;
+---
+
+<div class="cover">
+  <span class="cover__rings"></span>
+  <span class="cover__frame"></span>
+  <div class="cover__content">
+    <img class="cover__logo" src="/assets/img/scentscape-logo.png" alt="ScentScape" />
+    <div class="cover__title">
+      <span class="cover__collection" data-cover-collection>
+        {collection}
+      </span>
+      <span class="cover__word">Catálogo</span>
+      <span class="cover__count">
+        <span data-cover-count>{count}</span> fragancias · {CATALOG_YEAR}
+      </span>
+    </div>
+    <div class="cover__client">
+      <span>Preparado para</span>
+      <em data-cover-client>{client}</em>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.414;
+    overflow: hidden;
+    container-type: inline-size;
+    border-radius: 4px;
+    background: linear-gradient(150deg, #6e1824, var(--wine) 60%, #3d0211);
+    color: var(--sand);
+  }
+
+  .cover__rings {
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+    background: repeating-radial-gradient(
+      circle at 115% -15%,
+      transparent 0 4cqw,
+      rgb(240 210 170 / 0.45) 4cqw calc(4cqw + 1px)
+    );
+    mask-image: linear-gradient(200deg, #000, transparent 60%);
+  }
+
+  .cover__frame {
+    position: absolute;
+    inset: 4cqw;
+    border: 1px solid rgb(240 210 170 / 0.4);
+  }
+
+  .cover__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 11cqw 10cqw;
+  }
+
+  .cover__logo {
+    display: block;
+    align-self: flex-start;
+    width: auto;
+    height: 8cqw;
+  }
+
+  .cover__title,
+  .cover__client {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cover__title {
+    gap: 3cqw;
+  }
+
+  .cover__collection {
+    font: 600 3cqw var(--font-sans);
+    letter-spacing: 1cqw;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .cover__word {
+    color: #f6e3c6;
+    font: italic 400 17cqw / 0.95 var(--font-serif);
+  }
+
+  .cover__count {
+    font: 400 3.4cqw var(--font-sans);
+    letter-spacing: 0.6cqw;
+    text-transform: uppercase;
+  }
+
+  .cover__client {
+    gap: 1.4cqw;
+  }
+
+  .cover__client span {
+    font: 600 2.6cqw var(--font-sans);
+    letter-spacing: 0.8cqw;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .cover__client em {
+    overflow: hidden;
+    font: italic 400 7cqw / 1.2 var(--font-serif);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+</style>

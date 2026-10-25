@@ -1,0 +1,67 @@
+---
+/* Eine Fragancia auf einer Katalogseite: Foto, Name, Noten (nur im PDF) und Preis. */
+/** @typedef {{ entry: object }} Props */
+const { entry } = Astro.props;
+---
+
+<div class="sheet-item" data-sheet-item data-gender={entry.gender}>
+  <img src={entry.image} alt="" loading="lazy" data-sheet-image />
+  <span class="sheet-item__name" data-sheet-name>
+    {entry.name}
+  </span>
+  <span class="sheet-item__notes">{entry.notes}</span>
+  <span class="sheet-item__price" data-sheet-price>
+    {entry.price}
+  </span>
+</div>
+
+<style>
+  .sheet-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6cqw;
+    min-height: 0;
+  }
+
+  .sheet-item img {
+    display: block;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    border-radius: 2cqw;
+    background: #e8dfd2;
+    object-fit: contain;
+  }
+
+  .sheet-item__name {
+    overflow: hidden;
+    color: var(--navy);
+    font: 400 4.6cqw / 1.1 var(--font-serif);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .sheet-item__notes {
+    display: none;
+    overflow: hidden;
+    color: #5a5560;
+    font: 400 2.4cqw / 1.35 var(--font-sans);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .sheet-item__price {
+    min-height: 1em;
+    color: var(--wine);
+    font: 500 3.2cqw var(--font-sans);
+    letter-spacing: 0.3cqw;
+  }
+
+  :global(.sheet--full) .sheet-item__notes {
+    display: block;
+  }
+
+  :global(.no-prices) .sheet-item__price {
+    visibility: hidden;
+  }
+</style>

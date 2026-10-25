@@ -1,0 +1,59 @@
+---
+/*
+ * Innenseite des Catálogo Digital: Kopfzeile und Raster 2 × 2 (Slot für die Fragancias).
+ * full: ganze PDF-Seite mit Noten; sonst die kleine Vorschau.
+ */
+/** @typedef {{ short: string, page: number, full?: boolean }} Props */
+const { short, page, full = false } = Astro.props;
+---
+
+<div class:list={['sheet', { 'sheet--full': full }]} data-sheet>
+  <div class="sheet__page">
+    <div class="sheet__head">
+      <span>ScentScape</span>
+      <span>
+        <span data-sheet-short>{short}</span> ·{' '}
+        <span data-sheet-page>{String(page).padStart(2, '0')}</span>
+      </span>
+    </div>
+    <div class="sheet__grid" data-sheet-grid>
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .sheet {
+    width: 100%;
+    aspect-ratio: 1 / 1.414;
+    container-type: inline-size;
+    border-radius: 4px;
+    background: #f4ede3;
+  }
+
+  .sheet__page {
+    display: flex;
+    flex-direction: column;
+    gap: 5cqw;
+    height: 100%;
+    padding: 7cqw;
+  }
+
+  .sheet__head {
+    display: flex;
+    justify-content: space-between;
+    color: var(--wine);
+    font: 500 3cqw var(--font-sans);
+    letter-spacing: 0.6cqw;
+    text-transform: uppercase;
+  }
+
+  .sheet__grid {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 5cqw;
+    min-height: 0;
+  }
+</style>

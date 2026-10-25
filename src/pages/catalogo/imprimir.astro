@@ -1,230 +1,140 @@
 ---
-import PrintItem from '../../components/catalog/PrintItem.astro';
-import { CATALOG_YEAR } from '../../data/catalog.js';
+/*
+ * Das eigentliche PDF des Catálogo Digital: Deckblatt und Seiten mit je 4 Fragancias.
+ * Die Auswahl steht im Link (?coleccion=dama&precios=no&para=Ana). "Guardar como PDF" öffnet den Druckdialog.
+ */
+import CatalogCover from '../../components/catalogo/CatalogCover.astro';
+import CatalogSheet from '../../components/catalogo/CatalogSheet.astro';
+import CatalogSheetItem from '../../components/catalogo/CatalogSheetItem.astro';
+import { CATALOG_COLLECTIONS } from '../../data/catalog.js';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { catalogGroups } from '../../scripts/catalog/groups.js';
 import { getCatalog } from '../../scripts/catalog/load.js';
-import { PHONE_DISPLAY } from '../../scripts/config.js';
+import { pdfEntryOf } from '../../scripts/catalog/pdf-entry.js';
 
-const groups = catalogGroups(await getCatalog());
+const entries = (await getCatalog()).map(pdfEntryOf);
+const first = CATALOG_COLLECTIONS[0];
 ---
 
 <BaseLayout
-  title={`Catálogo ScentScape ${CATALOG_YEAR} · PDF`}
-  description="Versión para imprimir o guardar como PDF del catálogo ScentScape."
+  title="Catálogo ScentScape · PDF"
+  description="Catálogo ScentScape en PDF, con fotos y precios."
   noindex
   bare
 >
-  <div class="print-bar">
-    <a href="/catalogo/">← Volver al catálogo</a>
-    <button type="button" data-print>
-      Guardar como PDF
-    </button>
-  </div>
-  <main class="print">
-    <section class="print__cover">
-      <p class="print__eyebrow">Catálogo · Colección {CATALOG_YEAR}</p>
-      <img class="print__logo" src="/assets/img/scentscape-fulllogo.png" alt="ScentScape Parfums" />
-      <p class="print__claim">Distinción sin límites</p>
-      <p class="print__contact">Medellín, Colombia · WhatsApp {PHONE_DISPLAY}</p>
-    </section>
-    {groups.map((group) => (
-      <section class="print__group">
-        <div class="print__head">
-          <span class="print__number">{group.number}</span>
-          <h2 class="print__title">{group.title}</h2>
-          <p class="print__line">{group.line}</p>
-        </div>
-        <div class="print__grid">
-          {group.products.map((product) => (
-            <PrintItem product={product} />
-          ))}
-        </div>
+  <main class="pdf" data-pdf-page>
+    <div class="pdf__bar">
+      <a href="/catalogo/">← Catálogo Digital</a>
+      <button class="submit-btn" type="button" data-pdf-print>
+        Guardar como PDF
+      </button>
+    </div>
+    <div class="pdf__pages" data-pdf-pages>
+      <section class="pdf__page">
+        <CatalogCover collection={first.title} count={entries.length} />
       </section>
-    ))}
-    <section class="print__order">
-      <h2 class="print__order-title">Cómo pedir</h2>
-      <p>
-        Escríbenos por WhatsApp al {PHONE_DISPLAY}. Cada perfume llega sellado de fábrica, con su
-        código de lote en la caja. Envíos a todo Colombia; envío gratis desde $500.000.
-      </p>
-      <p class="print__payments">
-        Nequi · Daviplata · Bancolombia / PSE · Tarjeta crédito o débito · Wompi · Contraentrega
-      </p>
-    </section>
+    </div>
+    <template data-pdf-sheet>
+      <section class="pdf__page">
+        <CatalogSheet short={first.short} page={2} full />
+      </section>
+    </template>
+    <div hidden data-pdf-pool>
+      {entries.map((entry) => (
+        <CatalogSheetItem entry={entry} />
+      ))}
+    </div>
   </main>
 </BaseLayout>
 
 <style>
   @page {
-    size: letter;
-    margin: 0.6in;
+    size: A4;
+    margin: 0;
   }
 
-  :global(body) {
-    background: #fff;
-    color: var(--navy);
+  .pdf {
+    min-height: 100vh;
+    padding-bottom: 60px;
+    background: var(--navy-deep);
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 
-  .print-bar {
+  .pdf__bar {
     position: sticky;
     top: 0;
     z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     padding: 14px var(--gutter);
-    background: var(--navy);
+    background: rgb(var(--navy-rgb) / 0.92);
+    backdrop-filter: blur(10px);
   }
 
-  .print-bar button {
-    height: 44px;
-    padding: 0 22px;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: var(--peach);
-    color: var(--navy);
-    font: 700 14px/1 var(--font-sans);
+  .pdf__bar a {
+    font: 400 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
 
-  .print {
-    max-width: 8.5in;
-    margin: 0 auto;
-    padding: 0.6in;
+  .pdf__bar .submit-btn {
+    height: 46px;
+    padding: 0 24px;
   }
 
-  .print__cover {
+  .pdf__pages {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 22px;
-    min-height: 9in;
-    padding: 48px 32px;
-    border: 1px solid #b08a5a;
-    outline: 1px solid rgb(176 138 90 / 0.45);
-    outline-offset: -10px;
-    background-color: var(--navy);
-    background-image: repeating-linear-gradient(
-      135deg,
-      rgb(240 190 145 / 0.06) 0 1px,
-      transparent 1px 7px
-    );
-    color: var(--sand);
-    text-align: center;
-    break-after: page;
+    gap: 28px;
+    padding: 28px 16px 0;
   }
 
-  .print__eyebrow {
-    margin: 0;
-    font: 600 11px/1 var(--font-sans);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--peach);
-  }
-
-  .print__logo {
-    width: 3.2in;
-    height: auto;
-  }
-
-  .print__claim {
-    margin: 0;
-    font: italic 400 26px/1.3 var(--font-serif);
-  }
-
-  .print__contact {
-    margin: 0;
-    font: 500 13px/1.6 var(--font-sans);
-    color: rgb(255 255 255 / 0.7);
-  }
-
-  .print__group {
-    padding-top: 0.4in;
-    break-before: page;
-  }
-
-  .print__head {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 22px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #b08a5a;
-    break-after: avoid;
-  }
-
-  .print__number {
-    font: italic 400 40px/1 var(--font-serif);
-    color: var(--wine);
-  }
-
-  .print__title {
-    margin: 0;
-    font: 500 40px/1 var(--font-serif);
-    letter-spacing: -0.01em;
-  }
-
-  .print__line {
-    max-width: 3in;
-    margin: 0 0 0 auto;
-    font: italic 400 15px/1.35 var(--font-serif);
-    text-align: right;
-    color: #4a4a5a;
-  }
-
-  .print__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .print__order {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-top: 24px;
-    break-before: page;
-    font: 400 14px/1.6 var(--font-sans);
-    color: #2a2a3a;
-  }
-
-  .print__order p {
-    margin: 0;
-  }
-
-  .print__order-title {
-    margin: 0;
-    font: 500 34px/1 var(--font-serif);
-    color: var(--navy);
-  }
-
-  .print__payments {
-    font: 600 12px/1.6 var(--font-sans);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--wine);
+  .pdf__page {
+    width: min(100%, 640px);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
   }
 
   @media print {
-    .print-bar {
+    .pdf {
+      padding: 0;
+      background: none;
+    }
+
+    .pdf__bar {
       display: none;
     }
 
-    .print {
-      max-width: none;
+    .pdf__pages {
+      display: block;
       padding: 0;
+    }
+
+    .pdf__page {
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      box-shadow: none;
+      break-after: page;
+    }
+
+    .pdf__page:last-child {
+      break-after: auto;
+    }
+
+    .pdf__page :global(.cover),
+    .pdf__page :global(.sheet) {
+      height: 100%;
+      border-radius: 0;
     }
   }
 </style>
 
 <script>
   import { onPage } from '../../scripts/core/lifecycle.js';
+  import { initPdfPage } from '../../scripts/features/catalogo/pdf.js';
 
-  onPage((signal) => {
-    const button = document.querySelector('[data-print]');
-    button?.addEventListener('click', () => window.print(), { signal });
-  });
+  onPage(initPdfPage);
 </script>

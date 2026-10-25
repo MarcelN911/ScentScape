@@ -150,6 +150,7 @@
 }
 
 .submit-btn:hover {
+  color: var(--navy);
   gap: 20px;
 }
 

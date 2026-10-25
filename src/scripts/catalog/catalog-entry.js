@@ -1,11 +1,6 @@
-/* Texte einer Katalog-Karte (Web und Druck) */
-import { sizesTextOf } from './theme.js';
+/* Texte einer Fragancia im Catálogo Digital */
 import { formatCOP } from '../utils/format.js';
 import { capitalize } from '../utils/text.js';
-
-export function catalogMetaOf(product) {
-  return `${product.genderLabel} · ${sizesTextOf(product).replaceAll(' · ', ' / ')}`;
-}
 
 export function catalogNotesOf(product, count) {
   if (!product.notes) return product.brand;

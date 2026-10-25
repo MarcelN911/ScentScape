@@ -1,0 +1,172 @@
+---
+/*
+ * Bühne des Catálogo Digital: Deckblatt vorne, eine Innenseite dahinter, darunter Fortschritt und Status.
+ * Beim Erstellen schieben sich beide zusammen, danach erscheint die PDF-Datei als WhatsApp-Anhang.
+ */
+import CatalogCover from '../../components/catalogo/CatalogCover.astro';
+import CatalogSheet from '../../components/catalogo/CatalogSheet.astro';
+import CatalogSheetItem from '../../components/catalogo/CatalogSheetItem.astro';
+import WhatsAppIcon from '../../components/ui/WhatsAppIcon.astro';
+import { CATALOG_COLLECTIONS } from '../../data/catalog.js';
+
+/** @typedef {{ entries: object[], pages: number }} Props */
+const { entries, pages } = Astro.props;
+const first = CATALOG_COLLECTIONS[0];
+---
+
+<div class="catalog-stage reveal-late" style="--late:0.6s">
+  <div class="catalog-stage__back" data-stage-sheet>
+    <CatalogSheet short={first.short} page={2}>
+      {entries.slice(0, 4).map((entry) => (
+        <CatalogSheetItem entry={entry} />
+      ))}
+    </CatalogSheet>
+  </div>
+  <div class="catalog-stage__front">
+    <CatalogCover collection={first.title} count={entries.length} />
+  </div>
+  <div class="catalog-stage__file" aria-hidden="true">
+    <span class="catalog-stage__file-icon">
+      <WhatsAppIcon size={20} color="var(--cream)" />
+    </span>
+    <span class="catalog-stage__file-text">
+      <span>Catalogo_ScentScape.pdf</span>
+      <small>
+        <span data-stage-pages>{pages}</span> páginas · listo para enviar
+      </small>
+    </span>
+  </div>
+</div>
+<div class="catalog-progress reveal-late" style="--late:1.6s">
+  <span class="catalog-progress__bar">
+    <span data-catalog-bar></span>
+  </span>
+  <span class="catalog-progress__status" data-catalog-status>
+    {pages} páginas · {first.title}
+  </span>
+</div>
+
+<style>
+  .catalog-stage {
+    position: relative;
+    width: min(100%, 520px);
+    aspect-ratio: 1 / 0.95;
+  }
+
+  .catalog-stage__back,
+  .catalog-stage__front {
+    position: absolute;
+    left: 22%;
+    top: 2%;
+    width: 56%;
+    transition: transform 1.1s var(--ease);
+  }
+
+  .catalog-stage__back {
+    transform: translate(30%, 6%) rotate(6deg);
+    filter: drop-shadow(0 40px 40px rgb(0 0 0 / 0.5));
+  }
+
+  .catalog-stage__front {
+    transform: translate(-16%, 0) rotate(-4deg);
+    filter: drop-shadow(0 50px 50px rgb(0 0 0 / 0.55));
+  }
+
+  .catalog-stage__file {
+    position: absolute;
+    right: 0;
+    bottom: 4%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px 12px 12px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 14px;
+    background: var(--navy-card);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.5);
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition:
+      opacity 0.5s,
+      transform 0.7s var(--ease-pop);
+  }
+
+  .catalog-stage__file-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: var(--whatsapp);
+  }
+
+  .catalog-stage__file-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--cream);
+    font: 500 12px var(--font-sans);
+  }
+
+  .catalog-stage__file-text small {
+    color: var(--whatsapp);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 1px;
+  }
+
+  .catalog-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: min(100%, 420px);
+  }
+
+  .catalog-progress__bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    overflow: hidden;
+    background: rgb(var(--peach-rgb) / 0.15);
+  }
+
+  .catalog-progress__bar span {
+    display: block;
+    height: 100%;
+    background: var(--peach);
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left;
+    transition: transform 0.12s linear;
+  }
+
+  .catalog-progress__status {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  :global(.is-generating) .catalog-stage__back {
+    transform: translate(0, 2%) scale(0.94);
+  }
+
+  :global(.is-generating) .catalog-stage__front {
+    transform: scale(0.94);
+  }
+
+  :global(.is-ready) .catalog-stage__back {
+    transform: translate(12%, 0) rotate(3deg) scale(0.9);
+  }
+
+  :global(.is-ready) .catalog-stage__front {
+    transform: translate(-8%, -2%) rotate(-2deg) scale(0.9);
+  }
+
+  :global(.is-ready) .catalog-stage__file {
+    opacity: 1;
+    transform: none;
+  }
+</style>
