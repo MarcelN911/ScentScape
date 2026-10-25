@@ -5,8 +5,5 @@
 @import '@fontsource/pinyon-script/400.css';
 @import './tokens.css';
 @import './base.css';
-@import './typography.css';
-@import './buttons.css';
-@import './surfaces.css';
 @import './animations.css';
 @import './page.css';

@@ -17,8 +17,6 @@
   --wine: #531019;
   --wine-light: #6e1824;
   --wine-deep: #3d0211;
-  --gold: #c9a06e;
-  --copper: #b88d58;
   --error: #e7899b;
   --error-strong: #c0485e;
   --whatsapp: #25d366;
@@ -32,47 +30,27 @@
   --cream-rgb: 255 252 242;
   --wine-rgb: 83 16 25;
 
-  /* Ältere Namen, zeigen auf die neuen Werte */
-  --white: var(--cream);
-  --white-rgb: var(--cream-rgb);
-
   /* Text auf dunklem Grund */
   --text: var(--cream);
-  --text-soft: rgb(var(--cream-rgb) / 0.78);
-  --text-muted: rgb(var(--cream-rgb) / 0.6);
   --text-faint: rgb(var(--cream-rgb) / 0.45);
 
   /* Linien */
-  --line-faint: rgb(var(--peach-rgb) / 0.15);
   --line: rgb(var(--peach-rgb) / 0.22);
-  --line-strong: rgb(var(--peach-rgb) / 0.4);
 
   /* Flächen */
   --panel: rgb(var(--navy-card-rgb) / 0.55);
   --field: rgb(var(--navy-rgb) / 0.4);
-  --glass: rgb(var(--navy-rgb) / 0.55);
 
   /* Schriften */
   --font-serif: 'Instrument Serif', Georgia, serif;
   --font-sans: 'Instrument Sans Variable', 'Instrument Sans', system-ui, sans-serif;
   --font-script: 'Pinyon Script', cursive;
-  --font-mono: ui-monospace, Menlo, monospace;
 
   /* Abstände */
   --gutter: clamp(20px, 6vw, 96px);
-  --container: 1440px;
 
-  /* Rundungen */
+  /* Rundung der Pillen */
   --radius-pill: 999px;
-  --radius-xl: 28px;
-  --radius-lg: 24px;
-  --radius-md: 18px;
-  --radius-sm: 14px;
-
-  /* Schatten */
-  --shadow-card: 0 30px 60px rgb(0 0 0 / 0.35);
-  --shadow-float: 0 40px 80px rgb(0 0 0 / 0.45);
-  --shadow-deep: 0 50px 100px rgb(0 0 0 / 0.55);
 
   /* Bewegung */
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -85,7 +63,6 @@
   --z-progress: 60;
   --z-toast: 65;
   --z-menu: 70;
-  --z-sheet: 80;
   --z-curtain: 100;
   --z-player: 140;
   --z-cart-overlay: 150;

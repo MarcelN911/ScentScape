@@ -17,7 +17,7 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
   </div>
   <div class="best-card__shade" aria-hidden="true"></div>
   <a class="best-card__link" href={`/producto/${product.slug}/`} aria-label={product.name}></a>
-  <div class="inner-line" aria-hidden="true"></div>
+  <div class="best-card__line" aria-hidden="true"></div>
   <span class="best-card__rank">{padNumber(index + 1)}</span>
   <FamilyChips families={product.scentFamilies} class="best-card__chips" />
   <div class="best-card__bottom">
@@ -46,6 +46,15 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
 </article>
 
 <style>
+  .best-card__line {
+    position: absolute;
+    inset: 10px;
+    z-index: 2;
+    border: 1px solid rgb(var(--sand-rgb) / 0.28);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
   .best-card {
     position: relative;
     flex: none;

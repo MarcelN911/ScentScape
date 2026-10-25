@@ -28,7 +28,7 @@ const { title, text, cta, late = '2.2s' } = Astro.props;
     overflow: hidden;
     padding: clamp(28px, 3vw, 44px);
     border-radius: 28px;
-    background: linear-gradient(150deg, #6e1824, var(--wine) 60%, #3d0211);
+    background: linear-gradient(150deg, var(--wine-light), var(--wine) 60%, var(--wine-deep));
     box-shadow: 0 40px 80px rgb(0 0 0 / 0.45);
   }
 
@@ -58,7 +58,7 @@ const { title, text, cta, late = '2.2s' } = Astro.props;
   .wine-cta__title {
     position: relative;
     margin: 0;
-    color: #f6e3c6;
+    color: var(--sand-light);
     font: italic 400 clamp(32px, 3vw, 48px) / 1.05 var(--font-serif);
   }
 

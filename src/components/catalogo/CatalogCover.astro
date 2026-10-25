@@ -38,7 +38,7 @@ const { collection, count, client = 'ti' } = Astro.props;
     overflow: hidden;
     container-type: inline-size;
     border-radius: 4px;
-    background: linear-gradient(150deg, #6e1824, var(--wine) 60%, #3d0211);
+    background: linear-gradient(150deg, var(--wine-light), var(--wine) 60%, var(--wine-deep));
     color: var(--sand);
   }
 
@@ -94,7 +94,7 @@ const { collection, count, client = 'ti' } = Astro.props;
   }
 
   .cover__word {
-    color: #f6e3c6;
+    color: var(--sand-light);
     font: italic 400 17cqw / 0.95 var(--font-serif);
   }
 

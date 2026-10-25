@@ -28,8 +28,14 @@ function renderWords(heading, message) {
 function fillColor(root, gift) {
   const card = root.querySelector('[data-gift-card]');
   const color = setColor(card, gift.color, gift.color);
-  root.style.setProperty('--gift-bg', color.background);
-  root.style.setProperty('--glow', color.glow);
+  const vars = {
+    '--gift-bg': color.background,
+    '--glow': color.glow,
+    '--line': color.line,
+    '--ink': color.ink,
+    '--amount': color.amount,
+  };
+  Object.entries(vars).forEach(([name, value]) => root.style.setProperty(name, value));
   setOdometer(card.querySelector('[data-odometer]'), formatCOP(gift.amount).replace(/\d/g, '9'), 0);
 }
 
