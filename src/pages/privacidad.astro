@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { EMAIL, PHONE_DISPLAY } from '../scripts/config.js';
-import LegalPage from '../sections/pages/LegalPage.astro';
+import LegalPage from '../sections/legal/LegalPage.astro';
 ---
 
 <BaseLayout
@@ -128,3 +128,10 @@ import LegalPage from '../sections/pages/LegalPage.astro';
     </p>
   </LegalPage>
 </BaseLayout>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initIntroPage } from '../scripts/features/intro-page.js';
+
+  onPage(initIntroPage);
+</script>
