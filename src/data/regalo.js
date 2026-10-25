@@ -15,7 +15,7 @@ export const REGALO_EXAMPLE = {
   message: 'Un aroma te espera. Elige tu perfume favorito, en la tienda o en línea.',
 };
 
-export const REGALO_LIMITS = { name: 30, message: 160, code: 20, amount: 5000000 };
+export const REGALO_LIMITS = { name: 30, message: 160, code: 20 };
 
 /* Zeitpunkte der Öffnung in ms: Lasche auf, Karte hoch, Umschlag weg, Betrag rollt, Rückseite, fertig */
 export const REGALO_STEPS = [

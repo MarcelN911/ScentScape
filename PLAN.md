@@ -1,7 +1,8 @@
 # ScentScape Redesign: Plan
 
-Ziel: Die Seite sieht am Ende genau so aus wie die Vorlage aus Claude Design (`ScentScape Shop v7.dc.html`),
-mit allen Animationen und Effekten, aber mit echten Daten aus der nexomar-API.
+Ziel: Die Seite sieht am Ende genau so aus wie die Vorlage aus Claude Design
+(Handoff `design_handoff_scentscape_web/`, 14 Seiten), mit allen Animationen und Effekten,
+aber mit echten Daten aus der nexomar-API.
 
 ## Entscheidungen
 
@@ -13,7 +14,7 @@ mit allen Animationen und Effekten, aber mit echten Daten aus der nexomar-API.
 | Hosting         | **Hostinger** (wie nexomar). `dist/` wird hochgeladen                                           |
 | Produkt-URLs    | `/producto/<nombre-del-producto>/`, z. B. `/producto/khamrah/`                                  |
 | Familie & Noten | in der nexomar-API bereits eingebaut (muss dort noch committet werden)                          |
-| Bezahlen        | zuerst weiter über WhatsApp; Wompi und Addi in Phase 7                                          |
+| Bezahlen        | Bestellung an nexomar, Abschluss über WhatsApp (wie in der Vorlage)                             |
 | Alte Seite      | liegt unverändert in `legacy/` als Vorlage für die Logik; `main` bleibt bis zum Livegang online |
 
 ### Neue Produkte ohne Handarbeit
@@ -56,26 +57,28 @@ Werden von `npm run check` automatisch geprüft:
 
 ```
 src/
-  layouts/       BaseLayout.astro (Head, SEO, Header, Footer, Warenkorb, Test olfativo)
-  components/    kleine Bausteine, nach Bereich: layout/ cart/ product/ shop/ home/ quiz/ gift/ …
-  sections/      größere Abschnitte einer Seite: home/ product/ shop/ checkout/ pages/
-  pages/         index, productos, producto/[slug], checkout, nosotros, original, gift-card,
-                 catalogo (+ imprimir), resenas, contacto, terminos, privacidad, 404, data/quiz.json
-  data/          Texte und feste Listen (Familien, FAQ, Navigation, Gift Card …)
+  layouts/       BaseLayout.astro (Head, SEO, Header, Footer, Warenkorb, Musik-Player, Vorhang)
+  components/    kleine Bausteine, nach Bereich: layout/ cart/ product/ shop/ home/ quiz/ gift/
+                 regalo/ catalogo/ original/ reviews/ ritual/ chat/ page/ ui/ …
+  sections/      größere Abschnitte einer Seite, nach Seite: home/ shop/ product/ quiz/ gift/ …
+  pages/         index, productos, producto/[slug], test-olfativo, gift-card, regalo, catalogo (+ imprimir),
+                 original, resenas, servicios, te-asesoramos, el-ritual, nosotros, contacto,
+                 terminos, privacidad, 404
+  data/          Texte und feste Listen (Familien, Noten, FAQ, Navigation, Gift Card, Ritual …)
   scripts/
     core/        Seiten-Lebenszyklus, Events, Klick-Aktionen
     api/         Zugriff auf nexomar
-    catalog/     Produkte laden, aufbereiten, Slugs, Abfragen
+    catalog/     Produkte laden, aufbereiten, Slugs, Abfragen, Einträge für den Browser
     cart/        Warenkorb, Preise, Rabattcodes (+ ui/ für den Drawer)
     checkout/    Formular, WhatsApp-Nachricht, Bestellung speichern
-    effects/     GSAP, Scroll-Fortschritt, Einblenden, Parallax, Kippen
-    features/    home/ shop/ product/ quiz/ gift-card/ review-form/ music/ …
-    layout/      Header, Vorhang, Mauszeiger
+    effects/     GSAP, Scroll-Fortschritt, Einblenden, Parallax, Laufband
+    features/    eine Ordner je Seite: home/ shop/ product/ quiz/ gift/ regalo/ catalogo/ reviews/ …
+    layout/      Header, Dropdown, Vorhang, Wortmarke im Footer
     seo/         schema.org-Daten
-    utils/       format, text, image, whatsapp, storage, motion
-  styles/        tokens, base, typography, buttons, surfaces, animations
+    utils/       format, text, image, whatsapp, storage, motion, qr
+  styles/        tokens, base, animations, page (gemeinsame Formular-Bausteine)
 integrations/    erzeugt beim Build sitemap.xml, robots.txt, .htaccess
-public/assets/   Logos, Bilder, Videos, Musik
+public/assets/   Logos, Bilder, Videos
 tools/           Hilfsskripte (check-lines.js)
 legacy/          alte Seite, nur als Vorlage
 ```
@@ -108,92 +111,76 @@ Den Token nur auf dem nexomar-Server speichern, nie im Browser-Code.
 
 ## Phasen
 
-### Phase 0: Vorbereitung ✅
+Die erste Runde (Phasen 0–8) folgte der älteren Vorlage v7. Mit dem neuen Handoff wurde die Seite
+noch einmal neu aufgebaut (Phasen A–G). Mega-Menü, eigene Checkout-Seite, Quiz-Modal, Berater-Button,
+eigener Mauszeiger und die Startseiten-Abschnitte Descubre, Reseñas und FAQ sind dabei entfallen.
 
-- [x] Branch `redesign` anlegen
-- [x] alte Seite nach `legacy/` verschieben, `assets/` → `public/assets/`
-- [x] Astro 7 + GSAP installieren
-- [x] ESLint (14 Zeilen / 400 Zeilen), Prettier, `tools/check-lines.js`
-- [x] Platzhalter-Startseite, Build läuft
+### Erste Runde (v7) ✅
 
-### Phase 1: Fundament ✅
+- [x] Astro, GSAP, ESLint/Prettier, Zeilen-Prüfung
+- [x] Daten aus nexomar: Produkte, Bewertungen, Bestellung, Rabattcode, Slugs
+- [x] Warenkorb, Wunschliste, alte URLs weiterleiten, sitemap/robots, GitHub Action für Hostinger
 
-- [x] `tokens.css`: Farben, Schriften (Bodoni Moda + Helvetica Neue), Abstände, Radien, Easing
-- [x] `base.css`, `typography.css`: Reset, Eyebrows, Überschriften mit kursiver Zeile
-- [x] `buttons.css`: Pill, Outline, Icon-Kreis, WhatsApp
-- [x] Rahmenkarte (doppelte Linie + Schraffur) als wiederverwendbare Klasse
-- [x] `animations.css`: alle `@keyframes` aus v7, ohne Duplikate
-- [x] `prefers-reduced-motion` von Anfang an berücksichtigen
-- [x] Schrift Bodoni Moda lokal eingebunden (`@fontsource-variable`), kein Google Fonts
-- [x] Styleguide-Seite `/styleguide/` (noindex) zum Vergleichen mit der Vorlage
+### Phase A: Fundament ✅
 
-### Phase 2: Was jede Seite hat ✅
+- [x] Tokens, Schriften (Instrument Serif, Instrument Sans, Pinyon Script), Header mit Servicios-Menü
+- [x] Handy-Menü, Footer mit SCENTSCAPE-Wortmarke, Vorhang, Toast, Scroll-Balken
+- [x] Warenkorb mit Checkout im Drawer (Bestellung an nexomar + WhatsApp), fliegendes Produktbild
+- [x] Musik-Player „ScentScape Sessions“ (4 Titel, im Browser erzeugt, keine Audiodateien nötig)
 
-- [x] `BaseLayout.astro` mit SEO/OG aus den alten Seiten + Scroll-Fortschrittsbalken
-- [x] Navigation, Mega-Menü „Descubre“ mit Hover-Vorschau, Handy-Menü
-- [x] Footer: Chat-Demo, wechselnde Wörter, Zahlungsarten, Links
-- [x] schwebender Berater-Button (WhatsApp)
-- [x] Seitenwechsel-Vorhang mit Logo, eigener Mauszeiger, Toast
-- [x] Musik-Player (Playlist, Lautstärke, sich drehende Platte); Audiodateien fehlen noch
+### Phase B: Startseite ✅
 
-### Phase 3: Daten und Warenkorb ✅
+- [x] Logo-Portal als Intro, Hero, Los más pedidos, Test- und Gift-Story, Familien, Reels mit Video-Ansicht
 
-- [x] `api/`: Produkte, Bewertungen, Bestellung, Rabattcode (aus `legacy/script.js`)
-- [x] Produktdaten normalisieren inkl. Familie + Noten, Slug aus dem Namen
-- [x] `cart/` aus `legacy/scripts/cart.js` aufteilen: store, pricing, discount, shipping, whatsapp, render
-- [x] Warenkorb-Drawer wie v7: Geschenk-Option, Rabattcode, Zahlungsart, Versandbalken
-- [x] Wunschliste (Herzen)
+### Phase C: Productos ✅
 
-### Phase 4: Shop-Seiten ✅
+- [x] Familien-Rad, Noten-Band, Filter, Raster und Index-Ansicht mit Vorschau
 
-- [x] Productos: Hero, Noten-Band, Familien-Tabs, fixierte Filterleiste, Raster/Liste, FLIP-Animation, Listen-Vorschau
-- [x] Produktseite `/producto/[slug]/`: Galerie (Fortschritt, Zoom, Wischen), Größen, Kaufbereich, Akkordeons, Pyramide, Bewertungen, Ähnliche, Kaufleiste
-- [x] SEO pro Produkt (Meta + Schema aus `legacy/scripts/producto.js`)
-- [x] Checkout-Seite (Schritte, Formular, Zusammenfassung), Bestellung an nexomar + Abschluss über WhatsApp
+### Phase D: Produktseite ✅
 
-### Phase 5: Startseite ✅
+- [x] Galerie mit Notenrad, Kaufkarte, Akkordeons, Bewertungen, Ähnliche, Beratung mit Handy-Chat
 
-- [x] Hero mit Video + zwei schräge Laufbänder
-- [x] „Los más pedidos“: horizontaler Scroll, Zoom beim Hovern
-- [x] „Descubre“-Karten mit Kipp- und Parallax-Effekt
-- [x] „Familias olfativas“: fixierter Bereich, Flaschenwechsel
-- [x] Video-Karussell mit Auffächern + Video-Modal
-- [x] Bewertungen (einfliegende Karten, hochzählende Note), FAQ
+### Phase E: Servicios I ✅
 
-### Phase 6: Weitere Seiten ✅
+- [x] Test Olfativo (Pyramide, Ergebnis mit Match-Ring)
+- [x] Gift Card (3D-Karte, Farbwechsel, Zählwerk, Umdrehen)
+- [x] Regalo: Umschlag öffnet sich, Angaben kommen aus dem Link (siehe `src/data/regalo.js`)
+- [x] Catálogo Digital: Auswahl, echtes Vorladen der Fotos, PDF-Seite `/catalogo/imprimir/`, Teilen per WhatsApp
+- [x] Original Garantizado: Schild-Scan, Bestätigung des Lote-Codes per WhatsApp
 
-- [x] Nosotros
-- [x] Original garantizado mit Lot-Prüfung
-- [x] Test olfativo (Quiz-Modal)
-- [x] Gift Card (3D-Karte, Farben, Umdrehen)
-- [x] Catálogo + Druckversion für PDF
-- [x] Reseñas, Contacto, Términos, Privacidad, 404
+### Phase F: Servicios II ✅
 
-### Phase 7: Neue Funktionen mit Backend
+- [x] Reseñas: Übersicht, Suche, 3D-Karussell, Formular mit Live-Vorschau (sendet an nexomar)
+- [x] Servicios: Bewertungs-Karussell und Beratung
+- [x] Te asesoramos: Fragen im Handy-Chat, eigenes Eingabefeld öffnet WhatsApp
 
-Braucht Arbeit in nexomar, auf der Seite ist alles vorbereitet:
+### Phase G: Weitere Seiten ✅
 
-- [ ] Gift Card als echtes Produkt mit Code (heute: Bestellung über WhatsApp, Code wird von Hand erstellt)
-- [ ] Wompi (Karte/PSE): nexomar erstellt den Zahlungslink, die Seite leitet nach dem Checkout dorthin.
-      Heute schickt der Checkout „Tarjeta“ als Wunsch per WhatsApp, ihr sendet den Link von Hand.
-- [ ] Addi (4 Raten): wie Wompi; danach `ADDI_ENABLED` in `src/scripts/config.js` auf `true`
+- [x] El Ritual, Nosotros, Contacto, Términos, Privacidad, 404
+- [x] Aufräumen: alte Komponenten, Styles und Tokens entfernt
 
-### Phase 8: Feinschliff und Livegang
+### Livegang
 
-- [x] Handy-Ansichten, reduzierte Bewegung, Tastaturbedienung
-- [x] Performance: Cloudinary-Größen, Videos im Karussell nur mit Metadaten vorladen
-- [x] alte URLs weiterleiten (`.htaccess`; `producto.html?id=…` → `/producto/<slug>/`)
-- [x] `sitemap.xml` + `robots.txt` automatisch erzeugen
-- [x] GitHub Action: Build + FTP-Upload zu Hostinger, Webhook von nexomar (Secrets fehlen noch)
 - [ ] `redesign` in `main` zusammenführen, live schalten
+- [ ] Gift Card als echtes Produkt mit Code in nexomar (heute: Code von Hand, Link zur Regalo-Seite von Hand)
 
 ## Was ich noch brauche
 
-- [x] Hero-Video (`public/assets/video/hero.mp4`)
-- [ ] Musik-Dateien für die Playlist (4 Titel: Noche en El Poblado, Oud & Ámbar, Brisa de Bergamota, Terciopelo)
-- [ ] Bild für „Original garantizado“ (Litografie der versiegelten Box)
-- [ ] Feldnamen von Familie und Noten in der nexomar-API (sobald dort committet)
+- [ ] Foto für El Ritual, Momento 01 „Manos envolviendo la seda“ (bis dahin zeigt die Fläche die Seidenfarbe)
+- [ ] Feldnamen von Familie und Noten in der nexomar-API (heute leitet die Seite die Noten aus dem Text ab)
 - [ ] FTP-Zugang als GitHub-Secrets, Webhook in nexomar
+
+### Link für die Regalo-Seite
+
+Nach dem Kauf einer Gift Card bekommt die beschenkte Person einen Link, z. B.:
+
+```
+https://scentscape.com.co/regalo/?para=María&de=Camila&monto=200000&codigo=SC-K7M2-9QXP&color=burdeos&hasta=2027-10-18&mensaje=Feliz%20cumpleaños
+```
+
+Pflicht sind `para`, `monto` und `codigo`. Farben: `burdeos`, `azul-noche`, `champan`, `negro`.
+Ohne diese Angaben zeigt die Seite ein Beispiel. Der Saldo zeigt den vollen Betrag, weil nexomar
+(noch) kein Kartenkonto führt.
 
 ## Vor dem Livegang klären
 
@@ -201,4 +188,5 @@ Braucht Arbeit in nexomar, auf der Seite ist alles vorbereitet:
   sellado de fábrica, código de lote“. Beides zusammen geht nicht, eins muss angepasst werden.
 - Privacidad sagt „ningún dato es almacenado“, aber Bestellungen und Bewertungen werden in nexomar gespeichert.
 - Términos, Medios de pago: Platzhalter „[Otros medios … completar]“ ersetzen.
-- Gift Card „Válida por 12 meses“ und „+100 clientes“ bestätigen.
+- Gift Card „Válida por 12 meses“ bestätigen.
+- El Ritual verspricht „Pago contra entrega“ und „guía de seguimiento por WhatsApp“ (Texte aus der Vorlage): bestätigen.

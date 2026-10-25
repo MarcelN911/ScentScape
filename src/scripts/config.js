@@ -11,6 +11,3 @@ export const INSTAGRAM_HANDLE = '@Scentscapeparfums_';
 export const FREE_SHIPPING_THRESHOLD = 500000;
 export const GIFT_CARD_MIN = 50000;
 export const GIFT_CARD_MAX = 5000000;
-
-/** Addi (Ratenzahlung) erst einschalten, wenn die Anbindung steht. */
-export const ADDI_ENABLED = false;

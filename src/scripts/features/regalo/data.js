@@ -1,6 +1,7 @@
 /* Liest die Gift Card aus dem Link. Fehlt etwas Wichtiges, gilt das Beispiel. */
 import { GIFT_COLORS } from '../../../data/gift-card.js';
 import { REGALO_EXAMPLE, REGALO_LIMITS } from '../../../data/regalo.js';
+import { GIFT_CARD_MAX } from '../../config.js';
 import { slugify } from '../../utils/text.js';
 
 const dateFormat = new Intl.DateTimeFormat('es-CO', {
@@ -16,7 +17,7 @@ function readText(params, key, max) {
 
 function readAmount(params) {
   const amount = Number(readText(params, 'monto', 9).replace(/\D/g, ''));
-  return amount > 0 && amount <= REGALO_LIMITS.amount ? amount : 0;
+  return amount > 0 && amount <= GIFT_CARD_MAX ? amount : 0;
 }
 
 function readColor(params) {
