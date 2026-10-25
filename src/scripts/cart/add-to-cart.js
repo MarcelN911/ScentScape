@@ -12,9 +12,9 @@ function sizeLabel(item) {
 }
 
 /** Fügt eine Zeile hinzu und spielt die gleiche Rückmeldung wie die Buttons ab. */
-export function addWithFeedback(item, source) {
+export function addWithFeedback(item, source, message) {
   addItem(item);
-  showToast(`${item.name}${sizeLabel(item)} · añadido`, { cart: true });
+  showToast(message ?? `${item.name}${sizeLabel(item)} · añadido`, { cart: !message });
   flyToCart(source, item.image);
   setTimeout(() => emit(EVENTS.cartOpen), FLIGHT_MS);
 }

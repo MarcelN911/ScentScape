@@ -1,0 +1,275 @@
+---
+/* Karte mit der besten Empfehlung (links, nach dem Test). Inhalt setzt scripts/features/quiz/result.js. */
+---
+
+<div class="qr" data-quiz-card hidden>
+  <div class="qr__photo">
+    <img alt="" data-quiz-card-img />
+    <span></span>
+  </div>
+  <span class="qr__rings"></span>
+  <span class="qr__frame"></span>
+  <div class="qr__top">
+    <img src="/assets/img/scentscape-logo.png" alt="" />
+    <span>
+      <i></i>Tu fragancia
+    </span>
+  </div>
+  <div class="qr__bottom">
+    <div class="qr__head">
+      <span class="qr__names">
+        <span class="qr__eyebrow">Recomendación 01</span>
+        <span class="qr__name" data-quiz-card-name></span>
+      </span>
+      <span class="qr__ring">
+        <svg width="78" height="78" viewBox="0 0 78 78" aria-hidden="true">
+          <circle
+            cx="39"
+            cy="39"
+            r="34"
+            fill="rgba(22,26,50,.35)"
+            stroke="rgba(240,210,170,.18)"
+            stroke-width="2"
+          ></circle>
+          <circle
+            class="qr__arc"
+            cx="39"
+            cy="39"
+            r="34"
+            fill="none"
+            stroke="#F0D2AA"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-dasharray="213.6"
+            data-quiz-ring
+          ></circle>
+        </svg>
+        <span class="qr__pct">
+          <span>
+            <span data-quiz-card-pct></span>%
+          </span>
+          <small>Afinidad</small>
+        </span>
+      </span>
+    </div>
+    <div class="qr__notes" data-quiz-card-notes></div>
+  </div>
+</div>
+
+<style>
+  .qr {
+    position: relative;
+    width: min(100%, 410px);
+    aspect-ratio: 3 / 4.3;
+    overflow: hidden;
+    border-radius: 22px;
+    background: linear-gradient(180deg, var(--wine), var(--wine-deep));
+    box-shadow:
+      0 50px 100px rgb(0 0 0 / 0.6),
+      0 0 0 1px rgb(var(--sand-rgb) / 0.12);
+    opacity: 0;
+    transform: translateY(60px) scale(0.94);
+    transition:
+      opacity 0.9s,
+      transform 1.2s var(--ease);
+  }
+
+  .qr.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .qr__photo {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 64%;
+    overflow: hidden;
+  }
+
+  .qr__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.12);
+    transition: transform 3s var(--ease);
+  }
+
+  .qr.is-revealed .qr__photo img {
+    transform: scale(1);
+  }
+
+  .qr__photo span {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--navy-rgb) / 0.35),
+      rgb(var(--navy-rgb) / 0) 28%,
+      rgb(61 2 17 / 0) 55%,
+      #4a0215 100%
+    );
+  }
+
+  .qr__rings {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background: repeating-radial-gradient(
+      circle at 110% 110%,
+      transparent 0 22px,
+      rgb(var(--sand-rgb) / 0.4) 22px 23px
+    );
+    mask-image: linear-gradient(20deg, #000, transparent 45%);
+    pointer-events: none;
+  }
+
+  .qr__frame {
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.35);
+    border-radius: 14px;
+    pointer-events: none;
+  }
+
+  .qr__top {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    top: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .qr__top img {
+    height: 18px;
+    width: auto;
+  }
+
+  .qr__top span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--sand);
+    font: 600 9px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .qr__top i {
+    width: 18px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .qr__bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 30px 32px;
+  }
+
+  .qr__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .qr__names {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .qr__eyebrow {
+    color: var(--peach);
+    font: 600 9px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .qr__name {
+    font: 400 clamp(28px, 2.6vw, 38px) / 1.05 var(--font-serif);
+    text-wrap: balance;
+  }
+
+  .qr__ring {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+  }
+
+  .qr__ring svg {
+    position: absolute;
+    inset: 0;
+    transform: rotate(-90deg);
+  }
+
+  .qr__arc {
+    stroke-dashoffset: 213.6;
+    transition: stroke-dashoffset 1.8s var(--ease) 0.5s;
+  }
+
+  .qr__pct {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--sand-light);
+    font: italic 400 24px/1 var(--font-serif);
+  }
+
+  .qr__pct small {
+    color: rgb(var(--sand-rgb) / 0.75);
+    font: 600 7px var(--font-sans);
+    font-style: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .qr__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgb(var(--sand-rgb) / 0.2);
+  }
+
+  .qr__notes :global(span) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 30px;
+    padding: 0 12px;
+    border: 1px solid rgb(var(--sand-rgb) / 0.25);
+    border-radius: 15px;
+    background: rgb(var(--navy-rgb) / 0.25);
+    color: var(--sand);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .qr__notes :global(i) {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--dot);
+    box-shadow: 0 0 8px var(--dot);
+  }
+</style>

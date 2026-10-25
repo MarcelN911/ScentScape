@@ -1,0 +1,152 @@
+---
+/* Die vier Fragen. Familien laufen als ziehbares Band (bis zu drei wählbar). */
+import NoteChip from '../../components/ui/NoteChip.astro';
+import { MAX_FAMILIES, QUIZ_GENDERS, QUIZ_INTENSITIES, QUIZ_MOMENTS } from '../../data/quiz.js';
+import { SCENT_FAMILIES } from '../../data/scent.js';
+
+/** @typedef {{ images: Record<string, string> }} Props */
+const { images } = Astro.props;
+const loop = [...SCENT_FAMILIES, ...SCENT_FAMILIES].map((family, index) => ({
+  family,
+  data: {
+    'data-quiz-family': family.name,
+    'aria-pressed': 'false',
+    'aria-hidden': index >= SCENT_FAMILIES.length ? 'true' : undefined,
+    tabindex: index >= SCENT_FAMILIES.length ? '-1' : undefined,
+  },
+}));
+---
+
+<form class="form-card reveal-late quiz-form" data-quiz-form>
+  <div class="field-group">
+    <span class="field-label">01 · Para quién</span>
+    <div class="quiz-form__pills" role="radiogroup" aria-label="Para quién">
+      {QUIZ_GENDERS.map((item) => (
+        <button
+          class="choice-pill"
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-quiz-gender={item.gender}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="field-group">
+    <span class="quiz-form__split">
+      <span class="field-label">02 · Familias que te atraen</span>
+      <span class="quiz-form__count">
+        <span data-quiz-family-count>0</span> / {MAX_FAMILIES}
+      </span>
+    </span>
+    <div class="quiz-form__band" data-marquee>
+      <div class="quiz-form__track" data-marquee-track>
+        {loop.map(({ family, data }) => (
+          <NoteChip
+            name={family.name}
+            sub={family.hint}
+            color={family.color}
+            image={images[family.ingredient]}
+            data={data}
+            glow
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="field-group">
+    <span class="field-label">03 · Momento</span>
+    <div class="quiz-form__cards" role="radiogroup" aria-label="Momento">
+      {QUIZ_MOMENTS.map((moment, index) => (
+        <button
+          class="choice-card"
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-quiz-moment={index}
+        >
+          <span class="choice-card__title">{moment.title}</span>
+          <span class="choice-card__sub">{moment.sub}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="field-group">
+    <span class="field-label">04 · Intensidad</span>
+    <div class="quiz-form__pills quiz-form__pills--small" role="radiogroup" aria-label="Intensidad">
+      {QUIZ_INTENSITIES.map((label, index) => (
+        <button
+          class="choice-pill"
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-quiz-intensity={index}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="field-group">
+    <button class="submit-btn" type="submit" disabled data-quiz-submit>
+      <span data-quiz-submit-text>Ver mi fragancia</span> <span>→</span>
+    </button>
+    <span class="form-hint" data-quiz-hint>
+      Responde al menos las preguntas 01 y 02.
+    </span>
+  </div>
+</form>
+
+<style>
+  .quiz-form__pills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .quiz-form__pills--small {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .quiz-form__split {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .quiz-form__count {
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 400 11px var(--font-sans);
+  }
+
+  .quiz-form__band {
+    position: relative;
+    margin: 0 -28px;
+    overflow: hidden;
+    padding: 5px 0;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+
+  .quiz-form__track {
+    display: flex;
+    gap: 10px;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .quiz-form__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .quiz-form .submit-btn:not(:disabled) {
+    cursor: pointer;
+  }
+</style>

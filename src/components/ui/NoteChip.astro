@@ -8,12 +8,13 @@
  * @property {string} [image]
  * @property {Record<string, string>} [data] zusätzliche data-Attribute
  * @property {boolean} [muted] kleine Zeile hell statt in der Familienfarbe
+ * @property {boolean} [glow] gewählt: leuchtender Ring statt Häkchen (Test Olfativo)
  */
-const { name, sub, color, image, data = {}, muted = false } = Astro.props;
+const { name, sub, color, image, data = {}, muted = false, glow = false } = Astro.props;
 ---
 
 <button
-  class:list={['note-chip', { 'note-chip--muted': muted }]}
+  class:list={['note-chip', { 'note-chip--muted': muted, 'note-chip--glow': glow }]}
   type="button"
   style={`--color:${color}`}
   {...data}
@@ -99,6 +100,26 @@ const { name, sub, color, image, data = {}, muted = false } = Astro.props;
 
   .note-chip[aria-pressed='true'] .note-chip__check {
     opacity: 1;
+  }
+
+  .note-chip--glow[aria-pressed='true'] {
+    border-color: var(--peach);
+    background: rgb(var(--peach-rgb) / 0.16);
+  }
+
+  .note-chip--glow[aria-pressed='true'] .note-chip__check {
+    opacity: 0;
+  }
+
+  .note-chip--glow[aria-pressed='true'] .note-chip__photo {
+    box-shadow:
+      0 0 0 2px var(--navy-deep),
+      0 0 0 4px var(--color),
+      0 0 18px var(--color);
+  }
+
+  .note-chip--glow[aria-pressed='true'] .note-chip__name {
+    color: var(--sand);
   }
 
   .note-chip.is-empty {

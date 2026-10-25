@@ -1,0 +1,57 @@
+---
+import QuizPyramid from '../components/quiz/QuizPyramid.astro';
+import QuizResultCard from '../components/quiz/QuizResultCard.astro';
+import PageIntro from '../components/page/PageIntro.astro';
+import SplitPage from '../components/page/SplitPage.astro';
+import { QUIZ_TITLE } from '../data/quiz.js';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCatalog } from '../scripts/catalog/load.js';
+import { getNoteImages } from '../scripts/catalog/note-images.js';
+import { labelOf } from '../scripts/catalog/theme.js';
+import { imageUrl } from '../scripts/utils/image.js';
+import QuizForm from '../sections/quiz/QuizForm.astro';
+import QuizResult from '../sections/quiz/QuizResult.astro';
+
+const catalog = await getCatalog();
+const images = await getNoteImages();
+const products = catalog.map((product) => ({
+  name: product.name,
+  href: `/producto/${product.slug}/`,
+  image: imageUrl(product.images[0], 600),
+  gender: product.gender,
+  families: product.scentFamilies,
+  label: labelOf(product),
+}));
+---
+
+<BaseLayout
+  title="Test olfativo | Encuentra tu perfume · ScentScape"
+  description="Cuatro preguntas sobre lo que te gusta y te recomendamos las fragancias de la colección que mejor encajan contigo."
+  curtainX="47.619%"
+>
+  <main data-quiz-page>
+    <SplitPage word="Olfativo · Olfativo ·">
+      <Fragment slot="stage">
+        <QuizPyramid />
+        <QuizResultCard />
+      </Fragment>
+      <PageIntro
+        crumb="Test Olfativo"
+        eyebrow="Servicio 01 · Test Olfativo"
+        title={QUIZ_TITLE}
+        label="Encuentra tu aroma."
+        lead="Cuatro preguntas sobre lo que te gusta. Con tus respuestas armamos tu pirámide olfativa y te recomendamos las fragancias de la colección que mejor encajan contigo."
+      />
+      <QuizForm images={images} />
+      <QuizResult />
+    </SplitPage>
+    <script type="application/json" data-quiz-data set:html={JSON.stringify(products)} />
+  </main>
+</BaseLayout>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initQuizPage } from '../scripts/features/quiz/index.js';
+
+  onPage(initQuizPage);
+</script>

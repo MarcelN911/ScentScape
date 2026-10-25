@@ -1,0 +1,35 @@
+---
+/* Je Farbe eine Fläche. Die gewählte wächst als Kreis von rechts unten über die vorherige. */
+import { GIFT_COLORS } from '../../data/gift-card.js';
+
+/** @typedef {{ color: number }} Props */
+const { color } = Astro.props;
+---
+
+{GIFT_COLORS.map((item, index) => (
+  <span
+    class:list={['layer', { 'is-current': index === color }]}
+    style={`background:${item.background}`}
+    data-color-layer={index}
+  ></span>
+))}
+
+<style>
+  .layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    clip-path: circle(0% at 88% 100%);
+  }
+
+  .layer.is-previous {
+    z-index: 1;
+    clip-path: circle(150% at 88% 100%);
+  }
+
+  .layer.is-current {
+    z-index: 2;
+    clip-path: circle(150% at 88% 100%);
+    transition: clip-path 1.1s var(--ease-curtain);
+  }
+</style>

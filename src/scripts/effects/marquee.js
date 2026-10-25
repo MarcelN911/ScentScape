@@ -2,7 +2,7 @@
  * Endloses Band mit den 16 Noten. Läuft von selbst, beim Hovern fast still,
  * mit der Maus oder dem Finger lässt es sich ziehen. Ein Ziehen löst keinen Klick aus.
  */
-import { prefersReducedMotion } from '../../utils/motion.js';
+import { prefersReducedMotion } from '../utils/motion.js';
 
 function speed(band) {
   if (band.dragging) return 0;

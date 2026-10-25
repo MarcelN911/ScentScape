@@ -1,0 +1,57 @@
+---
+/*
+ * Gift Card mit Vorder- und Rückseite. Farbe wechselt mit einer runden Wischblende,
+ * der Betrag rollt wie ein Zählwerk. Bewegung: scripts/features/gift/card.js
+ */
+import { GIFT_COLORS } from '../../data/gift-card.js';
+import GiftCardBack from './GiftCardBack.astro';
+import GiftCardFront from './GiftCardFront.astro';
+
+/**
+ * @typedef {object} Props
+ * @property {number} [color]  Index der Startfarbe
+ * @property {object} front    { amount, to, from }
+ * @property {object} back     { message, code, valid }
+ */
+const { color = 0, front, back } = Astro.props;
+const start = GIFT_COLORS[color];
+const vars = `--ink:${start.ink};--amount:${start.amount};--line:${start.line};--logo:${start.logo}`;
+---
+
+<div class="gift-card" data-gift-card style={vars}>
+  <div class="gift-card__float" data-gift-float>
+    <div class="gift-card__spin" data-gift-spin>
+      <GiftCardFront color={color} {...front} />
+      <GiftCardBack color={color} {...back} />
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .gift-card {
+    --rx: 0deg;
+    --ry: 0deg;
+    --turn: 0deg;
+    --speed: 1.1s;
+    position: relative;
+    width: min(100%, 560px);
+    aspect-ratio: 1.586;
+    container-type: inline-size;
+    perspective: 1600px;
+  }
+
+  .gift-card__float {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .gift-card__spin {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx)) rotateY(calc(var(--turn) + var(--ry)));
+    transition: transform var(--speed) var(--ease);
+  }
+</style>

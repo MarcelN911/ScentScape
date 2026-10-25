@@ -3,7 +3,7 @@ import { SCENT_FAMILIES } from '../../../data/scent.js';
 import { renderActiveFilters } from './active-filters.js';
 import { bindControls } from './controls.js';
 import { filterEntries } from './filter.js';
-import { initMarquee } from './marquee.js';
+import { initMarquee } from '../../effects/marquee.js';
 import { bindPreview, renderPreview } from './preview-control.js';
 import { renderProfile } from './profile-view.js';
 import { renderResults } from './results-view.js';

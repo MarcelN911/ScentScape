@@ -1,0 +1,48 @@
+---
+/* Betrag wie ein Zählwerk: jede Ziffer ist eine Spalte 0–9, die zur richtigen Zahl rollt. */
+/** @typedef {{ text: string }} Props */
+const { text } = Astro.props;
+const DIGITS = [...'0123456789'];
+---
+
+<span class="odo" data-odometer>
+  {[...text].map((char, index) =>
+    /\d/.test(char) ? (
+      <span class="odo__slot">
+        <span class="odo__col" style={`--y:${-Number(char) * 10}%;--d:${index * 45}ms`}>
+          {DIGITS.map((digit) => (
+            <span>{digit}</span>
+          ))}
+        </span>
+      </span>
+    ) : (
+      <span class="odo__char">{char}</span>
+    ),
+  )}
+</span>
+
+<style>
+  .odo {
+    display: flex;
+  }
+
+  .odo :global(.odo__slot) {
+    display: inline-block;
+    height: 1.04em;
+    overflow: hidden;
+  }
+
+  .odo :global(.odo__col) {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(var(--y));
+    transition: transform var(--odo-speed, 1s) var(--ease) var(--d);
+  }
+
+  .odo :global(.odo__col span),
+  .odo :global(.odo__char) {
+    display: block;
+    height: 1.04em;
+    text-align: center;
+  }
+</style>

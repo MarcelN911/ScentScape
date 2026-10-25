@@ -1,47 +1,26 @@
-/* Sucht zu den Antworten das passende Parfum. Reine Logik, ohne DOM. */
-import { FAMILIES } from '../../../data/families.js';
-import { TIME_FAMILIES, VIBE_WORDS } from '../../../data/quiz.js';
-import { toPlain } from '../../utils/text.js';
-
-function fitsWho(product, who) {
-  if (!who || who === 'Sin etiquetas') return true;
-  return who === 'Dama' ? product.gender !== 'C' : product.gender !== 'D';
+/*
+ * Empfehlung wie in der Vorlage: Jede gemeinsame Familie zählt 3 Punkte,
+ * passendes Geschlecht 2, Unisex 1. Daraus wird eine Affinität zwischen 62 und 98 %.
+ */
+function genderScore(productGender, wanted) {
+  if (productGender === wanted) return 2;
+  return productGender === 'U' || wanted === 'U' ? 1 : 0;
 }
 
-/* Ohne Familie in nexomar zählen die typischen Noten der Familie in Beschreibung/Noten */
-function fitsVibe(product, vibe) {
-  if (!vibe || product.family === vibe) return true;
-  if (product.family) return false;
-  const keywords = FAMILIES.find((family) => family.id === vibe).notes;
-  return keywords.some((keyword) => product.search.includes(toPlain(keyword)));
+function scoreOf(product, state) {
+  const shared = product.families.filter((family) => state.families.includes(family)).length;
+  return shared * 3 + genderScore(product.gender, state.gender);
 }
 
-function candidatesFor(products, answers) {
-  const both = products.filter((p) => fitsWho(p, answers.who) && fitsVibe(p, answers.vibe));
-  if (both.length) return both;
-  const byVibe = products.filter((p) => fitsVibe(p, answers.vibe));
-  return byVibe.length ? byVibe : products;
-}
-
-function preferTime(candidates, when) {
-  const preferred = TIME_FAMILIES[when];
-  if (!preferred) return candidates;
-  const rank = (product) => (preferred.includes(product.family) ? 0 : 1);
-  return [...candidates].sort((a, b) => rank(a) - rank(b));
-}
-
-/** alternative: wie oft "Otra opción" gedrückt wurde */
-export function matchProduct(products, answers, alternative) {
-  const candidates = preferTime(candidatesFor(products, answers), answers.when);
-  return candidates[alternative % candidates.length];
-}
-
-export function reasonOf(answers) {
-  const reasons = [];
-  if (answers.vibe) reasons.push(`buscas algo ${VIBE_WORDS[answers.vibe]}`);
-  if (answers.when) reasons.push(`lo usarás ${answers.when.toLowerCase()}`);
-  if (answers.who && answers.who !== 'Sin etiquetas')
-    reasons.push(`es para ${answers.who.toLowerCase()}`);
-  if (!reasons.length) return 'Elige tus respuestas y te mostramos tu match al instante.';
-  return `Porque ${reasons.join(', ')}.`;
+/** Die drei besten Produkte mit Prozentwert */
+export function recommend(products, state) {
+  const max = state.families.length * 3 + 2;
+  return products
+    .map((product) => ({ product, score: scoreOf(product, state) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(({ product, score }, index) => ({
+      ...product,
+      pct: Math.round(62 + 36 * Math.min(1, score / max)) - index,
+    }));
 }

@@ -1,0 +1,107 @@
+---
+/*
+ * Aufbau der Service-Seiten: links eine feste Bühne (Slot "stage"), rechts der Inhalt.
+ * Unter 900px Breite stehen beide untereinander. Die Einblendungen starten, sobald <main> .is-in bekommt.
+ */
+/**
+ * @typedef {object} Props
+ * @property {string} word        großes Kontur-Wort unten in der Bühne
+ * @property {string} [glow]      Farbe des Lichtscheins (kann per JS über --glow wechseln)
+ * @property {string} [gap]       Abstand der Blöcke rechts
+ * @property {string} [ratio]     Spaltenverhältnis ab 900px
+ * @property {string} [stageGap]  Abstand der Elemente in der Bühne
+ */
+const {
+  word,
+  glow = 'rgb(83 16 25 / .5)',
+  gap = '30px',
+  ratio = 'minmax(0, 1fr) minmax(0, 1.1fr)',
+  stageGap = '28px',
+} = Astro.props;
+---
+
+<section
+  class="split"
+  style={`--glow:${glow};--gap:${gap};--ratio:${ratio};--stage-gap:${stageGap}`}
+>
+  <div class="split__grid">
+    <div class="split__stage" data-split-stage>
+      <div class="split__word" aria-hidden="true">
+        {word}
+      </div>
+      <slot name="stage" />
+    </div>
+    <div class="split__info">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .split {
+    position: relative;
+    background: var(--navy);
+  }
+
+  .split__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+  }
+
+  .split__stage {
+    position: relative;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--stage-gap);
+    overflow: hidden;
+    padding: 110px 20px 60px;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 50%, var(--glow), transparent 72%), var(--navy-deep);
+    transition: background 1s;
+  }
+
+  .split__word {
+    position: absolute;
+    left: 0;
+    bottom: 2vh;
+    color: transparent;
+    font: italic 400 clamp(140px, 18vw, 320px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.12);
+    transform: translateX(4vw);
+    transition: transform 2.4s var(--ease);
+    pointer-events: none;
+  }
+
+  :global(.is-in) .split__word {
+    transform: translateX(-20vw);
+  }
+
+  .split__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    min-width: 0;
+    padding: 6vh 24px 10vh;
+  }
+
+  @media (min-width: 900px) {
+    .split__grid {
+      grid-template-columns: var(--ratio);
+    }
+
+    .split__stage {
+      position: sticky;
+      height: 100vh;
+      padding: 96px clamp(24px, 3vw, 48px) 22px;
+    }
+
+    .split__info {
+      padding: 130px clamp(30px, 4.5vw, 80px) 12vh;
+    }
+  }
+</style>

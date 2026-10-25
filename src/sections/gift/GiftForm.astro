@@ -1,0 +1,217 @@
+---
+/* Formular der Gift Card: Betrag, Namen, Nachricht, Lieferart. Bedienung: scripts/features/gift/page.js */
+import {
+  GIFT_AMOUNTS,
+  GIFT_DEFAULT_AMOUNT,
+  GIFT_DELIVERY,
+  GIFT_LIMITS,
+} from '../../data/gift-card.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+---
+
+<form class="form-card reveal-late gift-form" data-gift-form novalidate>
+  <div class="field-group">
+    <span class="field-label">01 · Monto</span>
+    <div class="gift-form__amounts" role="radiogroup" aria-label="Monto">
+      {GIFT_AMOUNTS.map((amount) => (
+        <button
+          class="choice-pill"
+          type="button"
+          role="radio"
+          aria-checked={amount === GIFT_DEFAULT_AMOUNT ? 'true' : 'false'}
+          data-gift-amount-option={amount}
+        >
+          {formatCOP(amount)}
+        </button>
+      ))}
+      <label class="gift-form__custom" data-gift-custom-wrap>
+        <span class="gift-form__dollar">$</span>
+        <input
+          inputmode="numeric"
+          placeholder="Otro monto"
+          aria-label="Otro monto en COP"
+          name="custom"
+          autocomplete="off"
+        />
+        <span class="gift-form__cop">COP</span>
+      </label>
+    </div>
+    <span class="gift-form__range" data-gift-range>
+      Desde $50.000 hasta $5.000.000
+    </span>
+  </div>
+  <div class="gift-form__names">
+    <label class="field-group">
+      <span class="field-label">02 · Para</span>
+      <input class="text-input" name="to" maxlength={GIFT_LIMITS.name} placeholder="Nombre" />
+    </label>
+    <label class="field-group">
+      <span class="field-label">03 · De</span>
+      <input
+        class="text-input"
+        name="from"
+        maxlength={GIFT_LIMITS.name}
+        placeholder="Tu nombre"
+        autocomplete="name"
+      />
+    </label>
+  </div>
+  <label class="field-group">
+    <span class="gift-form__split">
+      <span class="field-label">04 · Mensaje</span>
+      <span class="gift-form__count">
+        <span data-gift-count>0</span> / {GIFT_LIMITS.message}
+      </span>
+    </span>
+    <textarea
+      class="text-input gift-form__message"
+      name="message"
+      maxlength={GIFT_LIMITS.message}
+      rows="3"
+      placeholder="Escribe unas palabras (máx. 160)"
+    ></textarea>
+  </label>
+  <div class="field-group">
+    <span class="field-label">05 · Entrega</span>
+    <div class="gift-form__delivery" role="radiogroup" aria-label="Entrega">
+      {GIFT_DELIVERY.map((item, index) => (
+        <button
+          class="choice-card"
+          type="button"
+          role="radio"
+          aria-checked={index === 0 ? 'true' : 'false'}
+          data-gift-delivery={index}
+        >
+          <span class="choice-card__title">{item.title}</span>
+          <span class="choice-card__sub">{item.sub}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="field-group">
+    <button class="submit-btn" type="submit" data-gift-submit>
+      Añadir al carrito · <span data-gift-total>{formatCOP(GIFT_DEFAULT_AMOUNT)}</span>{' '}
+      <span>→</span>
+    </button>
+    <span class="form-hint" data-gift-hint>
+      {GIFT_DELIVERY[0].hint}
+    </span>
+  </div>
+</form>
+<a class="outline-btn gift-form__regalo" href="/regalo/">
+  Así la recibe tu ser querido <span>→</span>
+</a>
+
+<style>
+  .gift-form__amounts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .gift-form__custom {
+    position: relative;
+    display: block;
+    grid-column: span 2;
+  }
+
+  .gift-form__custom input {
+    width: 100%;
+    height: 56px;
+    padding: 0 64px 0 40px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 28px;
+    background: var(--field);
+    color: var(--cream);
+    font: 400 18px var(--font-serif);
+    font-variant-numeric: lining-nums;
+    outline: none;
+    transition:
+      border-color 0.3s,
+      background-color 0.3s;
+  }
+
+  .gift-form__custom.is-active input {
+    border-color: var(--peach);
+    background: rgb(var(--peach-rgb) / 0.1);
+  }
+
+  .gift-form__custom.is-invalid input {
+    border-color: var(--error-strong);
+  }
+
+  .gift-form__dollar,
+  .gift-form__cop {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .gift-form__dollar {
+    left: 20px;
+    color: var(--peach);
+    font: 400 18px var(--font-serif);
+  }
+
+  .gift-form__cop {
+    right: 20px;
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 600 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+
+  .gift-form__range {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 300 12px var(--font-sans);
+    transition: color 0.3s;
+  }
+
+  .gift-form__range.is-invalid {
+    color: var(--error);
+  }
+
+  .gift-form__names,
+  .gift-form__delivery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .gift-form__delivery {
+    gap: 10px;
+  }
+
+  .gift-form__split {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .gift-form__count {
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 400 11px var(--font-sans);
+  }
+
+  .gift-form__message {
+    height: auto;
+    min-height: 110px;
+    padding: 18px 20px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+
+  .gift-form__regalo {
+    align-self: flex-start;
+    opacity: 0;
+    transition:
+      opacity 0.9s 2.1s,
+      background-color 0.3s,
+      color 0.3s,
+      gap 0.4s;
+  }
+
+  :global(.is-in) .gift-form__regalo {
+    opacity: 1;
+  }
+</style>

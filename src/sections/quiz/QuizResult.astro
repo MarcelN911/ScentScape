@@ -1,0 +1,156 @@
+---
+/* Ergebnis rechts: Profil, drei Empfehlungen, Knöpfe. Inhalt setzt scripts/features/quiz/result.js. */
+---
+
+<div class="form-card quiz-result" data-quiz-result hidden>
+  <div class="quiz-result__profile">
+    <span class="field-label">Tu perfil olfativo</span>
+    <p class="quiz-result__title">
+      <span data-quiz-profile-a></span> <em data-quiz-profile-b></em>
+    </p>
+    <p class="quiz-result__text" data-quiz-profile-text></p>
+  </div>
+  <div class="quiz-result__recs">
+    <span class="field-label">Recomendados para ti</span>
+    <div class="quiz-result__list" data-quiz-recs></div>
+  </div>
+  <div class="quiz-result__actions">
+    <a class="quiz-result__go" href="#" data-quiz-top-link>
+      Ver <span data-quiz-top-name></span> <span>→</span>
+    </a>
+    <button class="outline-btn" type="button" data-quiz-reset>
+      ↻ Repetir test
+    </button>
+  </div>
+  <template data-quiz-rec>
+    <a class="rec">
+      <img alt="" />
+      <span class="rec__text">
+        <span class="rec__name"></span>
+        <span class="rec__sub"></span>
+      </span>
+      <span class="rec__pct"></span>
+    </a>
+  </template>
+</div>
+
+<style>
+  .quiz-result__profile,
+  .quiz-result__recs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quiz-result__title {
+    margin: 0;
+    font: 400 clamp(30px, 2.8vw, 44px) / 1.1 var(--font-serif);
+  }
+
+  .quiz-result__title em {
+    color: var(--peach);
+  }
+
+  .quiz-result__text {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 15px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .quiz-result__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quiz-result__list :global(.rec) {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 18px 12px 12px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 18px;
+    background: var(--field);
+    color: var(--cream);
+    transition:
+      background-color 0.3s,
+      transform 0.4s var(--ease-pop);
+  }
+
+  .quiz-result__list :global(.rec:first-child) {
+    border-color: var(--peach);
+    background: rgb(var(--peach-rgb) / 0.1);
+  }
+
+  .quiz-result__list :global(.rec:hover) {
+    background: rgb(var(--peach-rgb) / 0.14);
+    color: var(--cream);
+    transform: translateY(-3px);
+  }
+
+  .quiz-result__list :global(.rec img) {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: rgb(var(--sand-rgb) / 0.08);
+    object-fit: contain;
+  }
+
+  .quiz-result__list :global(.rec__text) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .quiz-result__list :global(.rec__name) {
+    font: 400 19px/1.1 var(--font-serif);
+  }
+
+  .quiz-result__list :global(.rec__sub) {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 12px var(--font-sans);
+  }
+
+  .quiz-result__list :global(.rec__pct) {
+    color: var(--sand);
+    font: italic 400 24px var(--font-serif);
+  }
+
+  .quiz-result__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .quiz-result__go {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 28px;
+    border-radius: 28px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      gap 0.4s;
+  }
+
+  .quiz-result__go:hover {
+    gap: 20px;
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .quiz-result .outline-btn {
+    height: 56px;
+    border-radius: 28px;
+  }
+</style>

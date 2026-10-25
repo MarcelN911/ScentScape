@@ -1,0 +1,147 @@
+---
+/*
+ * Kopf der Service-Seiten: Pfad, Zeile mit Strich, Titel Buchstabe für Buchstabe, Einleitung.
+ * title: Teile als [Text, kursiv?], z. B. [['Tu ', false], ['catálogo, ', false], ['en PDF.', true]]
+ */
+/**
+ * @typedef {object} Props
+ * @property {string} crumb
+ * @property {string} eyebrow
+ * @property {[string, boolean][]} title
+ * @property {string} label    vollständiger Titel für Screenreader
+ * @property {string} [lead]
+ * @property {string} [size]   Schriftgröße des Titels
+ */
+const { crumb, eyebrow, title, label, lead, size = 'clamp(44px, 5vw, 88px)' } = Astro.props;
+let count = 0;
+const words = title.map(([text, italic]) => ({
+  italic,
+  letters: [...text].map((letter) => ({ letter, delay: 1100 + count++ * 40 })),
+}));
+---
+
+<nav class="intro-crumbs" aria-label="Ruta">
+  <a href="/">← Inicio</a>
+  <span>/</span>
+  <span class="intro-crumbs__here">{crumb}</span>
+</nav>
+<div>
+  <p class="intro-eyebrow">
+    <span></span>
+    {eyebrow}
+  </p>
+  <h1 class="intro-title" aria-label={label} style={`font-size:${size}`}>
+    {words.map((word) => (
+      <span class:list={['intro-title__word', { 'is-italic': word.italic }]} aria-hidden="true">
+        {word.letters.map((item) => (
+          <span class="intro-title__mask">
+            <span style={`--d:${item.delay}ms`}>{item.letter}</span>
+          </span>
+        ))}
+      </span>
+    ))}
+  </h1>
+  {lead && <p class="intro-lead">{lead}</p>}
+</div>
+
+<style>
+  .intro-crumbs,
+  .intro-eyebrow,
+  .intro-lead {
+    opacity: 0;
+    transition: opacity 0.8s var(--fade, 1.3s);
+  }
+
+  .intro-crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font: 400 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .intro-crumbs span {
+    color: rgb(var(--cream-rgb) / 0.35);
+  }
+
+  .intro-crumbs .intro-crumbs__here {
+    color: rgb(var(--cream-rgb) / 0.7);
+  }
+
+  .intro-eyebrow {
+    --fade: 1.4s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 16px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .intro-eyebrow span {
+    display: block;
+    width: 0;
+    height: 1px;
+    background: var(--peach);
+    transition: width 1s var(--ease) 1.4s;
+  }
+
+  .intro-title {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .intro-title__word {
+    display: inline-flex;
+    white-space: nowrap;
+  }
+
+  .intro-title__mask {
+    display: inline-block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+  }
+
+  .intro-title__mask span {
+    display: inline-block;
+    white-space: pre;
+    transform: translateY(110%);
+    transition: transform 1s var(--ease) var(--d);
+  }
+
+  .is-italic {
+    color: var(--sand);
+    font-style: italic;
+  }
+
+  .intro-lead {
+    --fade: 1.7s;
+    max-width: 480px;
+    margin: 18px 0 0;
+    color: rgb(var(--cream-rgb) / 0.78);
+    font: 300 16px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  :global(.is-in) .intro-crumbs,
+  :global(.is-in) .intro-eyebrow,
+  :global(.is-in) .intro-lead {
+    opacity: 1;
+  }
+
+  :global(.is-in) .intro-eyebrow span {
+    width: 40px;
+  }
+
+  :global(.is-in) .intro-title__mask span {
+    transform: none;
+  }
+</style>

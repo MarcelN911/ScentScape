@@ -1,43 +1,69 @@
-/* Gift Card: Farben der Karte, feste Beträge und Lieferarten */
+/* Gift Card: Farben, feste Beträge, Grenzen und Lieferarten (Texte aus der Vorlage). */
+
 export const GIFT_COLORS = [
   {
     name: 'Burdeos',
-    background: 'radial-gradient(ellipse at 28% 18%, #8a1230 0%, #61031b 55%, #3a0110 100%)',
-    ink: '#f0d2aa',
-    foil: 'linear-gradient(100deg, #fff6e6 0%, #f0d2aa 35%, #fff 50%, #e8b98a 70%, #fff6e6 100%)',
+    background: 'linear-gradient(150deg,#6E1824,#531019 60%,#3d0211)',
+    ink: '#F0D2AA',
+    amount: '#F6E3C6',
+    line: 'rgba(240,210,170,.45)',
+    glow: 'rgba(83,16,25,.6)',
     logo: 'none',
   },
   {
-    name: 'Noche',
-    background: 'radial-gradient(ellipse at 28% 18%, #2a3060 0%, #151932 55%, #0a0c1c 100%)',
-    ink: '#f0be91',
-    foil: 'linear-gradient(100deg, #f0d2aa 0%, #f0be91 35%, #fff4e0 50%, #d9a06a 70%, #f0d2aa 100%)',
+    name: 'Azul noche',
+    background: 'linear-gradient(150deg,#262c63,#1E2342 60%,#12152B)',
+    ink: '#F0D2AA',
+    amount: '#F6E3C6',
+    line: 'rgba(240,210,170,.4)',
+    glow: 'rgba(38,44,99,.7)',
     logo: 'none',
   },
   {
-    name: 'Champagne',
-    background: 'radial-gradient(ellipse at 28% 18%, #fbecd6 0%, #f0d2aa 50%, #d9ae7c 100%)',
-    ink: '#61031b',
-    foil: 'linear-gradient(100deg, #61031b 0%, #8a1230 35%, #b0485e 50%, #61031b 70%, #3a0110 100%)',
-    logo: 'brightness(0) saturate(100%) invert(9%) sepia(80%) saturate(4000%) hue-rotate(335deg)',
+    name: 'Champán',
+    background: 'linear-gradient(150deg,#F7E6CB,#E2C193 60%,#C9A06E)',
+    ink: '#1E2342',
+    amount: '#1E2342',
+    line: 'rgba(30,35,66,.3)',
+    glow: 'rgba(240,190,145,.35)',
+    logo: 'brightness(0) opacity(.85)',
   },
   {
-    name: 'Ónix',
-    background: 'radial-gradient(ellipse at 28% 18%, #3a3a40 0%, #16161a 55%, #050506 100%)',
-    ink: '#d4af7d',
-    foil: 'linear-gradient(100deg, #b08a52 0%, #d4af7d 30%, #fff1d6 50%, #c79b5c 70%, #b08a52 100%)',
+    name: 'Negro',
+    background: 'linear-gradient(150deg,#2b2b31,#141417 60%,#050506)',
+    ink: '#F0BE91',
+    amount: '#F0D2AA',
+    line: 'rgba(240,190,145,.4)',
+    glow: 'rgba(240,190,145,.18)',
     logo: 'none',
   },
 ];
 
 export const GIFT_AMOUNTS = [100000, 200000, 300000, 500000];
+export const GIFT_DEFAULT_AMOUNT = 200000;
 
-export const GIFT_DELIVERY = ['Digital por WhatsApp', 'Impresa, con el pedido'];
+export const GIFT_DELIVERY = [
+  {
+    title: 'Digital por WhatsApp',
+    sub: 'La enviamos al instante con tu mensaje',
+    hint: 'Te pediremos el número de WhatsApp al finalizar la compra.',
+  },
+  {
+    title: 'Impresa, con el pedido',
+    sub: 'Tarjeta física dentro de tu envío',
+    hint: 'La tarjeta impresa viaja dentro de tu pedido.',
+  },
+];
+
+export const GIFT_TITLE = [
+  ['Regala ', false],
+  ['un aroma.', true],
+];
 
 export const GIFT_DEFAULTS = {
   to: 'alguien especial',
   from: 'ti',
-  message: 'Para que elijas el aroma que te represente.',
+  message: 'Tu mensaje aparecerá aquí.',
 };
 
-export const GIFT_LIMITS = { name: 28, message: 160 };
+export const GIFT_LIMITS = { name: 30, message: 160 };

@@ -1,0 +1,155 @@
+---
+/* Linke Bühne der Gift-Card-Seite: Karte, Farbwahl und Umdrehen. */
+import GiftCard from '../../components/gift/GiftCard.astro';
+import { GIFT_COLORS, GIFT_DEFAULT_AMOUNT, GIFT_DEFAULTS } from '../../data/gift-card.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+
+const front = {
+  amount: formatCOP(GIFT_DEFAULT_AMOUNT),
+  to: GIFT_DEFAULTS.to,
+  from: GIFT_DEFAULTS.from,
+};
+const back = {
+  message: GIFT_DEFAULTS.message,
+  code: 'SC-GIFT-••••',
+  valid: 'Válida 12 meses',
+  faded: true,
+};
+---
+
+<div class="gift-stage__card" data-fly-source>
+  <GiftCard front={front} back={back} />
+</div>
+<div class="gift-stage__controls">
+  <span class="gift-stage__label">
+    Color · <em data-gift-color-name>{GIFT_COLORS[0].name}</em>
+  </span>
+  <div class="gift-stage__swatches" role="radiogroup" aria-label="Color">
+    {GIFT_COLORS.map((color, index) => (
+      <button
+        class="swatch"
+        type="button"
+        role="radio"
+        aria-checked={index === 0 ? 'true' : 'false'}
+        aria-label={color.name}
+        style={`background:${color.background}`}
+        data-gift-color={index}
+      ></button>
+    ))}
+  </div>
+  <button class="gift-stage__flip" type="button" data-gift-flip>
+    <span class="gift-stage__flip-icon">↻</span>
+    <span data-gift-flip-label>Ver reverso</span>
+  </button>
+</div>
+
+<style>
+  .gift-stage__card {
+    display: flex;
+    justify-content: center;
+    width: min(100%, 560px);
+    opacity: 0;
+    transform: translateY(80px) rotateX(28deg) scale(0.92);
+    transition:
+      opacity 1s 0.6s,
+      transform 1.6s var(--ease) 0.6s;
+  }
+
+  :global(.is-in) .gift-stage__card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .gift-stage__controls {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+    transition: opacity 0.8s 1.6s;
+  }
+
+  :global(.is-in) .gift-stage__controls {
+    opacity: 1;
+  }
+
+  .gift-stage__label {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .gift-stage__label em {
+    color: var(--sand);
+    font: italic 400 16px var(--font-serif);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .gift-stage__swatches {
+    display: flex;
+    gap: 12px;
+  }
+
+  .swatch {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 22px;
+    box-shadow:
+      0 0 0 2px var(--navy-deep),
+      0 0 0 0 var(--peach);
+    transition:
+      box-shadow 0.3s,
+      transform 0.4s var(--ease-pop);
+  }
+
+  .swatch:hover {
+    transform: scale(1.12);
+  }
+
+  .swatch[aria-checked='true'] {
+    box-shadow:
+      0 0 0 2px var(--navy-deep),
+      0 0 0 4px var(--peach);
+    transform: scale(1.06);
+  }
+
+  .gift-stage__flip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 22px;
+    background: none;
+    color: var(--sand);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .gift-stage__flip:hover {
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .gift-stage__flip-icon {
+    display: inline-block;
+    transition: transform 0.8s var(--ease);
+  }
+
+  :global(.is-back) .gift-stage__flip-icon {
+    transform: rotate(180deg);
+  }
+</style>
