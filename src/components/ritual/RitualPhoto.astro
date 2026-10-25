@@ -1,0 +1,75 @@
+---
+/*
+ * Foto eines Moments im Hochformat 4:5. Öffnet sich von unten (Klasse .is-revealed am Moment),
+ * das Bild zoomt dabei heraus und wandert beim Scrollen leicht (data-parallax).
+ * Ohne Foto bleibt nur die Seidenfarbe sichtbar.
+ */
+/** @typedef {{ image?: string | null, alt?: string, tag?: string }} Props */
+const { image, alt = '', tag } = Astro.props;
+---
+
+<div class="photo">
+  <div class:list={['photo__frame', { 'photo__frame--silk': !image }]}>
+    {image && <img src={image} alt={alt} loading="lazy" data-parallax="-70" />}
+    <slot />
+    {tag && <span class="photo__tag">{tag}</span>}
+  </div>
+</div>
+
+<style>
+  .photo {
+    min-width: 0;
+    clip-path: inset(100% 0% 0% 0%);
+    transform: translateY(40px);
+    transition:
+      clip-path 1.5s var(--ease-curtain),
+      transform 1.4s var(--ease);
+  }
+
+  :global(.is-revealed) .photo {
+    clip-path: inset(0% 0% 0% 0%);
+    transform: none;
+  }
+
+  .photo__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #0a0d1f;
+    box-shadow: 0 40px 80px rgb(0 0 0 / 0.55);
+  }
+
+  .photo__frame--silk {
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, #5e1420, #3d0211 75%);
+  }
+
+  .photo__frame img {
+    position: absolute;
+    left: 0;
+    top: -10%;
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    transform: scale(1.18);
+    transition: transform 1.8s var(--ease);
+  }
+
+  :global(.is-revealed) .photo__frame img {
+    transform: none;
+  }
+
+  .photo__tag {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    padding: 7px 12px;
+    border-radius: 2px;
+    background: rgb(var(--navy-ink-rgb) / 0.78);
+    backdrop-filter: blur(6px);
+    color: var(--cream);
+    font: 600 8px var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+</style>

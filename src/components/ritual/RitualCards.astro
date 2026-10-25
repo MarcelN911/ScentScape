@@ -1,0 +1,177 @@
+---
+/*
+ * Momento 04: zwei gezeichnete Tarjetas (schwarze Begrüßungskarte und helle Karte mit Noten,
+ * QR und Unterschrift). Mit der Maus kippen beide leicht (--tx, --ty aus scripts/features/ritual/index.js).
+ */
+import { RITUAL_CARD } from '../../data/ritual.js';
+---
+
+<div class="cards" data-ritual-cards>
+  <div class="cards__welcome">
+    <img src="/assets/img/scentscape-logo.png" alt="" />
+    <span class="cards__title">Tu fragancia</span>
+    <em>Bienvenido al ritual</em>
+    <small>SCENTSCAPE PARFUMS</small>
+  </div>
+  <div class="cards__notes">
+    <span class="cards__kicker">Tu fragancia</span>
+    <div class="cards__body">
+      <div class="cards__text">
+        <span class="cards__name">
+          {RITUAL_CARD.name[0]}
+          <em>{RITUAL_CARD.name[1]}</em>
+        </span>
+        <span class="cards__brand">{RITUAL_CARD.brand}</span>
+        <span class="cards__list">
+          {RITUAL_CARD.notes.map(([tier, notes]) => (
+            <span>
+              <b>{tier}</b> {notes}
+            </span>
+          ))}
+        </span>
+      </div>
+      <svg
+        class="cards__qr"
+        role="img"
+        aria-label="Código QR"
+        shape-rendering="crispEdges"
+        data-ritual-qr
+      >
+        <path></path>
+      </svg>
+    </div>
+    <span class="cards__sign">Sara &amp; Brayan</span>
+  </div>
+</div>
+
+<style>
+  .cards {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 65% 55% at 50% 45%, rgb(35 42 92 / 0.85), transparent 75%), #0a0d1f;
+    perspective: 1400px;
+  }
+
+  .cards__welcome,
+  .cards__notes {
+    position: absolute;
+    aspect-ratio: 1.6;
+    border-radius: 3px;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .cards__welcome {
+    left: 8%;
+    top: 14%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 68%;
+    background: radial-gradient(ellipse 90% 80% at 50% 25%, #26262d, #0b0b0e);
+    box-shadow:
+      0 24px 50px rgb(0 0 0 / 0.6),
+      0 0 0 1px rgb(var(--peach-rgb) / 0.18);
+    text-align: center;
+    transform: rotateY(calc(var(--tx, 0) * 10deg)) rotateX(calc(var(--ty, 0) * -8deg)) rotate(-8deg);
+  }
+
+  .cards__welcome img {
+    display: block;
+    width: 26%;
+    margin-bottom: 6px;
+    clip-path: inset(0 0 42% 0);
+  }
+
+  .cards__title {
+    color: var(--sand);
+    font: 400 clamp(18px, 1.9vw, 26px) / 1 var(--font-serif);
+  }
+
+  .cards__welcome em {
+    color: var(--peach);
+    font: italic 400 clamp(13px, 1.3vw, 17px) / 1.2 var(--font-serif);
+  }
+
+  .cards__welcome small {
+    margin-top: 10px;
+    color: rgb(var(--peach-rgb) / 0.7);
+    font: 500 6px var(--font-sans);
+    letter-spacing: 3px;
+  }
+
+  .cards__notes {
+    right: 7%;
+    top: 46%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 66%;
+    padding: 4.5% 5%;
+    background: linear-gradient(160deg, var(--cream), #f3ead8);
+    box-shadow: 0 28px 60px rgb(0 0 0 / 0.6);
+    color: var(--navy);
+    transform: rotateY(calc(var(--tx, 0) * 10deg)) rotateX(calc(var(--ty, 0) * -8deg)) rotate(4deg);
+  }
+
+  .cards__kicker {
+    color: #b9845a;
+    font: 500 6px var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .cards__body {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: start;
+    padding-top: 2px;
+  }
+
+  .cards__text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .cards__name {
+    font: 400 clamp(13px, 1.35vw, 18px) / 1 var(--font-serif);
+  }
+
+  .cards__brand {
+    color: rgb(var(--navy-rgb) / 0.6);
+    font: 500 5px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .cards__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 4px;
+    font: 300 clamp(6px, 0.6vw, 8px) / 1.45 var(--font-sans);
+  }
+
+  .cards__list b {
+    font-weight: 600;
+  }
+
+  .cards__qr {
+    width: clamp(30px, 3.6vw, 48px);
+    aspect-ratio: 1;
+    fill: var(--navy);
+  }
+
+  .cards__sign {
+    padding-top: 3px;
+    text-align: right;
+    border-top: 1px solid rgb(var(--navy-rgb) / 0.15);
+    font: 400 clamp(12px, 1.2vw, 16px) / 1 var(--font-script);
+  }
+</style>

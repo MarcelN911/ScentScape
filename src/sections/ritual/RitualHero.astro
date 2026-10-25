@@ -1,0 +1,220 @@
+---
+/* Portada von "El Ritual": Foto rechts, Titel links. Beim Scrollen gleitet der Text weg (scripts/features/ritual/index.js). */
+---
+
+<section class="ritual-hero" data-ritual-hero>
+  <div class="ritual-hero__image" data-ritual-image>
+    <img
+      src="/assets/img/ritual-d.jpeg"
+      alt="Perfume envuelto en seda bordeaux con sticker, faja negra y lacre cobre sobre mármol negro"
+    />
+    <span class="ritual-hero__shade" aria-hidden="true"></span>
+  </div>
+  <span class="ritual-hero__word" aria-hidden="true" data-drift="-14">
+    Ritual
+  </span>
+  <div class="ritual-hero__text" data-ritual-text>
+    <p class="ritual-eyebrow ritual-hero__fade" style="--d:1.1s">
+      <span></span>Servicios · Experiencia ScentScape
+    </p>
+    <h1 class="ritual-hero__title ritual-hero__rise" style="--d:1.2s">
+      El <em>Ritual</em>
+    </h1>
+    <p class="ritual-hero__lead ritual-hero__rise" style="--d:1.45s">
+      Tu perfume no llega en una caja. Llega como un regalo, incluso si es para ti.
+    </p>
+    <p class="ritual-hero__note ritual-hero__fade" style="--d:1.7s">
+      Perfumería 100 % original, sellada de fábrica y envuelta a mano en Medellín.
+    </p>
+    <div class="ritual-actions ritual-hero__fade" style="--d:1.9s">
+      <a class="ritual-btn ritual-btn--solid" href="/productos/">
+        Elige tu fragancia <span>→</span>
+      </a>
+      <a class="ritual-btn ritual-btn--ghost" href="#momento-01" data-ritual-first>
+        Descubre el ritual <span>↓</span>
+      </a>
+    </div>
+  </div>
+  <a
+    class="ritual-hero__mouse"
+    href="#momento-01"
+    aria-label="Bajar al momento 01"
+    data-ritual-first
+  >
+    <span></span>
+  </a>
+</section>
+
+<style>
+  .ritual-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 100vh;
+    overflow: hidden;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.16);
+    background: var(--navy-ink);
+  }
+
+  .ritual-hero__image {
+    position: relative;
+    height: 58vh;
+    overflow: hidden;
+  }
+
+  .ritual-hero__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    opacity: 0;
+    transform: scale(1.08);
+    transition:
+      transform 2.4s var(--ease),
+      opacity 1.6s 0.3s;
+  }
+
+  :global(.is-in) .ritual-hero__image img {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ritual-hero__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, var(--navy-ink) 0%, rgb(var(--navy-ink-rgb) / 0) 35%);
+  }
+
+  .ritual-hero__word {
+    position: absolute;
+    left: clamp(10px, 3vw, 50px);
+    bottom: -0.2em;
+    display: none;
+    color: transparent;
+    font: 400 clamp(150px, 19vw, 330px) / 0.8 var(--font-serif);
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.16);
+    pointer-events: none;
+  }
+
+  .ritual-hero__text {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 580px;
+    padding: 0 20px 64px;
+  }
+
+  .ritual-hero__fade,
+  .ritual-hero__rise {
+    opacity: 0;
+    transition:
+      opacity 1s var(--d),
+      transform 1.2s var(--ease) var(--d);
+  }
+
+  .ritual-hero__rise {
+    transform: translateY(30px);
+  }
+
+  :global(.is-in) .ritual-hero__fade,
+  :global(.is-in) .ritual-hero__rise {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ritual-hero__title {
+    margin: 0;
+    color: var(--cream);
+    font: 400 clamp(76px, 8.4vw, 136px) / 0.9 var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .ritual-hero__title em {
+    color: var(--peach);
+  }
+
+  .ritual-hero__lead {
+    max-width: 420px;
+    margin: 0;
+    color: var(--cream);
+    font: 400 clamp(20px, 1.7vw, 26px) / 1.3 var(--font-serif);
+    text-wrap: pretty;
+  }
+
+  .ritual-hero__note {
+    max-width: 330px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.68);
+    font: 300 13px/1.65 var(--font-sans);
+  }
+
+  .ritual-hero .ritual-actions {
+    margin-top: 10px;
+  }
+
+  .ritual-hero__mouse {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    display: none;
+    justify-content: center;
+    width: 22px;
+    height: 34px;
+    padding-top: 7px;
+    border: 1px solid rgb(var(--cream-rgb) / 0.5);
+    border-radius: 11px;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 1s 2.2s;
+  }
+
+  .ritual-hero__mouse span {
+    width: 2px;
+    height: 6px;
+    border-radius: 1px;
+    background: var(--peach);
+  }
+
+  :global(.is-in) .ritual-hero__mouse {
+    opacity: 1;
+  }
+
+  @media (min-width: 900px) {
+    .ritual-hero {
+      justify-content: center;
+    }
+
+    .ritual-hero__image {
+      position: absolute;
+      inset: 0 0 0 18%;
+      height: auto;
+    }
+
+    .ritual-hero__image img {
+      object-position: 50% 50%;
+    }
+
+    .ritual-hero__shade {
+      background:
+        linear-gradient(
+          90deg,
+          var(--navy-ink) 0%,
+          rgb(var(--navy-ink-rgb) / 0.75) 18%,
+          rgb(var(--navy-ink-rgb) / 0) 45%
+        ),
+        linear-gradient(0deg, var(--navy-ink) 0%, rgb(var(--navy-ink-rgb) / 0) 22%);
+    }
+
+    .ritual-hero__word,
+    .ritual-hero__mouse {
+      display: flex;
+    }
+
+    .ritual-hero__text {
+      padding: 130px clamp(24px, 8vw, 150px) 90px;
+    }
+  }
+</style>

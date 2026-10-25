@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RitualEnd from '../sections/ritual/RitualEnd.astro';
+import RitualGift from '../sections/ritual/RitualGift.astro';
+import RitualHero from '../sections/ritual/RitualHero.astro';
+import RitualIntro from '../sections/ritual/RitualIntro.astro';
+import RitualMoments from '../sections/ritual/RitualMoments.astro';
+---
+
+<BaseLayout
+  title="El Ritual | Así llega tu perfume · ScentScape"
+  description="Tu perfume no llega en una caja: llega envuelto a mano en seda, con sello, faja, lacre y su tarjeta. Así es el ritual ScentScape."
+  image="/assets/img/ritual-d.jpeg"
+  curtainMode="row"
+>
+  <main class="ritual" data-ritual-page>
+    <RitualHero />
+    <RitualIntro />
+    <RitualMoments />
+    <RitualGift />
+    <RitualEnd />
+  </main>
+</BaseLayout>
+
+<style>
+  .ritual {
+    background: var(--navy-ink);
+  }
+
+  /* Gemeinsam für alle Abschnitte des Rituals */
+  .ritual :global(.ritual-eyebrow) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    color: var(--peach);
+    font: 500 10px/1 var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ritual :global(.ritual-eyebrow span) {
+    flex: none;
+    width: 32px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .ritual :global(.ritual-actions) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .ritual :global(.ritual-btn) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 50px;
+    padding: 0 22px;
+    border: 1px solid var(--peach);
+    border-radius: 2px;
+    font: 600 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition:
+      background-color 0.3s,
+      color 0.3s,
+      border-color 0.3s,
+      gap 0.4s;
+  }
+
+  .ritual :global(.ritual-btn--solid) {
+    background: var(--peach);
+    color: var(--navy);
+  }
+
+  .ritual :global(.ritual-btn--solid:hover) {
+    gap: 18px;
+    background: var(--sand);
+    color: var(--navy);
+  }
+
+  .ritual :global(.ritual-btn--ghost) {
+    border-color: rgb(var(--cream-rgb) / 0.35);
+    background: rgb(var(--navy-ink-rgb) / 0.4);
+    color: var(--cream);
+  }
+
+  .ritual :global(.ritual-btn--ghost:hover) {
+    border-color: var(--peach);
+    color: var(--sand);
+  }
+
+  .ritual :global(.ritual-btn--outline) {
+    border-color: rgb(var(--peach-rgb) / 0.55);
+    background: none;
+    color: var(--cream);
+  }
+
+  .ritual :global(.ritual-btn--outline:hover) {
+    background: rgb(var(--cream-rgb) / 0.08);
+    color: var(--cream);
+  }
+
+  @media (min-width: 900px) {
+    .ritual :global(.ritual-actions) {
+      flex-direction: row;
+      width: auto;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initRitualPage } from '../scripts/features/ritual/index.js';
+
+  onPage(initRitualPage);
+</script>

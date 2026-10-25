@@ -1,0 +1,178 @@
+---
+/* "Para regalar": mehrere Pedidos, jedes mit eigenem Ritual. Darunter drei Vorteile. */
+import { RITUAL_BENEFITS } from '../../data/ritual.js';
+---
+
+<section class="ritual-gift" data-reveal="gift">
+  <span class="ritual-gift__word" aria-hidden="true" data-drift="10">
+    Regalo
+  </span>
+  <div class="ritual-gift__inner">
+    <div class="ritual-gift__head ritual-gift__step" style="--d:0ms">
+      <div class="ritual-gift__title-wrap">
+        <p class="ritual-eyebrow">
+          <span></span>Para regalar
+        </p>
+        <h2 class="ritual-gift__title">
+          Un ritual por
+          <br />
+          <em>cada perfume</em>
+        </h2>
+      </div>
+      <p class="ritual-gift__lead">
+        Si pides varios, cada uno llega con su propia seda, su faja, su lacre y su tarjeta. Listo
+        para entregar, sin envolver nada más.
+      </p>
+    </div>
+    <div class="ritual-gift__photo ritual-gift__step" style="--d:150ms">
+      <img
+        src="/assets/img/ritual-e.jpeg"
+        alt="Varios perfumes envueltos en seda bordeaux y azul noche, cada uno con faja y lacre, junto a la bolsa ScentScape"
+        loading="lazy"
+        data-parallax="-70"
+      />
+    </div>
+    <div class="ritual-gift__benefits ritual-gift__step" style="--d:300ms">
+      {RITUAL_BENEFITS.map(([title, text]) => (
+        <div>
+          <strong>{title}</strong>
+          <span>{text}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ritual-gift {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(70px, 12vh, 130px) clamp(20px, 6vw, 110px);
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+    background: var(--navy-ink);
+  }
+
+  .ritual-gift__word {
+    position: absolute;
+    right: -0.06em;
+    top: 0.02em;
+    color: transparent;
+    font: 400 clamp(120px, 15vw, 250px) / 0.9 var(--font-serif);
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.16);
+    pointer-events: none;
+  }
+
+  .ritual-gift__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(32px, 5vh, 52px);
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .ritual-gift__step {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.9s var(--d),
+      transform 1.1s var(--ease) var(--d);
+  }
+
+  .ritual-gift:global(.is-revealed) .ritual-gift__step {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ritual-gift__head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px 64px;
+    align-items: end;
+  }
+
+  .ritual-gift__title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ritual-gift__title {
+    margin: 0;
+    color: var(--cream);
+    font: 400 clamp(44px, 4.6vw, 70px) / 1 var(--font-serif);
+  }
+
+  .ritual-gift__title em {
+    color: var(--peach);
+  }
+
+  .ritual-gift__lead {
+    max-width: 440px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.72);
+    font: 300 15px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .ritual-gift__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    box-shadow: 0 40px 90px rgb(0 0 0 / 0.55);
+  }
+
+  .ritual-gift__photo img {
+    position: absolute;
+    left: 0;
+    top: -10%;
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    transform: scale(1.18);
+    transition: transform 2s var(--ease);
+  }
+
+  .ritual-gift:global(.is-revealed) .ritual-gift__photo img {
+    transform: none;
+  }
+
+  .ritual-gift__benefits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px clamp(20px, 3vw, 40px);
+  }
+
+  .ritual-gift__benefits div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 18px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.22);
+  }
+
+  .ritual-gift__benefits strong {
+    color: var(--cream);
+    font: 400 22px/1.15 var(--font-serif);
+  }
+
+  .ritual-gift__benefits span {
+    color: rgb(var(--cream-rgb) / 0.62);
+    font: 300 13px/1.6 var(--font-sans);
+  }
+
+  @media (min-width: 900px) {
+    .ritual-gift__head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .ritual-gift__photo {
+      aspect-ratio: 2.35 / 1;
+    }
+
+    .ritual-gift__benefits {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+/* Die fünf Momente des Rituals untereinander, Foto und Text abwechselnd. */
+import Moment from '../../components/ritual/Moment.astro';
+import { RITUAL_MOMENTS } from '../../data/ritual.js';
+---
+
+<section class="ritual-moments">
+  <div class="ritual-moments__list">
+    {RITUAL_MOMENTS.map((moment, index) => (
+      <Moment moment={moment} index={index} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .ritual-moments {
+    padding: clamp(40px, 6vh, 60px) clamp(20px, 6vw, 110px) clamp(90px, 14vh, 150px);
+    background: var(--navy-ink);
+  }
+
+  .ritual-moments__list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(90px, 16vh, 170px);
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .ritual-moments__list > :global(.moment) {
+    scroll-margin-top: 140px;
+  }
+</style>

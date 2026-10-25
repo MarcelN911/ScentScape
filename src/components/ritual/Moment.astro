@@ -1,0 +1,206 @@
+---
+/*
+ * Ein Moment des Rituals: Foto (oder gezeichnete Tarjetas) und Text mit großer Konturzahl.
+ * Erscheint beim Hereinscrollen (data-reveal → .is-revealed). flip: Foto rechts statt links.
+ */
+import { padNumber } from '../../scripts/utils/format.js';
+import RitualCards from './RitualCards.astro';
+import RitualPhoto from './RitualPhoto.astro';
+
+/** @typedef {{ moment: object, index: number }} Props */
+const { moment, index } = Astro.props;
+const number = padNumber(index + 1);
+---
+
+<article
+  class:list={['moment', { 'moment--flip': moment.flip }]}
+  id={`momento-${number}`}
+  data-reveal="moment"
+>
+  <RitualPhoto image={moment.image} alt={moment.alt} tag={moment.tag}>
+    {moment.visual === 'cards' && <RitualCards />}
+  </RitualPhoto>
+  <div class="moment__text">
+    <span class="moment__number" aria-hidden="true" data-parallax="60">
+      {number}
+    </span>
+    <p class="moment__eyebrow">
+      <span></span>Momento {number}
+    </p>
+    <h2 class="moment__title">
+      {moment.title[0]}
+      <em>{moment.title[1]}</em>
+    </h2>
+    <p class="moment__copy">{moment.text}</p>
+    {moment.swatches && (
+      <div class="moment__swatches">
+        {moment.swatches.map((swatch) => (
+          <span>
+            <i style={`background:${swatch.color}`} />
+            {swatch.name}
+          </span>
+        ))}
+      </div>
+    )}
+    {moment.rows && (
+      <div class="moment__rows">
+        {moment.rows.map(([label, value]) => (
+          <div>
+            <span>{label}</span>
+            <span>{value}</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  .moment {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 36px;
+    align-items: center;
+  }
+
+  .moment__text {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    max-width: 440px;
+    padding-top: 40px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 1s 0.45s,
+      transform 1.2s var(--ease) 0.45s;
+  }
+
+  .moment:global(.is-revealed) .moment__text {
+    opacity: 1;
+    transform: none;
+  }
+
+  .moment__number {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: transparent;
+    font: 300 clamp(80px, 8vw, 124px) / 1 var(--font-serif);
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.38);
+    transform: translateY(-62%);
+    pointer-events: none;
+  }
+
+  .moment__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    color: var(--peach);
+    font: 500 10px/1 var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .moment__eyebrow span {
+    width: 0;
+    height: 1px;
+    background: var(--peach);
+    transition: width 1s var(--ease) 0.9s;
+  }
+
+  .moment:global(.is-revealed) .moment__eyebrow span {
+    width: 32px;
+  }
+
+  .moment__title {
+    margin: 0;
+    color: var(--cream);
+    font: 400 clamp(40px, 4vw, 60px) / 1 var(--font-serif);
+  }
+
+  .moment__title em {
+    color: var(--peach);
+  }
+
+  .moment__copy {
+    max-width: 400px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.72);
+    font: 300 15px/1.7 var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  .moment__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 4px;
+  }
+
+  .moment__swatches span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 500 9px var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .moment__swatches i {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(var(--peach-rgb) / 0.5);
+  }
+
+  .moment__rows {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin-top: 6px;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.18);
+  }
+
+  .moment__rows div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+    font: 300 12px var(--font-sans);
+  }
+
+  .moment__rows span:first-child {
+    color: rgb(var(--cream-rgb) / 0.6);
+  }
+
+  .moment__rows span:last-child {
+    color: var(--cream);
+    text-align: right;
+  }
+
+  @media (min-width: 900px) {
+    .moment {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: clamp(48px, 8vw, 110px);
+    }
+
+    .moment--flip {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    }
+
+    .moment--flip > :global(:first-child) {
+      order: 2;
+    }
+
+    .moment__text {
+      padding-top: 0;
+    }
+  }
+</style>

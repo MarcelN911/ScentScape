@@ -2,7 +2,7 @@
 import { formatCOP } from '../../utils/format.js';
 import { setColor } from '../gift/card.js';
 import { setOdometer } from '../gift/odometer.js';
-import { drawQr } from './qr.js';
+import { drawQr } from '../../utils/qr.js';
 
 function setAll(root, selector, text) {
   root.querySelectorAll(selector).forEach((element) => (element.textContent = text));
