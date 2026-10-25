@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getReviews } from '../scripts/catalog/load.js';
+import ReviewsPanel from '../sections/services/ReviewsPanel.astro';
+import AdviceSection from '../sections/shared/AdviceSection.astro';
+
+const reviews = await getReviews();
+---
+
+<BaseLayout
+  title="Servicios | Reseñas y asesoría · ScentScape"
+  description="Lee lo que dicen nuestros clientes, cuéntanos tu experiencia o escríbenos: Sara y Brayan te asesoran en persona."
+  curtainMode="row"
+>
+  <main data-services-page>
+    <ReviewsPanel reviews={reviews} />
+    <AdviceSection allLink />
+  </main>
+</BaseLayout>
+
+<script>
+  import { onPage } from '../scripts/core/lifecycle.js';
+  import { initServicesPage } from '../scripts/features/services/index.js';
+
+  onPage(initServicesPage);
+</script>
