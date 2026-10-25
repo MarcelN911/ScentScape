@@ -9,7 +9,7 @@ const PAGE_REDIRECTS = {
   'resenas.html': '/resenas/',
   'terminos.html': '/terminos/',
   'privacidad.html': '/privacidad/',
-  'formulario.html': '/#test',
+  'formulario.html': '/test-olfativo/',
 };
 
 const HEADER = [

@@ -1,5 +1,5 @@
 /* sitemap.xml aus den gebauten Seiten. Seiten ohne Suchmaschinen-Nutzen fehlen. */
-const EXCLUDED = ['styleguide/', 'checkout/', 'catalogo/imprimir/', '404/'];
+const EXCLUDED = ['regalo/', 'catalogo/imprimir/', '404/'];
 
 function isListed(pathname) {
   return !pathname.includes('.') && !EXCLUDED.includes(pathname);

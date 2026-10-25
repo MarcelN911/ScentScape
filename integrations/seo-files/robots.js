@@ -1,10 +1,9 @@
-/* robots.txt: alles erlaubt außer Checkout und Hilfsseiten */
+/* robots.txt: alles erlaubt außer persönlichen Seiten (Regalo) und der Druckversion des Katalogs */
 export function robotsTxt(site) {
   return [
     'User-agent: *',
     'Allow: /',
-    'Disallow: /checkout/',
-    'Disallow: /styleguide/',
+    'Disallow: /regalo/',
     'Disallow: /catalogo/imprimir/',
     '',
     `Sitemap: ${new URL('/sitemap.xml', site).href}`,
