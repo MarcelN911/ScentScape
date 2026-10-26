@@ -1,0 +1,90 @@
+---
+/*
+ * Ein Feld im Formular "Finalizar compra": Eingabe, Auswahl (Departamento) oder Textfeld.
+ * Die Angaben stehen in data/checkout.js (CHECKOUT_FIELDS).
+ */
+import { DEPARTMENTS } from '../../data/checkout.js';
+
+/** @typedef {{ field: import('../../data/checkout.js').CHECKOUT_FIELDS[number] }} Props */
+const { field } = Astro.props;
+const id = `checkout-${field.name}`;
+const common = {
+  id,
+  name: field.name,
+  autocomplete: field.autocomplete ?? 'off',
+  required: !field.optional,
+};
+---
+
+<div class="field">
+  <label class="field-label" for={id}>
+    {field.label}
+    {field.optional && <span class="field__optional">· opcional</span>}
+  </label>
+  {field.kind === 'select' && (
+    <select class="text-input field__select" {...common}>
+      <option value="">Elige…</option>
+      {DEPARTMENTS.map((name) => (
+        <option value={name}>{name}</option>
+      ))}
+    </select>
+  )}
+  {field.kind === 'textarea' && (
+    <textarea
+      class="text-input field__area"
+      rows="3"
+      maxlength="500"
+      placeholder={field.placeholder}
+      {...common}
+    />
+  )}
+  {!field.kind && (
+    <input
+      class="text-input"
+      type={field.type ?? 'text'}
+      placeholder={field.placeholder}
+      {...common}
+    />
+  )}
+</div>
+
+<style>
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .field__optional {
+    letter-spacing: 1px;
+    text-transform: none;
+    opacity: 0.7;
+  }
+
+  .field__select {
+    appearance: none;
+    padding-right: 44px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23f0be91' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E")
+        no-repeat right 20px center,
+      var(--field);
+  }
+
+  .field__select option {
+    background: var(--navy);
+    color: var(--cream);
+  }
+
+  .field__area {
+    height: auto;
+    min-height: 96px;
+    padding: 16px 20px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  .text-input:user-invalid {
+    border-color: var(--error);
+  }
+</style>

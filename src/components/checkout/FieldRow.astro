@@ -1,0 +1,26 @@
+---
+/* Eine Zeile im Formular: ein Feld allein oder zwei nebeneinander (ab 560px). */
+import CheckoutField from './CheckoutField.astro';
+
+/** @typedef {{ row: import('../../data/checkout.js').CHECKOUT_FIELDS }} Props */
+const { row } = Astro.props;
+---
+
+<div class:list={['row', { 'is-pair': row.length > 1 }]}>
+  {row.map((field) => (
+    <CheckoutField field={field} />
+  ))}
+</div>
+
+<style>
+  .row {
+    display: grid;
+    gap: 20px;
+  }
+
+  @media (min-width: 560px) {
+    .row.is-pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,269 @@
+---
+/*
+ * "Gracias": nach dem Bestellen. Bei WhatsApp eine Bestätigung, bei Bold der Zahlungsstand,
+ * den die Seite bei nexomar abfragt, bis er feststeht. Gekaufte Gift Cards erscheinen hier,
+ * sobald die Zahlung bestätigt ist. Ablauf: scripts/features/checkout/thanks.js
+ */
+import Icon from '../../components/ui/Icon.astro';
+import { THANKS_ACTIONS, THANKS_STATES } from '../../data/checkout.js';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const seals = [...new Set(Object.values(THANKS_STATES).map((state) => state.seal))];
+const actions = Object.entries(THANKS_ACTIONS);
+---
+
+<BaseLayout
+  title="Tu pedido · ScentScape"
+  description="Estado de tu pedido en ScentScape."
+  noindex
+  footer={false}
+  curtainMode="none"
+>
+  <main class="thanks" data-thanks-page>
+    <section class="thanks__card" aria-live="polite">
+      <span class="thanks__seal">
+        {seals.map((name) => (
+          <span data-thanks-seal={name} hidden>
+            <Icon name={name} size={30} strokeWidth={1.3} />
+          </span>
+        ))}
+      </span>
+      <p class="thanks__number" data-thanks-number></p>
+      <h1 class="thanks__title" data-thanks-title>
+        Un momento…
+      </h1>
+      <p class="thanks__lead" data-thanks-lead></p>
+
+      <div class="thanks__gifts" data-thanks-gifts hidden>
+        <p class="field-label">Tus gift cards</p>
+        <ul data-thanks-gift-list></ul>
+        <template data-thanks-gift>
+          <li class="thanks__gift">
+            <span class="thanks__gift-info">
+              <strong data-gift-title></strong>
+              <code data-gift-code></code>
+            </span>
+            <span class="thanks__gift-links">
+              <a class="outline-btn" data-gift-view>
+                Ver tarjeta
+              </a>
+              <a class="outline-btn" target="_blank" rel="noopener" data-gift-share>
+                Enviar por WhatsApp
+              </a>
+            </span>
+          </li>
+        </template>
+      </div>
+
+      <div class="thanks__actions">
+        {actions.map(([name, action]) => (
+          <a
+            class:list={[action.primary ? 'submit-btn' : 'outline-btn', 'thanks__action']}
+            href={action.href ?? '#'}
+            data-thanks-action={name}
+            hidden
+          >
+            {action.label}
+          </a>
+        ))}
+      </div>
+      <p class="thanks__error" data-thanks-error role="alert"></p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .thanks {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 120px 16px 80px;
+    background:
+      radial-gradient(ellipse 45% 45% at 50% 30%, rgb(var(--wine-rgb) / 0.55), transparent 70%),
+      var(--navy);
+  }
+
+  .thanks__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: min(100%, 620px);
+    padding: clamp(28px, 5vw, 56px);
+    border: 1px solid rgb(var(--peach-rgb) / 0.2);
+    border-radius: 32px;
+    background: var(--panel);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.8s,
+      transform 1s var(--ease);
+  }
+
+  :global(.is-in) .thanks__card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .thanks__seal {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 38px;
+    color: var(--peach);
+  }
+
+  .thanks__seal span {
+    display: grid;
+  }
+
+  .thanks__seal span[hidden] {
+    display: none;
+  }
+
+  :global(.is-checking) .thanks__seal {
+    animation: thanks-pulse 1.6s ease-in-out infinite;
+  }
+
+  :global(.is-done) .thanks__seal {
+    border-color: var(--peach);
+    background: var(--peach);
+    color: var(--navy);
+    transition: background-color 0.6s;
+  }
+
+  .thanks__number {
+    margin: 0;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .thanks__number:empty {
+    display: none;
+  }
+
+  .thanks__title {
+    margin: 0;
+    font: 400 clamp(38px, 6vw, 60px) / 1 var(--font-serif);
+  }
+
+  .thanks__lead {
+    max-width: 440px;
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 15px/1.7 var(--font-sans);
+  }
+
+  .thanks__gifts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 6px;
+    text-align: left;
+  }
+
+  .thanks__gifts[hidden] {
+    display: none;
+  }
+
+  .thanks__gifts ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .thanks__gift {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 20px;
+    background: var(--field);
+  }
+
+  .thanks__gift-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .thanks__gift-info strong {
+    font: 400 20px var(--font-serif);
+  }
+
+  .thanks__gift-info code {
+    color: var(--sand);
+    font:
+      500 14px ui-monospace,
+      Menlo,
+      monospace;
+    letter-spacing: 1px;
+  }
+
+  .thanks__gift-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .thanks__gift-links .outline-btn {
+    height: 44px;
+    padding: 0 18px;
+  }
+
+  .thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .thanks__action {
+    padding: 0 28px;
+  }
+
+  .thanks__action[hidden] {
+    display: none;
+  }
+
+  .thanks__error {
+    margin: 0;
+    color: var(--error);
+    font: 400 13px var(--font-sans);
+  }
+
+  .thanks__error:empty {
+    display: none;
+  }
+
+  @keyframes thanks-pulse {
+    50% {
+      box-shadow: 0 0 0 14px rgb(var(--peach-rgb) / 0.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.is-checking) .thanks__seal {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../../scripts/core/lifecycle.js';
+  import { initThanksPage } from '../../scripts/features/checkout/thanks.js';
+
+  onPage(initThanksPage);
+</script>

@@ -1,0 +1,253 @@
+---
+/*
+ * Rechte Spalte von "Finalizar compra": Positionen, Rabattcode, Gift Card und Summen.
+ * Am Handy steht sie über dem Formular. Füllt scripts/features/checkout/summary.js.
+ */
+import CodeForm from '../../components/checkout/CodeForm.astro';
+---
+
+<aside class="sum form-card reveal-late" aria-label="Resumen del pedido">
+  <div class="sum__head">
+    <h2 class="sum__title">
+      Resumen <em data-sum-count></em>
+    </h2>
+    <button class="sum__edit" type="button" data-action="open-cart">
+      Editar bolsa
+    </button>
+  </div>
+  <ul class="sum__lines" data-sum-lines></ul>
+  <template data-sum-line>
+    <li class="sum__line">
+      <span class="sum__thumb">
+        <img alt="" data-line-image />
+        <span class="sum__qty" data-line-qty></span>
+      </span>
+      <span class="sum__info">
+        <span class="sum__name" data-line-name></span>
+        <span class="sum__meta" data-line-meta></span>
+      </span>
+      <span class="sum__price" data-line-total></span>
+    </li>
+  </template>
+
+  <div class="sum__codes">
+    <CodeForm kind="promo" label="Código de descuento" placeholder="Ej. BIENVENIDA" />
+    <div data-gift-wrap hidden>
+      <CodeForm kind="gift" label="Gift card" placeholder="Ej. GC-K7M2-9QXP-4HTW" />
+    </div>
+  </div>
+
+  <dl class="sum__rows">
+    <div class="sum__row">
+      <dt>Subtotal</dt>
+      <dd data-sum-subtotal></dd>
+    </div>
+    <div class="sum__row is-accent" data-sum-sale hidden>
+      <dt>Ofertas</dt>
+      <dd></dd>
+    </div>
+    <div class="sum__row is-accent" data-sum-code hidden>
+      <dt></dt>
+      <dd></dd>
+    </div>
+    <div class="sum__row">
+      <dt>Envío</dt>
+      <dd data-sum-shipping></dd>
+    </div>
+    <div class="sum__row is-accent" data-sum-gift hidden>
+      <dt></dt>
+      <dd></dd>
+    </div>
+  </dl>
+  <p class="sum__hint" data-sum-hint></p>
+  <div class="sum__total">
+    <span>Total</span>
+    <strong>
+      <span data-sum-total>$0</span> <small>COP</small>
+    </strong>
+  </div>
+</aside>
+
+<style>
+  .sum {
+    gap: 22px;
+    --late: 1.6s;
+  }
+
+  .sum__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .sum__title {
+    margin: 0;
+    font: 400 28px/1 var(--font-serif);
+  }
+
+  .sum__title em {
+    color: var(--sand);
+    font-size: 0.7em;
+  }
+
+  .sum__edit {
+    padding: 0 0 3px;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.5);
+    background: none;
+    color: var(--peach);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .sum__lines {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 320px;
+    margin: 0;
+    padding: 6px 4px 0 0;
+    overflow: auto;
+    list-style: none;
+    scrollbar-width: thin;
+  }
+
+  .sum__line {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    animation: fade-in 0.4s var(--ease);
+  }
+
+  .sum__thumb {
+    position: relative;
+    width: 56px;
+    height: 56px;
+  }
+
+  .sum__thumb img {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: rgb(var(--sand-rgb) / 0.08);
+    object-fit: cover;
+  }
+
+  .sum__line.is-gift img {
+    padding: 8px;
+    object-fit: contain;
+  }
+
+  .sum__qty {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 600 10px var(--font-sans);
+  }
+
+  .sum__info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .sum__name {
+    overflow: hidden;
+    font: 400 17px/1.15 var(--font-serif);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sum__meta {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 400 12px var(--font-sans);
+  }
+
+  .sum__price {
+    color: var(--sand);
+    font: 400 16px var(--font-serif);
+  }
+
+  .sum__codes {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 0;
+    border-block: 1px solid rgb(var(--peach-rgb) / 0.14);
+  }
+
+  .sum__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .sum__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 400 13px var(--font-sans);
+  }
+
+  .sum__row[hidden] {
+    display: none;
+  }
+
+  .sum__row dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  .sum__row.is-accent {
+    color: var(--sand);
+  }
+
+  .sum__hint {
+    margin: -8px 0 0;
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 300 12px/1.5 var(--font-sans);
+  }
+
+  .sum__hint:empty {
+    display: none;
+  }
+
+  .sum__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 16px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .sum__total strong {
+    color: var(--sand);
+    font: 400 32px var(--font-serif);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .sum__total small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+  }
+</style>

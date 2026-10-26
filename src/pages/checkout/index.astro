@@ -1,0 +1,129 @@
+---
+/*
+ * "Finalizar compra": Lieferdaten, Zahlungsart (Bold oder WhatsApp), Rabattcode und Gift Card.
+ * Nicht bei Google, kein Footer — hier soll nichts vom Bestellen ablenken.
+ */
+import PageIntro from '../../components/page/PageIntro.astro';
+import { CHECKOUT_TITLE } from '../../data/checkout.js';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CheckoutForm from '../../sections/checkout/CheckoutForm.astro';
+import CheckoutSummary from '../../sections/checkout/CheckoutSummary.astro';
+---
+
+<BaseLayout
+  title="Finalizar compra · ScentScape"
+  description="Completa tus datos de entrega y elige cómo pagar tu pedido."
+  noindex
+  footer={false}
+  curtainMode="none"
+>
+  <main class="checkout" data-checkout-page>
+    <div class="checkout__empty" data-checkout-empty hidden>
+      <p>Tu bolsa está vacía</p>
+      <a class="outline-btn" href="/productos/">
+        Ver perfumes →
+      </a>
+    </div>
+    <div class="checkout__grid" data-checkout-content>
+      <div class="checkout__intro">
+        <PageIntro
+          crumb="Finalizar compra"
+          eyebrow="Último paso"
+          title={CHECKOUT_TITLE}
+          label="Tu pedido, casi listo."
+          lead="Revisa tu pedido, completa los datos de entrega y elige cómo pagar."
+          size="clamp(44px, 5vw, 80px)"
+        />
+      </div>
+      <div class="checkout__summary">
+        <CheckoutSummary />
+      </div>
+      <div class="checkout__form">
+        <CheckoutForm />
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .checkout {
+    min-height: 100vh;
+    padding: 120px 16px 80px;
+    background:
+      radial-gradient(ellipse 50% 40% at 80% 10%, rgb(var(--wine-rgb) / 0.5), transparent 70%),
+      var(--navy);
+  }
+
+  .checkout__grid {
+    display: grid;
+    grid-template-areas: 'intro' 'summary' 'form';
+    gap: 28px;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .checkout__grid[hidden] {
+    display: none;
+  }
+
+  .checkout__intro {
+    grid-area: intro;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .checkout__summary {
+    grid-area: summary;
+    min-width: 0;
+  }
+
+  .checkout__form {
+    grid-area: form;
+    min-width: 0;
+  }
+
+  .checkout__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 18vh 0;
+    text-align: center;
+  }
+
+  .checkout__empty[hidden] {
+    display: none;
+  }
+
+  .checkout__empty p {
+    margin: 0;
+    font: 400 40px var(--font-serif);
+  }
+
+  @media (min-width: 980px) {
+    .checkout {
+      padding: 140px var(--gutter) 100px;
+    }
+
+    .checkout__grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.85fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas: 'intro summary' 'form summary';
+      gap: 36px 56px;
+    }
+
+    .checkout__summary {
+      position: sticky;
+      top: 110px;
+      align-self: start;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from '../../scripts/core/lifecycle.js';
+  import { initCheckoutPage } from '../../scripts/features/checkout/page.js';
+
+  onPage(initCheckoutPage);
+</script>

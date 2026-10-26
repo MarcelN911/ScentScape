@@ -1,0 +1,39 @@
+---
+/* Ein nummerierter Block im Formular "Finalizar compra" (Contacto, Entrega, Pago). */
+/** @typedef {{ number: string, title: string }} Props */
+const { number, title } = Astro.props;
+---
+
+<fieldset class="form-card step reveal-late">
+  <legend class="step__legend">
+    <span>{number}</span>
+    {title}
+  </legend>
+  <slot />
+</fieldset>
+
+<style>
+  .step {
+    gap: 20px;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .step__legend {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    float: left;
+    width: 100%;
+    margin-bottom: 4px;
+    padding: 0;
+    color: var(--cream);
+    font: 400 28px/1 var(--font-serif);
+  }
+
+  .step__legend span {
+    color: var(--peach);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 3px;
+  }
+</style>

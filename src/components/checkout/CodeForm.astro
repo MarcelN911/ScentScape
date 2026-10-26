@@ -1,0 +1,107 @@
+---
+/*
+ * Kleines Formular für einen Code: Rabattcode oder Gift Card.
+ * Ein Knopf: "Aplicar", nach dem Einlösen "Quitar". Logik: features/checkout/codes.js
+ */
+/**
+ * @typedef {object} Props
+ * @property {'promo' | 'gift'} kind
+ * @property {string} label
+ * @property {string} placeholder
+ */
+const { kind, label, placeholder } = Astro.props;
+---
+
+<form class="code" data-code-form={kind} novalidate>
+  <label class="field-label" for={`code-${kind}`}>
+    {label}
+  </label>
+  <div class="code__row">
+    <input
+      class="code__input"
+      id={`code-${kind}`}
+      placeholder={placeholder}
+      autocomplete="off"
+      autocapitalize="characters"
+      spellcheck="false"
+      data-code-input
+    />
+    <button class="code__btn" type="submit" data-code-button>
+      Aplicar
+    </button>
+  </div>
+  <span class="code__feedback" data-code-feedback aria-live="polite"></span>
+</form>
+
+<style>
+  .code {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .code__row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .code__input {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    padding: 0 18px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 24px;
+    background: var(--field);
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+  }
+
+  .code__input::placeholder {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .code__input:focus {
+    border-color: var(--peach);
+  }
+
+  .code__input:read-only {
+    border-color: rgb(var(--sand-rgb) / 0.5);
+    color: var(--sand);
+  }
+
+  .code__btn {
+    flex: none;
+    height: 48px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 24px;
+    background: rgb(var(--peach-rgb) / 0.16);
+    color: var(--sand);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+  }
+
+  .code__btn:hover {
+    background: rgb(var(--peach-rgb) / 0.28);
+  }
+
+  .code__feedback {
+    color: var(--sand);
+    font: 400 12px/1.5 var(--font-sans);
+  }
+
+  .code__feedback:empty {
+    display: none;
+  }
+
+  .code__feedback.is-error {
+    color: var(--error);
+  }
+</style>

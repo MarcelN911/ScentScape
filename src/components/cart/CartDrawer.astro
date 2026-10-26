@@ -1,33 +1,24 @@
 ---
 import Icon from '../ui/Icon.astro';
-import CartCheckout from './CartCheckout.astro';
 import CartLineTemplate from './CartLineTemplate.astro';
 import CartTotals from './CartTotals.astro';
 ---
 
-<div class="cart-root" data-cart-root data-view="cart" transition:persist="cart">
+<div class="cart-root" data-cart-root transition:persist="cart">
   <div class="cart-overlay" data-action="close-cart"></div>
   <aside class="cart" aria-label="Tu bolsa" role="dialog" data-cart>
     <div class="cart__head">
       <div class="cart__heading">
-        <span class="cart__eyebrow">
-          ScentScape · <span data-when-view="cart">Bolsa</span>
-          <span data-when-view="checkout">Pedido</span>
-        </span>
+        <span class="cart__eyebrow">ScentScape · Bolsa</span>
         <h2 class="cart__title">
-          <span data-when-view="cart">
-            Tu <em>bolsa</em>
-          </span>
-          <span data-when-view="checkout">
-            Finalizar <em>pedido</em>
-          </span>
+          Tu <em>bolsa</em>
         </h2>
       </div>
       <button class="cart__close" type="button" data-action="close-cart" aria-label="Cerrar">
         ✕
       </button>
     </div>
-    <div class="cart__view" data-when-view="cart">
+    <div class="cart__view">
       <div class="cart__shipping">
         <span class="cart__ship-text" data-ship-text></span>
         <span class="cart__ship-track">
@@ -44,7 +35,6 @@ import CartTotals from './CartTotals.astro';
       </div>
       <CartTotals />
     </div>
-    <CartCheckout />
     <CartLineTemplate />
   </aside>
 </div>
@@ -85,11 +75,6 @@ import CartTotals from './CartTotals.astro';
 
   [data-cart-open] .cart {
     transform: translateX(0);
-  }
-
-  [data-view='cart'] [data-when-view='checkout'],
-  [data-view='checkout'] [data-when-view='cart'] {
-    display: none;
   }
 
   .cart__head {

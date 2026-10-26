@@ -37,6 +37,14 @@ export function discountLines(summary, rule) {
 }
 
 export function shippingLine(summary) {
-  const free = summary.freeShipping || summary.code.freeShipping;
-  return free ? 'Envío: *¡GRATIS!*' : 'Envío: A calcular';
+  const { shipping } = summary;
+  if (!summary.hasProducts) return null;
+  if (shipping.free) return 'Envío: *¡GRATIS!*';
+  if (shipping.pending) return 'Envío: por acordar';
+  return `Envío: ${money(shipping.cost)}`;
+}
+
+export function redeemLine(summary) {
+  const { giftCard } = summary;
+  return giftCard.amount ? `Gift card *${giftCard.code}*: − ${money(giftCard.amount)}` : null;
 }

@@ -5,6 +5,7 @@ export function robotsTxt(site) {
     'Allow: /',
     'Disallow: /regalo/',
     'Disallow: /catalogo/imprimir/',
+    'Disallow: /checkout/',
     '',
     `Sitemap: ${new URL('/sitemap.xml', site).href}`,
     '',

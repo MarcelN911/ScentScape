@@ -1,40 +1,45 @@
 /* Baut die komplette WhatsApp-Nachricht mit der Bestellung. */
-import { discountLines, itemLine, money, shippingLine } from './message-lines.js';
+import { discountLines, itemLine, money, redeemLine, shippingLine } from './message-lines.js';
 
 function customerLines(customer) {
-  const reference = customer.reference ? [`*Referencia:* ${customer.reference}`] : [];
+  const optional = [
+    customer.email && `*Correo:* ${customer.email}`,
+    customer.reference && `*Referencia:* ${customer.reference}`,
+    customer.notes && `*Notas:* ${customer.notes}`,
+  ];
   return [
     `*Cliente:* ${customer.name}`,
     `*Celular:* ${customer.phone}`,
-    `*Dirección:* ${customer.address}`,
-    `*Ciudad/Barrio:* ${customer.city} / ${customer.district}`,
-    ...reference,
+    `*Dirección:* ${customer.address}, ${customer.district}`,
+    `*Ciudad:* ${customer.city} (${customer.department})`,
+    ...optional.filter(Boolean),
   ];
 }
 
 function summaryLines(summary, rule) {
-  return [
+  const lines = [
     `Subtotal: ${money(summary.subtotal)}`,
     ...discountLines(summary, rule),
     shippingLine(summary),
+    redeemLine(summary),
   ];
+  return lines.filter(Boolean);
 }
 
-const INTRO = [
-  '*NUEVO PEDIDO — ScentScape*',
-  '',
-  'Hola, quiero hacer un pedido con la siguiente información:',
-];
+function intro(number) {
+  const title = number ? `*NUEVO PEDIDO #${number} — ScentScape*` : '*NUEVO PEDIDO — ScentScape*';
+  return [title, '', 'Hola, quiero hacer un pedido con la siguiente información:'];
+}
 
-/** order = { customer, items, summary, rule }. Die Blöcke stehen durch Leerzeilen getrennt. */
+/** order = { customer, items, summary, rule, number }. Die Blöcke stehen durch Leerzeilen getrennt. */
 export function orderMessage(order) {
   const { customer, items, summary, rule } = order;
   const blocks = [
-    INTRO,
+    intro(order.number),
     customerLines(customer),
     ['*Productos:*', ...items.map(itemLine)],
     ['*Resumen del pedido:*', ...summaryLines(summary, rule)],
-    [`*Total a pagar: ${money(summary.total)}*`],
+    [`*Total a pagar: ${money(summary.total)}*`, 'Pago: por WhatsApp'],
   ];
   return blocks.map((lines) => lines.join('\n')).join('\n\n');
 }

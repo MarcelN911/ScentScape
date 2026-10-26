@@ -1,0 +1,54 @@
+---
+/*
+ * Eine Zahlungsart als Auswahl-Karte (role="radio"). Gewählt wird per Klick,
+ * features/checkout/payment.js setzt aria-checked. "bold" bleibt verborgen, bis nexomar Bold freigibt.
+ */
+import Icon from '../ui/Icon.astro';
+
+/** @typedef {{ method: import('../../data/checkout.js').PAYMENT_METHODS[number], checked: boolean }} Props */
+const { method, checked } = Astro.props;
+---
+
+<button
+  class="choice-card pay"
+  type="button"
+  role="radio"
+  aria-checked={String(checked)}
+  data-pay-method={method.id}
+  hidden={method.id === 'bold'}
+>
+  <span class="pay__icon">
+    <Icon name={method.icon} size={20} strokeWidth={1.5} />
+  </span>
+  <span class="choice-card__title">{method.title}</span>
+  <span class="choice-card__sub">{method.sub}</span>
+</button>
+
+<style>
+  .pay {
+    position: relative;
+    min-height: 128px;
+    padding: 18px;
+  }
+
+  .pay[hidden] {
+    display: none;
+  }
+
+  .pay__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 20px;
+    color: var(--peach);
+  }
+
+  .pay[aria-checked='true'] .pay__icon {
+    border-color: var(--peach);
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

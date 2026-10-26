@@ -159,10 +159,33 @@ eigener Mauszeiger und die Startseiten-Abschnitte Descubre, Reseñas und FAQ sin
 - [x] El Ritual, Nosotros, Contacto, Términos, Privacidad, 404
 - [x] Aufräumen: alte Komponenten, Styles und Tokens entfernt
 
+### Phase H: Checkout ✅
+
+- [x] Eigene Seite `/checkout/`: Kontakt, Entrega (mit Departamento), Pago, Términos; Rabattcode und
+      Gift Card einlösen; Versand aus nexomar; Lieferdaten bleiben auf dem Gerät gespeichert
+- [x] Zahlung über Bold (Fenster über der Seite) oder WhatsApp wie bisher
+- [x] `/checkout/gracias/`: Zahlungsstand live aus nexomar, gekaufte Gift Cards mit Link zur Regalo-Seite
+- [x] Bolsa nur noch mit Liste, Summen und Link zum Checkout
+- [x] nexomar (Branch `checkout-online`): Zahlungs-Einstellungen, Gift Cards mit Code und Saldo,
+      Bold-Signatur, Webhook, Aufräum-Job für unbezahlte Pedidos, Panel-Seiten dazu
+
+So läuft eine Zahlung über Bold:
+
+1. Die Seite schickt den Pedido an nexomar. nexomar rechnet den Betrag und signiert ihn mit der
+   geheimen Bold-Llave (die nur der Server kennt).
+2. Die Seite öffnet damit den Checkout von Bold. Bold leitet danach auf `/checkout/gracias/` weiter.
+3. Bold meldet die Zahlung per Webhook an nexomar; „Gracias“ fragt nexomar, bis der Stand feststeht.
+4. Bezahlt: nexomar bucht einen Abono, gekaufte Gift Cards werden aktiv, die Bolsa wird geleert.
+5. Nie bezahlt: nach 3 Stunden storniert nexomar den Pedido und gibt Code und Gift-Card-Guthaben frei.
+
 ### Livegang
 
+- [ ] nexomar-Branch `checkout-online` prüfen, in dessen `main` übernehmen und auf dem Server einspielen
+      (vor ScentScape, sonst fehlen die neuen Routen — ohne sie zeigt der Checkout nur WhatsApp)
+- [ ] In nexomar › Configuración › Pagos y envío: Bold-Llaves (erst Pruebas), Versandpreis, Gift Cards an
+- [ ] Bei Bold › Integraciones die Webhook-Adresse aus nexomar eintragen
+- [ ] Eine Testzahlung im Pruebas-Modus, dann auf die echten Llaves umstellen
 - [ ] `redesign` in `main` zusammenführen, live schalten
-- [ ] Gift Card als echtes Produkt mit Code in nexomar (heute: Code von Hand, Link zur Regalo-Seite von Hand)
 
 ## Was ich noch brauche
 
@@ -179,8 +202,9 @@ https://scentscape.com.co/regalo/?para=María&de=Camila&monto=200000&codigo=SC-K
 ```
 
 Pflicht sind `para`, `monto` und `codigo`. Farben: `burdeos`, `azul-noche`, `champan`, `negro`.
-Ohne diese Angaben zeigt die Seite ein Beispiel. Der Saldo zeigt den vollen Betrag, weil nexomar
-(noch) kein Kartenkonto führt.
+Ohne diese Angaben zeigt die Seite ein Beispiel. Den Link erzeugen nexomar (Descuentos › Gift cards ›
+„Copiar enlace“) und die Seite „Gracias“ nach einer bezahlten Gift Card. Der Saldo auf der Regalo-Seite
+zeigt den Betrag aus dem Link; den aktuellen Saldo kennt nexomar.
 
 ## Vor dem Livegang klären
 
@@ -190,3 +214,10 @@ Ohne diese Angaben zeigt die Seite ein Beispiel. Der Saldo zeigt den vollen Betr
 - Términos, Medios de pago: Platzhalter „[Otros medios … completar]“ ersetzen.
 - Gift Card „Válida por 12 meses“ bestätigen.
 - El Ritual verspricht „Pago contra entrega“ und „guía de seguimiento por WhatsApp“ (Texte aus der Vorlage): bestätigen.
+- Versandpreis: ein fester Betrag für ganz Kolumbien? Oder je nach Stadt? (nexomar kann heute einen Betrag
+  und eine Gratis-Schwelle; ohne Betrag steht „Envío por acordar“ und Bold kassiert nur die Produkte.)
+- Términos: Abschnitt zu Pago en línea (Bold), Gift Cards (Gültigkeit, nicht auszahlbar) und Retracto
+  (Ley 1480: 5 Tage bei Online-Käufen) ergänzen. Privacidad: Daten gehen für die Zahlung an Bold.
+- Factura electrónica (DIAN): stellt ScentScape Rechnungen aus? Wenn ja, wo (Bold, Siigo, Alegra …)?
+- Bestätigungs-E-Mail: heute schickt nur Bold eine (bei Online-Zahlung). Eine eigene Mail aus nexomar
+  bräuchte einen Mail-Dienst (z. B. Brevo, Resend).

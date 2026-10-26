@@ -1,23 +1,17 @@
+---
+/*
+ * Summen unten in der Bolsa. Rabattcode, Gift Card und Lieferdaten kommen auf der Seite /checkout/.
+ * Werte füllt scripts/cart/ui/totals.js.
+ */
+---
+
 <div class="totals">
-  <form class="totals__code" data-promo-form>
-    <input
-      class="totals__code-input"
-      placeholder="Código de descuento"
-      aria-label="Código de descuento"
-      autocomplete="off"
-      data-promo-input
-    />
-    <button class="totals__code-btn" type="submit" data-promo-button>
-      Aplicar
-    </button>
-  </form>
-  <span class="totals__feedback" data-promo-feedback></span>
   <div class="totals__row">
     <span>Subtotal</span>
     <span data-cart-subtotal></span>
   </div>
   <div class="totals__row totals__row--accent" data-sale-row hidden>
-    <span>Descuento</span>
+    <span>Ofertas</span>
     <span data-sale-value></span>
   </div>
   <div class="totals__row totals__row--accent" data-discount-row hidden>
@@ -34,10 +28,10 @@
       <span data-cart-total>$0</span> <small>COP</small>
     </span>
   </div>
-  <button class="totals__cta" type="button" data-action="cart-checkout" data-cart-cta>
-    Finalizar compra →
-  </button>
-  <span class="totals__note">Serás redirigido a WhatsApp para confirmar tu pedido.</span>
+  <a class="totals__cta" href="/checkout/" data-cart-cta>
+    Finalizar compra <span aria-hidden="true">→</span>
+  </a>
+  <span class="totals__note">Códigos de descuento y gift cards en el siguiente paso.</span>
 </div>
 
 <style>
@@ -48,55 +42,6 @@
     padding: 18px 28px 24px;
     border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
     background: rgb(var(--navy-rgb) / 0.4);
-  }
-
-  .totals__code {
-    display: flex;
-    gap: 8px;
-  }
-
-  .totals__code-input {
-    flex: 1;
-    min-width: 0;
-    height: 46px;
-    padding: 0 16px;
-    border: 1px solid rgb(var(--peach-rgb) / 0.3);
-    border-radius: 23px;
-    background: rgb(var(--navy-rgb) / 0.5);
-    color: var(--cream);
-    font: 400 14px var(--font-sans);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    outline: none;
-  }
-
-  .totals__code-input::placeholder {
-    text-transform: none;
-  }
-
-  .totals__code-btn {
-    height: 46px;
-    padding: 0 18px;
-    border: 0;
-    border-radius: 23px;
-    background: rgb(var(--peach-rgb) / 0.16);
-    color: var(--sand);
-    font: 500 10px var(--font-sans);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .totals__feedback {
-    color: var(--sand);
-    font: 400 12px var(--font-sans);
-  }
-
-  .totals__feedback.is-error {
-    color: var(--error);
-  }
-
-  .totals__feedback:empty {
-    display: none;
   }
 
   .totals__row {
@@ -136,19 +81,28 @@
   }
 
   .totals__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     height: 56px;
-    border: 0;
     border-radius: 28px;
     background: var(--peach);
     color: var(--navy);
     font: 500 11px var(--font-sans);
     letter-spacing: 3px;
     text-transform: uppercase;
+    transition: gap 0.4s;
   }
 
-  .totals__cta:disabled {
+  .totals__cta:hover {
+    gap: 20px;
+    color: var(--navy);
+  }
+
+  .totals__cta[aria-disabled='true'] {
     background: rgb(var(--peach-rgb) / 0.3);
-    cursor: not-allowed;
+    pointer-events: none;
   }
 
   .totals__note {
