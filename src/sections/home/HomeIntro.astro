@@ -2,6 +2,7 @@
 /*
  * Intro der Startseite: Das Logo steht 3 Sekunden, dann zoomt die Kamera durch das "O" ins Video.
  * Das Logo ist dabei ein Loch in der dunklen Fläche (SVG-Maske), dahinter läuft schon das Hero-Video.
+ * Ohne Strich über dem Claim: in der Vorlage ist er angelegt, im Browser aber nie sichtbar.
  */
 const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
 ---
@@ -70,30 +71,6 @@ const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
         ></animateTransform>
       </rect>
     </g>
-    <line x1="800" y1="664" x2="800" y2="664" stroke="#F0BE91" stroke-width="1" data-intro-fine>
-      <animate
-        attributeName="x1"
-        from="800"
-        to="600"
-        dur="1.6s"
-        begin="1s"
-        fill="freeze"
-        calcMode="spline"
-        keySplines=".2 .8 .2 1"
-        keyTimes="0;1"
-      ></animate>
-      <animate
-        attributeName="x2"
-        from="800"
-        to="1000"
-        dur="1.6s"
-        begin="1s"
-        fill="freeze"
-        calcMode="spline"
-        keySplines=".2 .8 .2 1"
-        keyTimes="0;1"
-      ></animate>
-    </line>
     <text class="intro__claim" x="800" y="712" text-anchor="middle">
       Elegancia · Carácter · Distinción
     </text>

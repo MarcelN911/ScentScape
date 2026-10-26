@@ -9,6 +9,7 @@ const EASE_CURTAIN = 'cubic-bezier(0.7, 0, 0.2, 1)';
 const EASE_LINE = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
 const OPEN = 'inset(0% 0% 0% 0%)';
 const GONE = 'inset(0% 0% 100% 0%)';
+const COVER_MS = 450;
 
 function applyPageSettings(curtain) {
   const { curtainX = '50%', curtainMode = 'line' } = document.body.dataset;
@@ -43,10 +44,18 @@ function revealFirstPage(curtain) {
   clip(curtain, [GONE, GONE], { duration: 1 });
 }
 
+/* Alte Animationen weg: sonst steht beim Zuziehen noch die volle Linie der letzten Seite. */
+function reset(curtain) {
+  const line = curtain.querySelector('[data-curtain-line]');
+  [curtain, line].forEach((element) => element.getAnimations().forEach((a) => a.cancel()));
+}
+
+/* Beim Seitenwechsel fällt eine leere Fläche; die Linie wächst erst auf der neuen Seite, wie beim Laden. */
 function coverBeforeLoading(curtain, event) {
   const loadPage = event.loader;
   event.loader = async () => {
-    await Promise.all([clip(curtain, [GONE, OPEN], { duration: 700 }), loadPage()]);
+    reset(curtain);
+    await Promise.all([clip(curtain, [GONE, OPEN], { duration: COVER_MS }), loadPage()]);
   };
 }
 
