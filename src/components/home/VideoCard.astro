@@ -1,5 +1,5 @@
 ---
-/** @typedef {{ video: { src: string, title: string }, index: number }} Props */
+/** @typedef {{ video: { src: string, poster: string, title: string }, index: number }} Props */
 const { video, index } = Astro.props;
 ---
 
@@ -7,6 +7,7 @@ const { video, index } = Astro.props;
   <video
     class="video-card__video"
     src={`${video.src}#t=0.6`}
+    poster={video.poster}
     muted
     playsinline
     preload="metadata"

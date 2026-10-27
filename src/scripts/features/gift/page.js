@@ -12,6 +12,7 @@ import {
   renderForm,
   valueOf,
 } from './form.js';
+import { initGiftMobile, paintMobile } from './mobile.js';
 import { setOdometer } from './odometer.js';
 
 function paintAmount(card, value) {
@@ -44,6 +45,7 @@ function render(gift) {
   paintAmount(gift.card, valueOf(gift.state));
   paintTexts(gift.card, gift.form);
   paintSide(gift);
+  paintMobile(gift);
 }
 
 function pickColor(gift, index) {
@@ -142,6 +144,7 @@ function bindGift(gift, signal) {
   gift.form.addEventListener('input', (event) => handleInput(gift, event), { signal });
   gift.form.addEventListener('submit', (event) => submit(gift, event), { signal });
   showBackWhileWriting(gift, signal);
+  initGiftMobile(gift, render, signal);
   bindTilt(gift.card, signal);
   signal.addEventListener('abort', startIdle(gift.card));
 }

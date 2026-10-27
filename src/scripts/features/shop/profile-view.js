@@ -38,12 +38,14 @@ function renderNotes(root, state, familyBase) {
 }
 
 function renderToggles(root, state) {
-  root.querySelectorAll('[data-gender-tab]').forEach((tab, index) => {
+  /* Für-wen-Reiter gibt es zweimal (Filterbereich und Handy-Leiste), Position je Gruppe zählen */
+  root.querySelectorAll('[data-gender-tab]').forEach((tab) => {
     const on = tab.dataset.genderTab === state.gender;
     tab.setAttribute('aria-checked', String(on));
+    const index = [...tab.parentElement.querySelectorAll('[data-gender-tab]')].indexOf(tab);
     if (on) tab.parentElement.style.setProperty('--tab', index);
   });
-  root.querySelectorAll('[data-density]').forEach((button) => {
+  root.querySelectorAll('button[data-density]').forEach((button) => {
     button.setAttribute('aria-pressed', String(Number(button.dataset.density) === state.density));
   });
   root.querySelector('[data-shop-sort]').value = state.sort;

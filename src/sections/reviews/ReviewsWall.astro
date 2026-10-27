@@ -3,6 +3,7 @@
  * Oberer Teil der Seite "Reseñas": Titel, Suche nach Fragancia, Übersicht der Sterne
  * und ein 3D-Karussell, das sich langsam dreht (← → beschleunigen oder wechseln die Richtung).
  */
+import PageIntro from '../../components/page/PageIntro.astro';
 import ReviewSlide from '../../components/reviews/ReviewSlide.astro';
 import ReviewSummary from '../../components/reviews/ReviewSummary.astro';
 import SearchCombo from '../../components/ui/SearchCombo.astro';
@@ -17,23 +18,30 @@ const { reviews } = Astro.props;
   </div>
   <div class="wall__inner">
     <div class="wall__head">
-      <div class="wall__intro reveal-late" style="--late:0.5s">
-        <h1 class="wall__title">Reseñas</h1>
-        <p class="wall__lead">
-          Cuéntanos tu experiencia y califica tu fragancia. Tu opinión ayuda a otros clientes a
-          elegir.
-        </p>
-        <a class="wall__write" href="#escribir" data-review-write>
-          Escribir reseña <span>→</span>
-        </a>
-        <div class="wall__search">
-          <SearchCombo
-            name="review-search"
-            placeholder="Buscar reseñas por fragancia"
-            label="Buscar reseñas por fragancia"
-            empty="Ninguna fragancia con reseñas coincide."
-          />
-          <span class="wall__result" data-review-result></span>
+      <div class="wall__intro">
+        <PageIntro
+          crumb="Reseñas"
+          eyebrow="Servicio 05 · Reseñas"
+          title={[
+            ['Tu ', false],
+            ['opinión.', true],
+          ]}
+          label="Tu opinión."
+          lead="Cuéntanos tu experiencia y califica tu fragancia. Tu opinión ayuda a otros clientes a elegir."
+        />
+        <div class="wall__actions reveal-late" style="--late:1.6s">
+          <a class="wall__write" href="#escribir" data-review-write>
+            Escribir reseña <span>→</span>
+          </a>
+          <div class="wall__search">
+            <SearchCombo
+              name="review-search"
+              placeholder="Buscar reseñas por fragancia"
+              label="Buscar reseñas por fragancia"
+              empty="Ninguna fragancia con reseñas coincide."
+            />
+            <span class="wall__result" data-review-result></span>
+          </div>
         </div>
       </div>
       <div class="reveal-late" style="--late:0.8s">
@@ -132,19 +140,11 @@ const { reviews } = Astro.props;
     gap: 16px;
   }
 
-  .wall__title {
-    margin: 0;
-    color: var(--sand);
-    font: italic 400 clamp(80px, 9vw, 150px) / 0.9 var(--font-serif);
-    letter-spacing: -0.01em;
-  }
-
-  .wall__lead {
-    max-width: 520px;
-    margin: 0;
-    color: rgb(var(--cream-rgb) / 0.82);
-    font: 300 17px/1.75 var(--font-sans);
-    text-wrap: pretty;
+  .wall__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 12px;
   }
 
   .wall__write {
@@ -199,6 +199,14 @@ const { reviews } = Astro.props;
     perspective-origin: 50% 45%;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+    /* Wischen (carousel-drag.js): waagerecht dreht das Karussell, senkrecht scrollt die Seite */
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .carousel.is-dragging {
+    cursor: grabbing;
   }
 
   .carousel__track {
@@ -295,6 +303,66 @@ const { reviews } = Astro.props;
     .carousel {
       --card-w: 380px;
       height: 460px;
+    }
+  }
+
+  /*
+   * Handy: Karussell nur so hoch wie die höchste Karte (max. 4 Zeilen Text, ca. 240px) plus Luft
+   * für Schatten; dazu engere Abstände zwischen Übersicht, Karussell und Pfeilen.
+   */
+  @media (max-width: 899px) {
+    .wall__inner {
+      gap: 20px;
+    }
+
+    .carousel {
+      height: 290px;
+    }
+
+    .controls {
+      margin-top: 0;
+    }
+
+    /* Kopf mittig wie auf den anderen Service-Seiten (gleiche Regeln wie in SplitPage) */
+    .wall {
+      padding-top: 112px;
+    }
+
+    .wall__intro {
+      text-align: center;
+    }
+
+    .wall__intro :global(.intro-eyebrow),
+    .wall__intro :global(.intro-title) {
+      justify-content: center;
+    }
+
+    .wall__intro :global(.intro-eyebrow) {
+      gap: 10px;
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
+
+    .wall__intro :global(.intro-eyebrow::after) {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--peach);
+    }
+
+    .wall__intro :global(.intro-lead) {
+      margin-inline: auto;
+      font-size: 15px;
+    }
+
+    .wall__write {
+      align-self: center;
+    }
+
+    /* Suchfeld volle Breite, Text darin und Vorschläge bleiben linksbündig */
+    .wall__search {
+      justify-content: center;
+      text-align: left;
     }
   }
 </style>

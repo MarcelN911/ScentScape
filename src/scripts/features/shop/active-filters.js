@@ -32,6 +32,10 @@ export function renderActiveFilters(root, state, update) {
     .querySelector('[data-active-list]')
     .replaceChildren(...chips.map((chip) => chipElement(chip, update)));
   root.querySelector('[data-active-none]').hidden = chips.length > 0;
+  /* Zahl am Knopf "Filtros" der Handy-Leiste (ohne Für wen und Suche, die stehen in der Leiste) */
+  const count = chips.filter((chip) => !chip.remove?.gender && chip.remove?.query === undefined);
+  const badge = root.querySelector('[data-filter-count]');
+  if (badge) Object.assign(badge, { hidden: !count.length, textContent: count.length });
   root.querySelectorAll('[data-shop-clear]').forEach((button) => {
     if (button.closest('[data-active-filters]')) button.hidden = chips.length === 0;
   });

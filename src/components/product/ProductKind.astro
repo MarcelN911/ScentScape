@@ -1,0 +1,52 @@
+---
+/*
+ * Nur Handy: eine Zeile "Perfume [Oriental] para Dama" unter dem Namen.
+ * Erstes Wort der Beschriftung, dann die Familien als Etiketten, dann der Rest ("para Dama", "unisex").
+ */
+import { labelOf } from '../../scripts/catalog/theme.js';
+
+/** @typedef {{ product: object }} Props */
+const { product } = Astro.props;
+const [first, ...rest] = labelOf(product).split(' ');
+---
+
+<p class="kind">
+  <span>{first}</span>
+  {product.scentFamilies.map((family) => (
+    <span class="kind__chip">{family}</span>
+  ))}
+  <span>{rest.join(' ')}</span>
+</p>
+
+<style>
+  .kind {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .kind {
+      display: flex;
+      order: 1;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 0;
+      color: rgb(var(--cream-rgb) / 0.6);
+      font: 400 10px var(--font-sans);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Familie ohne Rahmen, nur in Pfirsich hervorgehoben; mehrere mit "·" getrennt */
+    .kind__chip {
+      color: var(--peach);
+      font-weight: 500;
+    }
+
+    .kind__chip + .kind__chip::before {
+      content: '·';
+      margin-right: 8px;
+      color: rgb(var(--cream-rgb) / 0.6);
+    }
+  }
+</style>

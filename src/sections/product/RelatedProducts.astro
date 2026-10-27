@@ -186,6 +186,15 @@ const { products } = Astro.props;
     perspective: 1400px;
   }
 
+  /* Handy: engere Abstände zwischen den kleineren Karten (RelatedCard) */
+  @media (max-width: 899px) {
+    .related__track {
+      gap: 12px;
+      padding: 28px 20px;
+      scroll-padding-inline: 20px;
+    }
+  }
+
   .related__end {
     flex: none;
     width: clamp(1px, calc(6vw - 28px), 68px);

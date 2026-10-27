@@ -11,12 +11,12 @@ import { pagesOf } from '../../scripts/features/catalogo/state.js';
 
 const entries = (await getCatalog()).map(pdfEntryOf);
 const counts = countByCollection(entries, CATALOG_COLLECTIONS);
-const pages = pagesOf(entries.length);
+const pages = pagesOf(CATALOG_COLLECTIONS[0], entries);
 ---
 
 <BaseLayout
   title="Catálogo Digital | Tu catálogo en PDF · ScentScape"
-  description="Elige la colección y personaliza la portada. Generamos un PDF con fotos y precios, listo para compartir por WhatsApp."
+  description="Elige la colección y si quieres precios. Generamos un PDF con fotos y precios, listo para descargar."
   curtainX="47.619%"
 >
   <main data-catalog-page>
@@ -27,7 +27,7 @@ const pages = pagesOf(entries.length);
         eyebrow="Servicio 03 · Catálogo Digital"
         title={CATALOG_TITLE}
         label="Tu catálogo, en PDF."
-        lead="Elige la colección y personaliza la portada. Generamos un PDF con fotos, notas y precios, listo para compartir por WhatsApp."
+        lead="Elige la colección y si quieres precios. Generamos un PDF con fotos, notas y precios, listo para descargar."
       />
       <CatalogForm counts={counts} pages={pages} />
     </SplitPage>

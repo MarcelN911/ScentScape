@@ -1,14 +1,23 @@
 /* Was eine Fragancia im Catálogo Digital braucht: Bild, Name, Preis, Geschlecht. */
 import { imageUrl } from '../utils/image.js';
-import { catalogNotesOf, catalogPriceOf } from './catalog-entry.js';
+import { catalogPriceOf } from './catalog-entry.js';
 
 export function pdfEntryOf(product) {
   return {
     name: product.name,
     image: product.images[0] ? imageUrl(product.images[0], 400) : '/assets/img/scentscape-logo.png',
     price: catalogPriceOf(product),
-    notes: catalogNotesOf(product, 4),
     gender: product.gender,
+  };
+}
+
+/** Für das PDF selbst zusätzlich Marke, Beschreibung und Größen (die Vorschau bleibt klein). */
+export function pdfPageEntryOf(product) {
+  return {
+    ...pdfEntryOf(product),
+    brand: product.brand,
+    description: product.plainDescription,
+    sizes: product.sizes.map((size) => size.label),
   };
 }
 

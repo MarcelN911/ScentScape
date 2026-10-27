@@ -1,6 +1,6 @@
 ---
 /*
- * Das eigentliche PDF des Catálogo Digital: Deckblatt und Seiten mit je 4 Fragancias.
+ * Das eigentliche PDF des Catálogo Digital: Deckblatt und Seiten mit je 4 Fragancias untereinander.
  * Die Auswahl steht im Link (?coleccion=dama&precios=no&para=Ana). "Guardar como PDF" öffnet den Druckdialog.
  */
 import CatalogCover from '../../components/catalogo/CatalogCover.astro';
@@ -9,9 +9,9 @@ import CatalogSheetItem from '../../components/catalogo/CatalogSheetItem.astro';
 import { CATALOG_COLLECTIONS } from '../../data/catalog.js';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCatalog } from '../../scripts/catalog/load.js';
-import { pdfEntryOf } from '../../scripts/catalog/pdf-entry.js';
+import { pdfPageEntryOf } from '../../scripts/catalog/pdf-entry.js';
 
-const entries = (await getCatalog()).map(pdfEntryOf);
+const entries = (await getCatalog()).map(pdfPageEntryOf);
 const first = CATALOG_COLLECTIONS[0];
 ---
 
@@ -35,7 +35,7 @@ const first = CATALOG_COLLECTIONS[0];
     </div>
     <template data-pdf-sheet>
       <section class="pdf__page">
-        <CatalogSheet short={first.short} page={2} full />
+        <CatalogSheet title={first.sections[0].title} full />
       </section>
     </template>
     <div hidden data-pdf-pool>

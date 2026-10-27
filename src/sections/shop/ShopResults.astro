@@ -139,6 +139,16 @@ const LETTERS = ['', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
     gap: clamp(20px, 2.4vw, 36px);
   }
 
+  /*
+   * position + isolation: ausblendende Karten (motion.js) werden hier drin absolut platziert
+   * und liegen mit z-index -1 hinter den anderen, aber nicht hinter dem Seitenhintergrund.
+   */
+  .results__rows,
+  .results__grid {
+    position: relative;
+    isolation: isolate;
+  }
+
   .results__rows {
     display: flex;
     flex-direction: column;

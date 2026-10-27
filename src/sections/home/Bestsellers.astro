@@ -53,7 +53,8 @@ const { products, moreCount } = Astro.props;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    min-height: 600px;
+    height: 100svh;
+    min-height: 560px;
     overflow: hidden;
   }
 
@@ -157,6 +158,45 @@ const { products, moreCount } = Astro.props;
   @media (max-width: 700px) {
     .bestsellers {
       height: 340vh;
+    }
+  }
+
+  /*
+   * Hochformat: Karussell. Die aktive Karte steht in der Mitte, links und rechts schauen die
+   * Nachbarn herein. Der Innenabstand der Reihe ist so groß, dass auch die erste und die letzte
+   * Karte genau mittig stehen. Unten bleibt Luft für den Musik-Player.
+   */
+  @media (max-width: 1079px) and (orientation: portrait) {
+    .bestsellers {
+      --best-card: min(64vw, 400px, 46svh);
+    }
+
+    .bestsellers__pin {
+      padding-bottom: 72px;
+    }
+
+    .bestsellers__head {
+      padding-top: max(108px, 12svh);
+    }
+
+    .bestsellers__track {
+      gap: 14px;
+      margin-block: auto;
+      padding-inline: calc((100vw - var(--best-card)) / 2);
+    }
+
+    .bestsellers__more {
+      width: var(--best-card);
+    }
+  }
+
+  @media (min-width: 600px) and (max-width: 1079px) and (orientation: portrait) {
+    .bestsellers__title {
+      font-size: 11vw;
+    }
+
+    .bestsellers__progress {
+      min-width: 300px;
     }
   }
 </style>

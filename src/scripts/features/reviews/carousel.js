@@ -1,9 +1,11 @@
 /*
  * 3D-Karussell der Bewertungen: dreht sich langsam weiter, beim Hovern fast gar nicht.
  * Pfeile (Knöpfe oder Tastatur) geben Schwung oder kehren die Richtung um.
+ * Anfassen und Wischen: carousel-drag.js.
  */
 import { CAROUSEL } from '../../../data/reviews.js';
 import { prefersReducedMotion } from '../../utils/motion.js';
+import { bindDrag } from './carousel-drag.js';
 
 /* Karte an Abstand d zur Mitte: seitlich, nach hinten, gedreht, abgedunkelt */
 function placeCard(card, d, spacing) {
@@ -33,6 +35,7 @@ function paint(spin) {
   const cards = spin.track.children;
   if (!cards.length) return;
   const spacing = cards[0].offsetWidth * (window.innerWidth < 900 ? 0.5 : 0.66);
+  spin.spacing = spacing; // für das Wischen: so viele Pixel = eine Karte
   [...cards].forEach((card, index) =>
     placeCard(card, offsetOf(index, spin.pos, cards.length), spacing),
   );
@@ -40,6 +43,7 @@ function paint(spin) {
 }
 
 function step(spin, seconds) {
+  if (spin.drag) return; // beim Wischen bestimmt der Finger die Lage
   spin.boost *= Math.pow(0.18, seconds);
   spin.hover += ((spin.hovered ? 1 : 0) - spin.hover) * Math.min(1, seconds * 4);
   const speed = spin.still ? spin.boost : CAROUSEL.speed * (1 - spin.hover * 0.85) + spin.boost;
@@ -75,6 +79,7 @@ function bindSpin(spin, root, signal) {
   spin.region.addEventListener('mouseenter', () => (spin.hovered = true), { signal });
   spin.region.addEventListener('mouseleave', () => (spin.hovered = false), { signal });
   document.addEventListener('keydown', (event) => onKey(spin, event), { signal });
+  bindDrag(spin, signal);
   root.querySelectorAll('[data-carousel-step]').forEach((button) => {
     const dir = Number(button.dataset.carouselStep);
     button.addEventListener('click', () => nudge(spin, dir), { signal });

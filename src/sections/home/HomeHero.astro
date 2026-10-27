@@ -1,18 +1,18 @@
 ---
-import { HERO_VIDEO } from '../../data/home.js';
+import { existsSync } from 'node:fs';
+import { HERO_VIDEO, HERO_VIDEO_PORTRAIT } from '../../data/home.js';
+
+/* Liegt das Hochformat-Video in public/, nehmen Handys (Hochformat) dieses Video */
+const hasPortrait = existsSync(`public${HERO_VIDEO_PORTRAIT}`);
 ---
 
 <section class="hero" data-hero>
-  <video
-    class="hero__video"
-    src={HERO_VIDEO}
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="auto"
-    data-hero-video
-  ></video>
+  <video class="hero__video" autoplay muted loop playsinline preload="auto" data-hero-video>
+    {hasPortrait && (
+      <source src={HERO_VIDEO_PORTRAIT} media="(max-width: 759px) and (orientation: portrait)" />
+    )}
+    <source src={HERO_VIDEO} />
+  </video>
   <div class="hero__shade hero__shade--side"></div>
   <div class="hero__shade hero__shade--bottom"></div>
   <div class="hero__content">
@@ -42,6 +42,7 @@ import { HERO_VIDEO } from '../../data/home.js';
   .hero {
     position: relative;
     height: max(100vh, 560px);
+    height: max(100svh, 560px);
     overflow: hidden;
     background: var(--navy-deep);
   }
@@ -189,5 +190,37 @@ import { HERO_VIDEO } from '../../data/home.js';
     font: 600 12px/1.6 var(--font-sans);
     letter-spacing: 3px;
     text-transform: uppercase;
+  }
+
+  /* Hochformat (Handy, Tablet): Text steht unten, also dunkelt vor allem der untere Teil ab */
+  @media (max-width: 1079px) and (orientation: portrait) {
+    .hero__shade--side {
+      background: linear-gradient(
+        180deg,
+        rgb(var(--navy-deep-rgb) / 0.35) 0%,
+        rgb(var(--navy-deep-rgb) / 0.1) 35%,
+        rgb(var(--navy-deep-rgb) / 0.55) 75%
+      );
+    }
+
+    .hero__shade--bottom {
+      height: 55%;
+    }
+
+    .hero__text {
+      padding-bottom: max(96px, 11svh);
+    }
+  }
+
+  /* Tablet hochkant: größerer Titel, damit die Fläche nicht leer wirkt */
+  @media (min-width: 600px) and (max-width: 1079px) and (orientation: portrait) {
+    .hero__text {
+      gap: 34px;
+      padding-inline: 8vw;
+    }
+
+    .hero__title {
+      font-size: 13vw;
+    }
   }
 </style>

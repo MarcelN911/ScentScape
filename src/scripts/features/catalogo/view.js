@@ -1,9 +1,9 @@
 /* Zeigt den Zustand des Catálogo Digital: Auswahl, Vorschau auf der Bühne, Knöpfe und Hinweis. */
 import { CATALOG_COLLECTIONS } from '../../../data/catalog.js';
-import { hintOf, itemsOf, pagesOf, pdfPath, whatsappLink } from './state.js';
+import { hintOf, itemsOf, pagesOf, pdfPath, sectionsOf } from './state.js';
 
 const IDLE_GLOW = 'rgb(83 16 25 / .5)';
-const PHASE_GLOW = { ready: 'rgb(37 211 102 / .12)' };
+const PHASE_GLOW = { ready: 'rgb(240 190 145 / .14)' }; // Pfirsich (--peach)
 
 function setText(root, selector, text) {
   root.querySelectorAll(selector).forEach((element) => (element.textContent = text));
@@ -42,9 +42,9 @@ function renderStage(root, items, state) {
   const collection = CATALOG_COLLECTIONS[state.collection];
   setText(root, '[data-cover-collection]', collection.title);
   setText(root, '[data-cover-count]', items.length);
-  setText(root, '[data-cover-client]', state.client.trim() || 'ti');
-  setText(root, '[data-sheet-short]', collection.short);
-  renderSheet(root, items, state);
+  const [first] = sectionsOf(collection, items);
+  setText(root, '[data-sheet-title]', first?.title ?? collection.title);
+  renderSheet(root, first?.items ?? [], state);
 }
 
 function statusOf(state, pages) {
@@ -67,7 +67,6 @@ function renderSubmit(root, state, items, pages) {
 function renderDone(root, state, items) {
   root.querySelector('[data-catalog-done]').hidden = state.phase !== 'ready';
   root.querySelector('[data-catalog-pdf]').href = `${pdfPath(state)}&imprimir`;
-  root.querySelector('[data-catalog-wa]').href = whatsappLink(state, items.length);
   setText(root, '[data-catalog-hint]', hintOf(state, items.length));
 }
 
@@ -83,7 +82,7 @@ function renderPhase(root, state, pages) {
 
 export function renderCatalog(root, entries, state) {
   const items = itemsOf(entries, state);
-  const pages = pagesOf(items.length);
+  const pages = pagesOf(CATALOG_COLLECTIONS[state.collection], items);
   markChoices(root, state);
   renderStage(root, items, state);
   renderSubmit(root, state, items, pages);

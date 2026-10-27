@@ -1,6 +1,11 @@
 ---
+/*
+ * "Familias olfativas": der Bereich bleibt stehen, beim Scrollen wechselt die Familie
+ * (scripts/features/home/families.js). Desktop: Namen untereinander links, rechts die Flasche.
+ * Hochformat: die Namen laufen als Band seitwärts, die aktive steht in der Mitte.
+ */
+import FamilyShowcase from '../../components/home/FamilyShowcase.astro';
 import { FAMILIES } from '../../data/families.js';
-import { imageUrl } from '../../scripts/utils/image.js';
 import { padNumber } from '../../scripts/utils/format.js';
 
 const glowOf = (family) => `${family.accent}33`;
@@ -12,11 +17,11 @@ const glowOf = (family) => `${family.accent}33`;
       <span></span>
     </div>
     <div class="families__grid">
-      <div>
+      <div class="families__head">
         <p class="families__eyebrow">
           Familias olfativas · <span data-families-number>01</span> / {padNumber(FAMILIES.length)}
         </p>
-        <div class="families__list">
+        <div class="families__list" data-families-list>
           {FAMILIES.map((family, index) => (
             <button
               class:list={['families__name', { 'is-active': index === 0 }]}
@@ -31,46 +36,7 @@ const glowOf = (family) => `${family.accent}33`;
           ))}
         </div>
       </div>
-      <div class="families__showcase">
-        <div class="families__top">
-          <div class="families__bottles">
-            {FAMILIES.map((family, index) => (
-              <img
-                class:list={[
-                  'families__bottle',
-                  { 'is-active': index === 0, 'is-after': index > 0 },
-                ]}
-                src={imageUrl(family.image, 700)}
-                alt={family.bottle}
-                loading="lazy"
-                data-family-bottle
-              />
-            ))}
-          </div>
-          <div class="families__descs">
-            {FAMILIES.map((family, index) => (
-              <div
-                class:list={['families__desc', { 'is-active': index === 0, 'is-after': index > 0 }]}
-                data-family-desc
-              >
-                <p class="families__desc-title">
-                  <span></span>
-                  {family.id}
-                </p>
-                <p class="families__desc-text">{family.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div class="families__copy">
-          <p class="families__line" data-families-line>
-            {FAMILIES[0].line}
-          </p>
-          <a class="families__link" href="/productos/" data-families-link>
-            Explorar&nbsp;<span data-families-title>{FAMILIES[0].id}</span>&nbsp;→
-          </a>
-        </div>
-      </div>
+      <FamilyShowcase />
     </div>
   </div>
 </section>
@@ -92,6 +58,7 @@ const glowOf = (family) => `${family.accent}33`;
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     overflow: hidden;
     background:
       radial-gradient(ellipse 70% 70% at 70% 55%, var(--family-glow), transparent 70%), var(--navy);
@@ -136,6 +103,7 @@ const glowOf = (family) => `${family.accent}33`;
   }
 
   .families__list {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -160,132 +128,81 @@ const glowOf = (family) => `${family.accent}33`;
     transform: translateX(18px);
   }
 
-  .families__showcase {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    height: min(62vh, 600px);
+  /*
+   * Hochformat (Handy, Tablet hochkant): Namen-Laufband. Die Namen stehen in einer Reihe,
+   * das Skript schiebt die Reihe (--families-shift), bis die aktive Familie in der Mitte steht.
+   * Darunter zeigt eine Linie den Fortschritt. Die senkrechte Linie vom Desktop fällt weg.
+   */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .families__stage {
+      background:
+        radial-gradient(ellipse 90% 55% at 50% 58%, var(--family-glow), transparent 70%),
+        var(--navy);
+    }
+
+    .families__rail {
+      display: none;
+    }
+
+    .families__grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: 3svh;
+      padding: max(100px, 12svh) 24px 76px;
+    }
+
+    .families__head {
+      position: relative;
+      min-width: 0;
+      padding-bottom: 20px;
+    }
+
+    /* Fortschrittslinie: blasse Spur und darüber der helle Anteil */
+    .families__head::before,
+    .families__head::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: rgb(var(--peach-rgb) / 0.2);
+    }
+
+    .families__head::after {
+      background: var(--peach);
+      transform: scaleX(var(--families-progress, 0));
+      transform-origin: 0 50%;
+    }
+
+    .families__eyebrow {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .families__list {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 18px;
+      width: max-content;
+      transform: translateX(var(--families-shift, 0px));
+      transition: transform 0.8s var(--ease-soft);
+    }
+
+    .families__name {
+      font-size: clamp(40px, min(12vw, 6.4svh), 84px);
+      white-space: nowrap;
+    }
+
+    .families__name.is-active {
+      transform: none;
+    }
   }
 
-  .families__top {
-    position: absolute;
-    inset: 0 0 120px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(120px, 200px);
-    align-items: center;
-    gap: clamp(14px, 2.4vw, 32px);
-  }
-
-  .families__bottles {
-    position: relative;
-    height: 100%;
-    min-width: 0;
-  }
-
-  .families__bottle {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 40px 50px rgb(0 0 0 / 0.5));
-    opacity: 0;
-    transform: translateY(-60px) rotate(-6deg) scale(0.9);
-    transition:
-      opacity 0.8s ease,
-      transform 1.1s var(--ease-soft);
-  }
-
-  .families__bottle.is-after {
-    transform: translateY(80px) rotate(6deg) scale(0.9);
-  }
-
-  .families__bottle.is-active {
-    opacity: 1;
-    transform: none;
-  }
-
-  .families__descs {
-    position: relative;
-    min-height: 190px;
-  }
-
-  .families__desc {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    transform: translateY(calc(-50% - 24px));
-    pointer-events: none;
-    transition:
-      opacity 0.7s ease,
-      transform 0.9s var(--ease-soft);
-  }
-
-  .families__desc.is-after {
-    transform: translateY(calc(-50% + 24px));
-  }
-
-  .families__desc.is-active {
-    opacity: 1;
-    transform: translateY(-50%);
-    pointer-events: auto;
-  }
-
-  .families__desc-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 12px;
-    color: var(--peach);
-    font: 600 10px/1 var(--font-sans);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-
-  .families__desc-title span {
-    width: 22px;
-    height: 1px;
-    background: var(--peach);
-  }
-
-  .families__desc-text {
-    margin: 0;
-    color: rgb(var(--cream-rgb) / 0.86);
-    font: 400 14px/1.6 var(--font-sans);
-    text-wrap: pretty;
-  }
-
-  .families__copy {
-    position: relative;
-    max-width: 380px;
-    text-align: center;
-  }
-
-  .families__line {
-    margin: 0 0 16px;
-    color: rgb(var(--cream-rgb) / 0.85);
-    font: italic 400 22px/1.4 var(--font-serif);
-  }
-
-  .families__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 24px;
-    border: 1px solid rgb(var(--peach-rgb) / 0.45);
-    border-radius: var(--radius-pill);
-    color: var(--sand);
-    font: 600 11px/1 var(--font-sans);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .families__link:hover {
-    background: var(--peach);
-    color: var(--navy);
+  @media (min-width: 600px) and (max-width: 1079px) and (orientation: portrait) {
+    .families__grid {
+      padding-inline: 9vw;
+    }
   }
 </style>

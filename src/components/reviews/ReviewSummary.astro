@@ -131,4 +131,48 @@ const rowAttrs = (row) => ({
     font: 400 12px var(--font-sans);
     text-align: right;
   }
+
+  /* Handy: deutlich flacher, damit das Karussell darunter gleich ins Bild kommt */
+  @media (max-width: 899px) {
+    .summary {
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 20px;
+    }
+
+    .summary__score {
+      gap: 4px;
+      padding-right: 16px;
+    }
+
+    .summary__average {
+      font-size: 40px;
+    }
+
+    .summary__stars {
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .summary__count {
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .summary__rows {
+      gap: 0;
+    }
+
+    .summary__row {
+      grid-template-columns: 26px minmax(0, 1fr) 16px;
+      gap: 8px;
+      padding: 3px 4px;
+      border-radius: 6px;
+    }
+
+    .summary__label,
+    .summary__number {
+      font-size: 11px;
+    }
+  }
 </style>

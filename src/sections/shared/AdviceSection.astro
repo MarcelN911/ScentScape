@@ -2,6 +2,7 @@
 /*
  * "¿No sabes cuál elegir? Te asesoramos": Fragenliste, Handy-Chat und Kontakt.
  * Auf Produktseite und Servicios. Beim Hereinscrollen kippt das Handy ins Bild (scripts/features/chat/advice.js).
+ * Handy: wie die Seite "Te asesoramos" — Kopf mittig, Fragen als Vorschläge im Chat, darunter die Kontaktkarte.
  */
 import PhoneMock from '../../components/chat/PhoneMock.astro';
 import ContactList from '../../components/chat/ContactList.astro';
@@ -50,7 +51,10 @@ const { allLink = false } = Astro.props;
     </div>
     <div class="advice__stage">
       <div class="advice__glow"></div>
-      <PhoneMock greeting={CHAT_GREETING} />
+      <PhoneMock
+        greeting={CHAT_GREETING}
+        suggestions={CHAT_QUESTIONS.map((item) => item.question)}
+      />
       <div class="advice__side">
         <p>¿Tu pregunta no está en la lista? Escríbenos directamente.</p>
         <ContactList />
@@ -311,6 +315,85 @@ const { allLink = false } = Astro.props;
   @media (min-width: 1280px) {
     .advice__grid {
       grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  /* Handy wie "Te asesoramos": Kopf mittig, Fragen als Vorschläge im Chat, darunter WhatsApp-Karte */
+  @media (max-width: 899px) {
+    .advice {
+      padding: 12vh 16px;
+    }
+
+    .advice__grid {
+      gap: 32px;
+    }
+
+    .advice__grid > div:first-child {
+      text-align: center;
+    }
+
+    .advice__eyebrow {
+      justify-content: center;
+    }
+
+    /* Zweite Linie rechts, wie auf den Service-Seiten */
+    .advice__eyebrow::after {
+      content: '';
+      width: calc(var(--line, 10) * 1px);
+      height: 1px;
+      background: var(--peach);
+    }
+
+    .advice__title {
+      font-size: 38px;
+    }
+
+    .advice__lead {
+      font-size: 15px;
+    }
+
+    .advice__label,
+    .advice__list,
+    .advice__side :global(.contact-list) {
+      display: none;
+    }
+
+    .advice__stage {
+      --phone-height: min(82svh, 170vw);
+      --phone-ratio: 9 / 18.2;
+      --phone-min: 0px;
+      gap: 28px;
+    }
+
+    .advice__side {
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 26px 22px;
+      border: 1px solid rgb(var(--peach-rgb) / 0.22);
+      border-radius: 24px;
+      background: rgb(var(--navy-card-rgb) / 0.45);
+      text-align: center;
+    }
+
+    .advice__side > p {
+      color: var(--cream);
+      font: 400 21px/1.25 var(--font-serif);
+    }
+
+    .advice__wa {
+      align-self: stretch;
+      height: 52px;
+      margin-top: 0;
+      border-radius: 26px;
+      color: var(--navy);
+      font: 500 11px var(--font-sans);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    .advice__wa :global(svg) {
+      fill: var(--navy);
     }
   }
 </style>

@@ -8,7 +8,7 @@
 export const REGALO_EXAMPLE = {
   to: 'ti',
   from: 'ScentScape',
-  amount: 200000,
+  amount: 500000,
   code: '',
   color: 0,
   until: '',

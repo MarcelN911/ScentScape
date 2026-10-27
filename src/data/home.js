@@ -2,6 +2,9 @@
 
 export const HERO_VIDEO = '/assets/video/hero.mp4';
 
+/* Hochformat-Version fürs Handy. Wird erst benutzt, wenn die Datei in public/ liegt. */
+export const HERO_VIDEO_PORTRAIT = '/assets/video/hero2.mp4';
+
 /* Laufband mit Parfumnamen und die Karten "Los más pedidos" (Slugs aus nexomar) */
 export const BESTSELLER_SLUGS = [
   'khamrah',
@@ -93,6 +96,8 @@ const VIDEO_CAPTIONS = [
 
 export const VIDEOS = VIDEO_CAPTIONS.map((caption, index) => ({
   src: `/assets/video/video${index + 1}.mp4`,
+  /* Standbild aus dem Video (Sekunde 0,6): wird gezeigt, bis das Video läuft (wichtig fürs iPhone) */
+  poster: `/assets/img/reels/video${index + 1}.jpg`,
   title: `Reel ${String(index + 1).padStart(2, '0')} · Instagram`,
   caption,
 }));

@@ -12,6 +12,13 @@ export const ORIGINAL_ITEMS = [
   'Cada perfume cuenta con verificación de autenticidad.',
 ];
 
+/* Handy: drei kurze Versprechen unter dem Kaufbereich (ProductTrust.astro) */
+export const TRUST_ITEMS = [
+  { icon: 'truck', title: 'Envío gratis', text: 'desde $500.000' },
+  { icon: 'shield', title: '100 % original', text: 'garantizado' },
+  { icon: 'lock', title: 'Pago seguro', text: 'en línea o WhatsApp' },
+];
+
 /* Logos im Akkordeon "Envíos y pagos". Ohne Datei: Name als Schrift in der Markenfarbe */
 export const PAYMENT_LOGOS = [
   { name: 'VISA', file: 'visa.svg', height: 16 },

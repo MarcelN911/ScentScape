@@ -1,5 +1,5 @@
-/* Seite "Catálogo Digital": Auswahl treffen, Fotos vorladen, PDF öffnen oder per WhatsApp teilen. */
-import { CATALOG_LIMITS } from '../../../data/catalog.js';
+/* Seite "Catálogo Digital": Auswahl treffen, Fotos vorladen, PDF öffnen. */
+import { CATALOG_COLLECTIONS } from '../../../data/catalog.js';
 import { showToast } from '../../core/events.js';
 import { preloadImages } from './preload.js';
 import { createCatalogState, itemsOf, pagesOf } from './state.js';
@@ -15,7 +15,8 @@ function change(catalog, patch) {
 }
 
 function finish(catalog) {
-  const pages = pagesOf(itemsOf(catalog.entries, catalog.state).length);
+  const collection = CATALOG_COLLECTIONS[catalog.state.collection];
+  const pages = pagesOf(collection, itemsOf(catalog.entries, catalog.state));
   Object.assign(catalog.state, { phase: 'ready', progress: 1 });
   render(catalog);
   showToast(`Catálogo listo · ${pages} páginas`);
@@ -61,15 +62,6 @@ function handleClick(catalog, event) {
   if (match) match[1](catalog, event.target.closest(match[0]));
 }
 
-function handleInput(catalog, event) {
-  const { name, value } = event.target;
-  if (name === 'client') change(catalog, { client: value });
-  if (name === 'phone') {
-    event.target.value = value.replace(/[^\d +]/g, '').slice(0, CATALOG_LIMITS.phone);
-    change(catalog, { phone: event.target.value });
-  }
-}
-
 export function initCatalogPage(signal) {
   const root = document.querySelector('[data-catalog-page]');
   if (!root) return;
@@ -77,7 +69,6 @@ export function initCatalogPage(signal) {
   const catalog = { root, entries, signal, state: createCatalogState() };
   const form = root.querySelector('[data-catalog-form]');
   root.addEventListener('click', (event) => handleClick(catalog, event), { signal });
-  form.addEventListener('input', (event) => handleInput(catalog, event), { signal });
   form.addEventListener('submit', (event) => generate(catalog, event), { signal });
   render(catalog);
   setTimeout(() => root.classList.add('is-in'), 80);

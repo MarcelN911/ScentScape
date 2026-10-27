@@ -73,6 +73,8 @@ export function initMusicPlayer() {
   bindSound(root, render);
   bindList(root);
   startOnFirstInteraction(root, render);
-  setInterval(() => (player.tick() ? render() : renderTime(root)), 1000);
+  /* Titelwechsel am Ende eines Songs oder Anhalten von außen: Anzeige neu zeichnen */
+  player.onChange(render);
+  setInterval(() => renderTime(root), 1000);
   render();
 }

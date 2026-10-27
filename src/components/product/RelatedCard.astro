@@ -240,4 +240,53 @@ const price = priceFromText(product).replace('desde', 'Desde');
   .rel-card__add:hover {
     transform: rotate(90deg) scale(1.08);
   }
+
+  /*
+   * Handy: kleinere Karten, damit 2½ nebeneinander zu sehen sind
+   * (Breite = Bildschirm minus Rand 20px und zwei Abstände à 12px, geteilt durch 2,5).
+   * Weniger auf dem Bild: keine Familien, kleinere Schrift und kleinerer "+"-Knopf.
+   */
+  @media (max-width: 899px) {
+    .rel-card {
+      width: calc((100vw - 44px) / 2.5);
+      border-radius: 16px;
+    }
+
+    .rel-card__line,
+    .rel-card :global(.rel-card__chips) {
+      display: none;
+    }
+
+    .rel-card__num {
+      top: 10px;
+      left: 12px;
+      font-size: 15px;
+    }
+
+    .rel-card__bottom {
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      gap: 6px;
+    }
+
+    .rel-card__name {
+      margin-bottom: 5px;
+      overflow: hidden;
+      font-size: 14px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .rel-card__price {
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .rel-card__add {
+      width: 28px;
+      height: 28px;
+      font-size: 17px;
+    }
+  }
 </style>

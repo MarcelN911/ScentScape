@@ -1,11 +1,20 @@
 ---
-/* Code der Gift Card zum Kopieren und als QR-Code für die Kasse in der Tienda. */
+/*
+ * Code der Gift Card zum Kopieren und als QR-Code für die Kasse in der Tienda.
+ * Kopieren: Knopf "Copiar" oder einfach auf den Code tippen.
+ */
 ---
 
 <div class="code-panel" data-regalo-code-panel>
   <div class="code-panel__text">
     <span class="code-panel__label">Código</span>
-    <span class="code-panel__code" data-regalo-code></span>
+    <button
+      class="code-panel__code"
+      type="button"
+      aria-label="Copiar código"
+      data-regalo-code
+      data-regalo-copy-code
+    ></button>
     <button class="code-panel__copy" type="button" data-regalo-copy>
       <svg
         width="14"
@@ -61,6 +70,12 @@
   }
 
   .code-panel__code {
+    align-self: flex-start;
+    padding: 0 0 4px;
+    border: 0;
+    border-bottom: 1px dashed rgb(var(--peach-rgb) / 0.4);
+    background: none;
+    cursor: copy;
     overflow-wrap: anywhere;
     color: var(--sand);
     font: 500 clamp(18px, 1.7vw, 24px) var(--font-sans);
@@ -112,6 +127,30 @@
   @media (max-width: 480px) {
     .code-panel {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Handy und Tablet hochkant: alles untereinander und mittig */
+  @media (max-width: 899px) {
+    .code-panel {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 22px;
+      padding: 26px 20px;
+      text-align: center;
+    }
+
+    .code-panel__text {
+      align-items: center;
+    }
+
+    .code-panel__code,
+    .code-panel__copy {
+      align-self: center;
+    }
+
+    .code-panel__code {
+      font-size: 22px;
     }
   }
 </style>

@@ -71,23 +71,76 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
       box-shadow 0.6s;
   }
 
-  .best-card:hover {
-    box-shadow:
-      0 46px 80px rgb(0 0 0 / 0.55),
-      0 0 0 1px rgb(var(--peach-rgb) / 0.55);
-    transform: translateY(-14px);
+  /*
+   * Hover-Effekte nur mit Maus und nur außerhalb des Karussells (Hochformat).
+   * Auf Touch-Geräten bliebe der Effekt nach dem Antippen hängen.
+   */
+  @media (hover: hover) and (min-width: 1080px), (hover: hover) and (orientation: landscape) {
+    .best-card:hover {
+      box-shadow:
+        0 46px 80px rgb(0 0 0 / 0.55),
+        0 0 0 1px rgb(var(--peach-rgb) / 0.55);
+      transform: translateY(-14px);
+    }
+
+    :global([data-best-track]:has(.best-card:hover)) .best-card:not(:hover) {
+      filter: saturate(0.6);
+      opacity: 0.55;
+      transform: scale(0.96);
+    }
   }
 
-  :global([data-best-track]:has(.best-card:hover)) .best-card:not(:hover) {
-    filter: saturate(0.6);
-    opacity: 0.55;
-    transform: scale(0.96);
+  @media (max-width: 1079px) and (orientation: portrait) {
+    .best-card {
+      width: var(--best-card);
+    }
+  }
+
+  /*
+   * Karussell und Touch: Nachbarkarten etwas kleiner und ohne Familien-Chips.
+   * Die Karte in der Mitte in voller Größe, ihre Chips blenden ein.
+   */
+  @media (hover: none), (max-width: 1079px) and (orientation: portrait) {
+    .best-card {
+      transform: scale(0.9);
+    }
+
+    .best-card.is-focus {
+      transform: none;
+    }
+
+    .best-card :global(.best-card__chips) {
+      opacity: 0;
+      transform: translateY(-8px);
+      transition:
+        opacity 0.45s var(--ease),
+        transform 0.55s var(--ease);
+    }
+
+    .best-card.is-focus :global(.best-card__chips) {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .best-card__photo {
     position: absolute;
     inset: 0;
     transition: transform 1.2s var(--ease);
+  }
+
+  /* Desktop: Noten und "Descubrir" beim Drüberfahren. Im Karussell nur bei der Karte in der Mitte. */
+  @media (hover: hover) and (min-width: 1080px), (hover: hover) and (orientation: landscape) {
+    .best-card:hover .best-card__notes {
+      max-height: 70px;
+      opacity: 1;
+      transform: none;
+    }
+
+    .best-card:hover .best-card__cta {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .best-card:hover .best-card__photo {
@@ -167,7 +220,7 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
     transition: all 0.55s var(--ease);
   }
 
-  .best-card:hover .best-card__notes {
+  .best-card.is-focus .best-card__notes {
     max-height: 70px;
     opacity: 1;
     transform: none;
@@ -212,7 +265,7 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
     transition: all 0.45s var(--ease);
   }
 
-  .best-card:hover .best-card__cta {
+  .best-card.is-focus .best-card__cta {
     opacity: 1;
     transform: none;
   }
@@ -232,5 +285,59 @@ const notes = product.ingredients.slice(0, 3).join(' · ');
 
   .best-card__add:hover {
     transform: rotate(90deg) scale(1.08);
+  }
+
+  /* Schmale Karten (Handy): "Descubrir" steht unter dem Preis statt daneben */
+  @media (max-width: 599px) {
+    .best-card__rank {
+      top: 20px;
+      left: 20px;
+    }
+
+    :global(.best-card__chips) {
+      top: 18px;
+      right: 18px;
+      left: 56px;
+    }
+
+    .best-card__bottom {
+      left: 20px;
+      right: 18px;
+      bottom: 18px;
+    }
+
+    .best-card__name {
+      font-size: 22px;
+    }
+
+    .best-card__price {
+      flex-wrap: wrap;
+      row-gap: 8px;
+      white-space: nowrap;
+    }
+
+    .best-card__cta {
+      flex-basis: 100%;
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .best-card__notes-text {
+      font-size: 15px;
+    }
+
+    .best-card :global(.chip) {
+      gap: 6px;
+      height: 26px;
+      padding: 0 10px 0 8px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+    }
+
+    .best-card__add {
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+    }
   }
 </style>

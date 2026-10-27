@@ -199,4 +199,11 @@ const { title, accent, updated } = Astro.props;
     color: var(--cream);
     font-weight: 500;
   }
+
+  /* Handy und Tablet hochkant: kein Pfad ("← Inicio / …"), zurück geht über Browser oder Wischen */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .legal__crumbs {
+      display: none;
+    }
+  }
 </style>

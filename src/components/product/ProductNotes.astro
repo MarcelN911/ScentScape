@@ -1,0 +1,85 @@
+---
+/*
+ * Nur Handy: "Notas principales" mit Foto jeder Note (auf dem Desktop zeigt das Notenrad
+ * in der Galerie dieselben Noten). Ohne Noten erscheint nichts.
+ */
+import { scentColor } from '../../data/scent.js';
+
+/** @typedef {{ notes: string[], images: Record<string, string> }} Props */
+const { notes, images } = Astro.props;
+---
+
+{notes.length > 0 && (
+  <div class="notes">
+    <span class="notes__label">Notas principales</span>
+    <ul class="notes__list">
+      {notes.map((note) => (
+        <li style={`--color:${scentColor(note)}`}>
+          <span class="notes__photo">
+            {images[note] && <img src={images[note]} alt="" loading="lazy" />}
+          </span>
+          {note}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  .notes {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .notes {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .notes__label {
+      color: rgb(var(--cream-rgb) / 0.6);
+      font: 400 10px var(--font-sans);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .notes__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .notes__list li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 62px;
+      color: var(--cream);
+      font: 400 12px/1.2 var(--font-sans);
+      text-align: center;
+    }
+
+    /* Foto der Note mit einem Ring in der Farbe ihrer Familie */
+    .notes__photo {
+      width: 54px;
+      height: 54px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--color);
+      box-shadow:
+        0 0 0 2px var(--navy),
+        0 0 0 3px var(--color);
+    }
+
+    .notes__photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+</style>

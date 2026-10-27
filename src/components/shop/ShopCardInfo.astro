@@ -1,0 +1,275 @@
+---
+/**
+ * Unterer Teil der Produktkarte: Noten (beim Hover), Marke, Name, Größen, Preis und Pfeil.
+ * Desktop: liegt auf dem Bild. Handy: steht unter dem Bild (die Familie steht dort auf dem Foto, ShopCard).
+ */
+import { formatCOP } from '../../scripts/utils/format.js';
+
+/** @typedef {{ entry: ReturnType<typeof import('../../scripts/catalog/shop-entry.js').shopEntryOf> }} Props */
+const { entry } = Astro.props;
+const cheapest =
+  entry.sizes.find((size) => (size.sale ?? size.price) === entry.price) ?? entry.sizes[0];
+const notes =
+  (entry.ingredients.length ? entry.ingredients : entry.families).join(' · ') || entry.label;
+---
+
+<div class="shop-card__bottom">
+  <div class="shop-card__text">
+    <div class="shop-card__reveal">
+      <div>
+        <p class="shop-card__notes-label">Notas</p>
+        <p class="shop-card__notes">{notes}</p>
+      </div>
+    </div>
+    {entry.brand && <p class="shop-card__brand">{entry.brand}</p>}
+    <h3 class="shop-card__name">{entry.name}</h3>
+    <p class="shop-card__sizes">
+      {entry.sizes.map((size) => (
+        <span>{size.ml} ml</span>
+      ))}
+    </p>
+    <p class="shop-card__price">
+      {entry.sizes.length > 1 && <span class="shop-card__from">Desde</span>}
+      <span>{formatCOP(entry.price)}</span>
+      {cheapest.sale && <s class="shop-card__old">{formatCOP(cheapest.price)}</s>}
+    </p>
+  </div>
+  <span class="shop-card__arrow" aria-hidden="true">
+    →
+  </span>
+</div>
+
+<style>
+  .shop-card__bottom {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .shop-card__text {
+    min-width: 0;
+  }
+
+  .shop-card__reveal {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s var(--ease);
+  }
+
+  .shop-card__reveal > div {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.45s 0.12s,
+      transform 0.6s var(--ease) 0.08s;
+  }
+
+  :global(.shop-card:hover) .shop-card__reveal {
+    grid-template-rows: 1fr;
+  }
+
+  :global(.shop-card:hover) .shop-card__reveal > div {
+    opacity: 1;
+    transform: none;
+  }
+
+  .shop-card__notes-label {
+    margin: 0 0 6px;
+    color: var(--peach);
+    font: 600 9px/1 var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .shop-card__notes {
+    margin: 0 0 14px;
+    font: italic 400 16px/1.3 var(--font-serif);
+  }
+
+  .shop-card__brand {
+    margin: 0 0 6px;
+    color: var(--peach);
+    font: 600 10px/1.2 var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  /* Instrument Serif gibt es nur in 400; ein höheres Gewicht wirkt künstlich fett. */
+  .shop-card__name {
+    display: -webkit-box;
+    margin: 0 0 10px;
+    overflow: hidden;
+    font: 400 clamp(22px, 1.8vw, 28px) / 1.08 var(--font-serif);
+    letter-spacing: -0.01em;
+    text-transform: capitalize;
+    text-wrap: balance;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  /* Desktop: Größen als Zeile "75 ml · 125 ml" */
+  .shop-card__sizes {
+    margin: -2px 0 10px;
+    overflow: hidden;
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 500 11px/1.2 var(--font-sans);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .shop-card__sizes span + span::before {
+    content: ' · ';
+  }
+
+  .shop-card__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    margin: 0;
+    color: var(--sand);
+    font: 600 12px/1 var(--font-sans);
+    letter-spacing: 1.5px;
+  }
+
+  .shop-card__old {
+    color: rgb(var(--cream-rgb) / 0.5);
+    font: 300 10px var(--font-sans);
+    letter-spacing: 0;
+  }
+
+  .shop-card__arrow {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 20px/1 var(--font-sans);
+    transition: transform 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  :global(.shop-card:hover) .shop-card__arrow {
+    transform: translateX(4px);
+  }
+
+  /*
+   * Handy: Text unter dem Foto als Raster
+   *   Marke / Name (immer 2 Zeilen Platz) / Größen-Kästchen / Linie / "Desde" + Preis | Pfeil
+   * "display: contents" löst den Text-Kasten auf, damit alles direkt im Raster liegt.
+   * Feste Höhen (Marke, Name, Größen) halten Preis und Pfeil in allen Karten auf einer Höhe.
+   */
+  @media (max-width: 899px) {
+    .shop-card__reveal {
+      display: none;
+    }
+
+    .shop-card__bottom {
+      position: static;
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(0, 1fr) auto;
+      /* Letzte Zeile fest 34px: mit oder ohne "Desde" steht die Linie überall gleich hoch */
+      grid-template-rows: 14px auto 22px auto 34px;
+      grid-template-areas:
+        'brand brand'
+        'name name'
+        'sizes sizes'
+        'rule rule'
+        'price arrow';
+      align-content: end;
+      align-items: center;
+      gap: 0 8px;
+      padding: 14px 12px 12px;
+    }
+
+    /* Feine Linie über Preis und Pfeil */
+    .shop-card__bottom::after {
+      content: '';
+      grid-area: rule;
+      height: 1px;
+      margin: 12px 0 10px;
+      background: rgb(var(--peach-rgb) / 0.14);
+    }
+
+    .shop-card__text {
+      display: contents;
+    }
+
+    .shop-card__brand {
+      grid-area: brand;
+      margin: 0;
+      overflow: hidden;
+      font-size: 9px;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .shop-card__name {
+      grid-area: name;
+      min-height: 2.3em;
+      margin: 4px 0 8px;
+      font-size: 17px;
+      line-height: 1.15;
+      letter-spacing: 0.02em;
+    }
+
+    /* Größen als kleine Kästchen in einer Zeile */
+    .shop-card__sizes {
+      grid-area: sizes;
+      display: flex;
+      gap: 4px;
+      margin: 0;
+    }
+
+    .shop-card__sizes span {
+      flex: none;
+      padding: 3px 6px;
+      border: 1px solid rgb(var(--cream-rgb) / 0.18);
+      border-radius: 6px;
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .shop-card__sizes span + span::before {
+      content: none;
+    }
+
+    /* "Desde" (nur bei mehreren Größen) klein über dem Preis */
+    .shop-card__price {
+      grid-area: price;
+      flex-direction: column;
+      align-items: flex-start;
+      /* Mittig zum Pfeil: ohne "Desde" auf gleicher Höhe, mit "Desde" das Paar mittig daneben */
+      align-self: center;
+      gap: 3px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .shop-card__from {
+      color: rgb(var(--cream-rgb) / 0.55);
+      font: 500 8px/1 var(--font-sans);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .shop-card__arrow {
+      grid-area: arrow;
+      width: 34px;
+      height: 34px;
+      font-size: 15px;
+    }
+  }
+</style>

@@ -146,6 +146,22 @@ import RegaloStage from '../sections/regalo/RegaloStage.astro';
     pointer-events: auto;
   }
 
+  /* Handy und Tablet hochkant: "Nochmal ansehen" oben links neben dem Logo, nicht über dem Text */
+  @media (max-width: 899px) {
+    .regalo__grid {
+      height: 100svh;
+      min-height: 100svh;
+    }
+
+    .regalo__replay {
+      top: max(16px, env(safe-area-inset-top));
+      left: 16px;
+      bottom: auto;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
   @media (min-width: 900px) {
     .regalo__grid {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

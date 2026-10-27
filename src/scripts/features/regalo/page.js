@@ -1,4 +1,4 @@
-/* Seite "Regalo": Gift Card aus dem Link lesen, Umschlag öffnen, Karte drehen, Code kopieren. */
+/* Seite "Regalo": Gift Card aus dem Link lesen, Umschlag öffnen, Karte drehen (Knopf, Antippen, Wischen), Code kopieren. */
 import { showToast } from '../../core/events.js';
 import { bindTilt, startIdle } from '../gift/card.js';
 import { readGift } from './data.js';
@@ -13,8 +13,23 @@ function flip(regalo) {
   paint(regalo);
 }
 
+/* Ersatz für ältere Handys ohne moderne Zwischenablage: Text kurz in ein Feld, markieren, kopieren */
+function copyFallback(text) {
+  const field = Object.assign(document.createElement('textarea'), { value: text, readOnly: true });
+  field.style.cssText = 'position:fixed;opacity:0';
+  document.body.append(field);
+  field.select();
+  document.execCommand('copy');
+  field.remove();
+}
+
+function writeClipboard(text) {
+  if (!navigator.clipboard) return copyFallback(text);
+  return navigator.clipboard.writeText(text).catch(() => copyFallback(text));
+}
+
 function copyCode(regalo) {
-  navigator.clipboard?.writeText(regalo.gift.code).catch(() => {});
+  writeClipboard(regalo.gift.code);
   const button = regalo.root.querySelector('[data-regalo-copy]');
   const label = button.querySelector('[data-regalo-copy-label]');
   button.classList.add('is-copied');
@@ -37,12 +52,42 @@ const CLICKS = [
   ['[data-regalo-flip]', flip],
   ['[data-regalo-card]', flip],
   ['[data-regalo-copy]', copyCode],
+  ['[data-regalo-copy-code]', copyCode],
   ['[data-regalo-replay]', replay],
 ];
 
 function handleClick(regalo, event) {
+  /* Nach einem Wischer kommt noch ein Klick an, der darf die Karte nicht zurückdrehen */
+  if (regalo.swiped) {
+    regalo.swiped = false;
+    return;
+  }
   const match = CLICKS.find(([selector]) => event.target.closest(selector));
   if (match) match[1](regalo);
+}
+
+const SWIPE = 30; // so viele Pixel zur Seite drehen die Karte um
+
+/* Nach einem Wischer: drehen und kurz merken, damit der folgende Klick nicht zurückdreht.
+   Nur kurz, weil Touch-Geräte nach dem Wischen oft gar keinen Klick schicken. */
+function flipBySwipe(regalo) {
+  regalo.swiped = true;
+  setTimeout(() => (regalo.swiped = false), 400);
+  flip(regalo);
+}
+
+/* Karte zur Seite wischen = umdrehen (wenn sie ganz ausgepackt ist) */
+function bindSwipe(regalo, signal) {
+  const card = regalo.root.querySelector('[data-regalo-card]');
+  let startX = null;
+  const down = (event) => (startX = event.clientX);
+  const up = (event) => {
+    const swiped = startX !== null && Math.abs(event.clientX - startX) > SWIPE;
+    if (swiped && isDone(regalo)) flipBySwipe(regalo);
+    startX = null;
+  };
+  card.addEventListener('pointerdown', down, { signal });
+  card.addEventListener('pointerup', up, { signal });
 }
 
 function createRegalo(root) {
@@ -57,6 +102,7 @@ function createRegalo(root) {
 function bindRegalo(regalo, signal) {
   regalo.root.addEventListener('click', (event) => handleClick(regalo, event), { signal });
   bindTilt(regalo.card, signal, () => isDone(regalo));
+  bindSwipe(regalo, signal);
   const stopIdle = startIdle(regalo.card, regalo.root.querySelector('[data-regalo-float]'));
   signal.addEventListener('abort', () => {
     stopIdle();

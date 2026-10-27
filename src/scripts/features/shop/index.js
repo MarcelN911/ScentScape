@@ -4,6 +4,7 @@ import { renderActiveFilters } from './active-filters.js';
 import { bindControls } from './controls.js';
 import { filterEntries } from './filter.js';
 import { initMarquee } from '../../effects/marquee.js';
+import { bindMobileFilters } from './mobile-filters.js';
 import { bindPreview, renderPreview } from './preview-control.js';
 import { renderProfile } from './profile-view.js';
 import { renderResults } from './results-view.js';
@@ -11,14 +12,14 @@ import { stopReveal } from './reveal.js';
 import { createState, isIndexMode, resetPaging } from './state.js';
 import { renderWheel } from './wheel.js';
 
-function render(shop) {
+function render(shop, keepCards = false) {
   const { root, state } = shop;
   const result = filterEntries(shop.entries, state);
   const indexMode = isIndexMode(state);
   renderWheel(root, state, result.base);
   renderProfile(root, state, result);
   renderActiveFilters(root, state, shop.update);
-  renderResults(root, result, state, indexMode);
+  renderResults(root, result, state, { indexMode, keepCards });
   shop.visible = result.list.slice(0, state.shown);
   if (indexMode) renderPreview(shop, shop.visible);
 }
@@ -38,7 +39,9 @@ function createShop(root) {
   shop.update = (changes, { keepPage = false } = {}) => {
     applyChanges(shop.state, changes);
     if (!keepPage) resetPaging(shop.state);
-    render(shop);
+    // Beim Tippen in der Suche und bei "Ver más" bleiben die Karten stehen (kein neues Einblenden).
+    const onlyQuery = Object.keys(changes).every((key) => key === 'query');
+    render(shop, keepPage || onlyQuery);
   };
   return shop;
 }
@@ -49,8 +52,10 @@ export function initShop(signal) {
   const shop = createShop(root);
   bindControls(shop, signal);
   bindPreview(shop, signal);
+  bindMobileFilters(root, signal);
   initMarquee(root, signal);
-  addEventListener('resize', () => render(shop), { signal });
+  // Auf dem Handy feuert "resize" auch beim Scrollen (Adressleiste): Karten dabei stehen lassen.
+  addEventListener('resize', () => render(shop, true), { signal });
   render(shop);
   setTimeout(() => root.classList.add('is-in'), 80);
   signal.addEventListener('abort', stopReveal);

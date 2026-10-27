@@ -1,67 +1,181 @@
 ---
-/* Eine Fragancia auf einer Katalogseite: Foto, Name, Noten (nur im PDF) und Preis. */
+/*
+ * Eine Fragancia auf einer Katalogseite: Foto links, rechts
+ *   oben:   Name und Marke | Preis (bei mehreren Größen mit "Desde")
+ *   Mitte:  Beschreibung (max. 3 Zeilen)
+ *   unten:  Größen als kleine Kästchen
+ * Marke, Beschreibung, Größen und "Desde" nur im PDF (sheet--full); die Vorschau zeigt Name und Preis.
+ */
 /** @typedef {{ entry: object }} Props */
 const { entry } = Astro.props;
+const sizes = entry.sizes ?? [];
 ---
 
 <div class="sheet-item" data-sheet-item data-gender={entry.gender}>
   <img src={entry.image} alt="" loading="lazy" data-sheet-image />
-  <span class="sheet-item__name" data-sheet-name>
-    {entry.name}
-  </span>
-  <span class="sheet-item__notes">{entry.notes}</span>
-  <span class="sheet-item__price" data-sheet-price>
-    {entry.price}
-  </span>
+  <div class="sheet-item__text">
+    <div class="sheet-item__head">
+      <div class="sheet-item__title">
+        <span class="sheet-item__name" data-sheet-name>
+          {entry.name}
+        </span>
+        {entry.brand && <span class="sheet-item__brand">{entry.brand}</span>}
+      </div>
+      <div class="sheet-item__price-box">
+        {sizes.length > 1 && <span class="sheet-item__from">Desde</span>}
+        <span class="sheet-item__price" data-sheet-price>
+          {entry.price}
+        </span>
+      </div>
+    </div>
+    {entry.description && <p class="sheet-item__description">{entry.description}</p>}
+    {sizes.length > 0 && (
+      <div class="sheet-item__sizes">
+        {sizes.map((size) => (
+          <span>{size}</span>
+        ))}
+      </div>
+    )}
+  </div>
 </div>
 
 <style>
+  /* Eine Zeile: quadratisches Foto (22 % der Seitenbreite, passt in jede Zeile), daneben der Text */
   .sheet-item {
-    display: flex;
-    flex-direction: column;
-    gap: 1.6cqw;
+    display: grid;
+    grid-template-columns: 22cqw minmax(0, 1fr);
+    align-items: center;
+    gap: 4.5cqw;
     min-height: 0;
+  }
+
+  /* Trennstrich zwischen zwei Produkten, mittig im Abstand (gap 3cqw in CatalogSheet) */
+  .sheet-item + .sheet-item {
+    position: relative;
+  }
+
+  .sheet-item + .sheet-item::before {
+    content: '';
+    position: absolute;
+    top: -1.5cqw;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgb(0 0 0 / 0.14);
   }
 
   .sheet-item img {
     display: block;
-    flex: 1;
     width: 100%;
-    min-height: 0;
-    border-radius: 2cqw;
-    background: #e8dfd2;
-    object-fit: contain;
+    aspect-ratio: 1;
+    border-radius: 1.6cqw;
+    background: rgb(255 255 255 / 0.72);
+    box-shadow: 0 0.6cqw 2cqw rgb(0 0 0 / 0.06);
+    /* Foto füllt das Quadrat ganz aus, überstehende Ränder werden abgeschnitten */
+    object-fit: cover;
+  }
+
+  .sheet-item__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6cqw;
+    min-width: 0;
+  }
+
+  /* Kopf: links Name und Marke, rechts der Preis auf derselben Höhe */
+  .sheet-item__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3cqw;
+  }
+
+  .sheet-item__title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8cqw;
+    min-width: 0;
   }
 
   .sheet-item__name {
     overflow: hidden;
-    color: var(--navy);
-    font: 400 4.6cqw / 1.1 var(--font-serif);
+    color: #1c1c1e;
+    font: 400 3.8cqw / 1.05 var(--font-serif);
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
-  .sheet-item__notes {
+  .sheet-item__brand {
     display: none;
-    overflow: hidden;
-    color: #5a5560;
-    font: 400 2.4cqw / 1.35 var(--font-sans);
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    color: #8a8a90;
+    font: 500 1.45cqw / 1.2 var(--font-sans);
+    letter-spacing: 0.3cqw;
+    text-transform: uppercase;
+  }
+
+  /* "Desde" steht in derselben Zeile vor dem Preis: der Preis ist immer auf Höhe des Namens */
+  .sheet-item__price-box {
+    display: flex;
+    flex: none;
+    align-items: baseline;
+    gap: 1cqw;
+  }
+
+  .sheet-item__from {
+    display: none;
+    color: #8a8a90;
+    font: 500 1.3cqw / 1 var(--font-sans);
+    letter-spacing: 0.3cqw;
+    text-transform: uppercase;
   }
 
   .sheet-item__price {
     min-height: 1em;
-    color: var(--wine);
-    font: 500 3.2cqw var(--font-sans);
-    letter-spacing: 0.3cqw;
+    color: #9a7149;
+    font: 400 3.2cqw / 1 var(--font-serif);
+    white-space: nowrap;
   }
 
-  :global(.sheet--full) .sheet-item__notes {
+  /* Höchstens 3 Zeilen, längere Beschreibungen enden mit "…" */
+  .sheet-item__description {
+    display: none;
+    margin: 0;
+    overflow: hidden;
+    color: #55555b;
+    font: 400 1.65cqw / 1.6 var(--font-sans);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .sheet-item__sizes {
+    display: none;
+    flex-wrap: wrap;
+    gap: 1cqw;
+  }
+
+  .sheet-item__sizes span {
+    padding: 0.5cqw 1.3cqw;
+    border: 1px solid rgb(154 113 73 / 0.45);
+    border-radius: 0.8cqw;
+    color: #7a5a3a;
+    font: 500 1.35cqw / 1.2 var(--font-sans);
+    letter-spacing: 0.1cqw;
+  }
+
+  :global(.sheet--full) .sheet-item__brand,
+  :global(.sheet--full) .sheet-item__from {
     display: block;
   }
 
-  :global(.no-prices) .sheet-item__price {
+  :global(.sheet--full) .sheet-item__description {
+    display: -webkit-box;
+  }
+
+  :global(.sheet--full) .sheet-item__sizes {
+    display: flex;
+  }
+
+  :global(.no-prices) .sheet-item__price-box {
     visibility: hidden;
   }
 </style>

@@ -1,0 +1,168 @@
+---
+/*
+ * Handy und Tablet hochkant: Leiste über den Produkten, bleibt beim Scrollen oben.
+ * Suche, "Filtros" (öffnet das Filter-Panel von unten, siehe ProfilePanel.astro) und Für wen.
+ * Die Knöpfe nutzen dieselben data-Attribute wie die großen Filter, deshalb funktionieren sie
+ * ohne eigenes Skript (scripts/features/shop/controls.js). Öffnen/Schließen: mobile-filters.js
+ */
+import { GENDER_TABS } from '../../data/shop.js';
+import Icon from '../ui/Icon.astro';
+---
+
+<div class="shop-bar" data-shop-bar>
+  <label class="shop-bar__search">
+    <Icon name="search" size={15} strokeWidth={1.6} />
+    <input placeholder="Buscar nombre o marca" aria-label="Buscar productos" data-shop-search />
+  </label>
+  <div class="shop-bar__row">
+    <button class="shop-bar__filters" type="button" data-filters-open>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path>
+        <circle cx="16" cy="7" r="2"></circle>
+        <circle cx="10" cy="17" r="2"></circle>
+      </svg>
+      Filtros
+      <span class="shop-bar__count" data-filter-count hidden></span>
+    </button>
+    <div class="shop-bar__tabs" role="radiogroup" aria-label="Género">
+      {GENDER_TABS.map((tab) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked={tab === 'Todos' ? 'true' : 'false'}
+          data-gender-tab={tab}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .shop-bar {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .shop-bar {
+      position: sticky;
+      top: 90px;
+      z-index: calc(var(--z-header) - 1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0 -6px 22px;
+      padding: 10px;
+      border: 1px solid rgb(var(--peach-rgb) / 0.18);
+      border-radius: 22px;
+      background: rgb(var(--navy-rgb) / 0.86);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: top 0.6s var(--ease);
+    }
+
+    /* Ist der Header weggescrollt, rutscht die Leiste ganz nach oben */
+    :global(html:has(.site-header.is-hidden)) .shop-bar {
+      top: 10px;
+    }
+  }
+
+  .shop-bar__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.22);
+    border-radius: 21px;
+    background: var(--field);
+    color: var(--peach);
+  }
+
+  .shop-bar__search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    outline: none;
+  }
+
+  .shop-bar__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .shop-bar__filters {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--peach);
+    border-radius: 19px;
+    background: rgb(var(--peach-rgb) / 0.12);
+    color: var(--peach);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .shop-bar__count {
+    display: grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 10px/1 var(--font-sans);
+    letter-spacing: 0;
+  }
+
+  .shop-bar__count[hidden] {
+    display: none;
+  }
+
+  /* Für wen: waagrecht scrollbar, falls der Platz knapp ist */
+  .shop-bar__tabs {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .shop-bar__tabs button {
+    flex: none;
+    height: 38px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 19px;
+    background: none;
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .shop-bar__tabs button[aria-checked='true'] {
+    background: var(--peach);
+    color: var(--navy);
+  }
+</style>

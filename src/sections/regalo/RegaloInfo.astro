@@ -205,4 +205,59 @@ const { gift } = Astro.props;
       padding: 120px clamp(30px, 5vw, 96px) 12vh clamp(8px, 1.5vw, 24px);
     }
   }
+
+  /* Handy und Tablet hochkant: unter der Karte, alles mittig, Knöpfe in voller Breite */
+  @media (max-width: 899px) {
+    .regalo-info {
+      align-items: center;
+      gap: 30px;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 24px 120px;
+      text-align: center;
+    }
+
+    .regalo-info__eyebrow,
+    .regalo-info__from,
+    .regalo-info__message {
+      justify-content: center;
+    }
+
+    /* Zweite Linie rechts vom Eyebrow, wie links */
+    .regalo-info__eyebrow::after {
+      content: '';
+      width: 0;
+      height: 1px;
+      background: var(--peach);
+      transition: width 1.2s var(--ease) 0.2s;
+    }
+
+    :global(.is-p5) .regalo-info__eyebrow::after {
+      width: 40px;
+    }
+
+    .regalo-info__head {
+      align-items: center;
+    }
+
+    .regalo-info__message {
+      font-size: clamp(30px, 8vw, 46px);
+    }
+
+    .regalo-info__late {
+      width: 100%;
+    }
+
+    .regalo-info__actions {
+      flex-direction: column;
+    }
+
+    .regalo-info__cta,
+    .regalo-info__wa,
+    .regalo-info__give {
+      justify-content: center;
+      width: 100%;
+    }
+  }
 </style>

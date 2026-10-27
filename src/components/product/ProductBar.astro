@@ -1,0 +1,95 @@
+---
+/*
+ * Handy und Tablet hochkant: feste Leiste unten mit Größe, Preis und "Añadir al carrito".
+ * Erscheint, sobald der Kaufbereich (BuyCard) nach oben weggescrollt ist.
+ * Der Knopf löst den Knopf im Kaufbereich aus, Größe und Menge stimmen so immer.
+ * Bedienung: scripts/features/product/bar.js
+ */
+/** @typedef {{ product: object }} Props */
+import { formatCOP } from '../../scripts/utils/format.js';
+
+const { product } = Astro.props;
+const first = product.sizes[0];
+---
+
+<div class="product-bar" data-product-bar>
+  <span class="product-bar__total">
+    <small data-product-bar-size>{first.label}</small>
+    <strong data-product-bar-price>{formatCOP(first.salePrice ?? first.price)}</strong>
+  </span>
+  <button class="product-bar__add" type="button" data-product-bar-add>
+    Añadir al carrito <span aria-hidden="true">→</span>
+  </button>
+</div>
+
+<style>
+  .product-bar {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .product-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: calc(var(--z-player) - 1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px max(14px, env(safe-area-inset-bottom));
+      border-top: 1px solid rgb(var(--peach-rgb) / 0.18);
+      background: rgb(var(--navy-deep-rgb) / 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transform: translateY(110%);
+      transition: transform 0.5s var(--ease);
+    }
+
+    .product-bar.is-shown {
+      transform: none;
+    }
+  }
+
+  .product-bar__total {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .product-bar__total small {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .product-bar__total strong {
+    color: var(--cream);
+    font: 400 24px/1 var(--font-serif);
+    font-variant-numeric: lining-nums;
+  }
+
+  .product-bar__add {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 26px;
+    background: var(--peach);
+    color: var(--navy);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: transform 0.2s;
+  }
+
+  .product-bar__add:active {
+    transform: scale(0.97);
+  }
+</style>

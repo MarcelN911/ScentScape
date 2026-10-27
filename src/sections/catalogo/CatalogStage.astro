@@ -1,23 +1,25 @@
 ---
 /*
  * Bühne des Catálogo Digital: Deckblatt vorne, eine Innenseite dahinter, darunter Fortschritt und Status.
- * Beim Erstellen schieben sich beide zusammen, danach erscheint die PDF-Datei als WhatsApp-Anhang.
+ * Beim Erstellen schieben sich beide zusammen, danach erscheint die fertige PDF-Datei.
  */
 import CatalogCover from '../../components/catalogo/CatalogCover.astro';
 import CatalogSheet from '../../components/catalogo/CatalogSheet.astro';
 import CatalogSheetItem from '../../components/catalogo/CatalogSheetItem.astro';
-import WhatsAppIcon from '../../components/ui/WhatsAppIcon.astro';
+import Icon from '../../components/ui/Icon.astro';
 import { CATALOG_COLLECTIONS } from '../../data/catalog.js';
 
 /** @typedef {{ entries: object[], pages: number }} Props */
 const { entries, pages } = Astro.props;
 const first = CATALOG_COLLECTIONS[0];
+const [opening] = first.sections;
+const preview = entries.filter((entry) => opening.genders.includes(entry.gender)).slice(0, 4);
 ---
 
 <div class="catalog-stage reveal-late" style="--late:0.6s">
   <div class="catalog-stage__back" data-stage-sheet>
-    <CatalogSheet short={first.short} page={2}>
-      {entries.slice(0, 4).map((entry) => (
+    <CatalogSheet title={opening.title}>
+      {preview.map((entry) => (
         <CatalogSheetItem entry={entry} />
       ))}
     </CatalogSheet>
@@ -27,12 +29,12 @@ const first = CATALOG_COLLECTIONS[0];
   </div>
   <div class="catalog-stage__file" aria-hidden="true">
     <span class="catalog-stage__file-icon">
-      <WhatsAppIcon size={20} color="var(--cream)" />
+      <Icon name="download" size={18} />
     </span>
     <span class="catalog-stage__file-text">
       <span>Catalogo_ScentScape.pdf</span>
       <small>
-        <span data-stage-pages>{pages}</span> páginas · listo para enviar
+        <span data-stage-pages>{pages}</span> páginas · listo para descargar
       </small>
     </span>
   </div>
@@ -99,7 +101,8 @@ const first = CATALOG_COLLECTIONS[0];
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    background: var(--whatsapp);
+    background: var(--peach);
+    color: var(--navy);
   }
 
   .catalog-stage__file-text {
@@ -111,7 +114,7 @@ const first = CATALOG_COLLECTIONS[0];
   }
 
   .catalog-stage__file-text small {
-    color: var(--whatsapp);
+    color: var(--peach);
     font: 400 10px var(--font-sans);
     letter-spacing: 1px;
   }

@@ -1,10 +1,9 @@
 ---
 /*
- * Formular des Catálogo Digital: Kollektion, Preise, Name für das Deckblatt, WhatsApp-Nummer.
+ * Formular des Catálogo Digital: Kollektion und Preise wählen, dann das PDF erstellen und öffnen.
  * Bedienung: scripts/features/catalogo/page.js
  */
-import WhatsAppIcon from '../../components/ui/WhatsAppIcon.astro';
-import { CATALOG_COLLECTIONS, CATALOG_LIMITS, CATALOG_PRICES } from '../../data/catalog.js';
+import { CATALOG_COLLECTIONS, CATALOG_PRICES } from '../../data/catalog.js';
 
 /** @typedef {{ counts: Record<string, number>, pages: number }} Props */
 const { counts, pages } = Astro.props;
@@ -50,30 +49,6 @@ const fragrances = (count) => `${count} ${count === 1 ? 'fragancia' : 'fragancia
       ))}
     </div>
   </div>
-  <div class="catalog-form__fields">
-    <label class="field-group">
-      <span class="field-label">03 · Portada</span>
-      <input
-        class="text-input"
-        name="client"
-        maxlength={CATALOG_LIMITS.client}
-        placeholder="Nombre del cliente o tienda"
-        autocomplete="off"
-      />
-    </label>
-    <label class="field-group">
-      <span class="field-label">04 · WhatsApp</span>
-      <input
-        class="text-input"
-        name="phone"
-        type="tel"
-        inputmode="tel"
-        maxlength={CATALOG_LIMITS.phone}
-        placeholder="300 000 0000 (opcional)"
-        autocomplete="tel"
-      />
-    </label>
-  </div>
   <div class="catalog-form__end">
     <button class="submit-btn" type="submit" data-catalog-submit>
       <span data-catalog-submit-label>Generar catálogo · {pages} páginas</span>
@@ -88,10 +63,6 @@ const fragrances = (count) => `${count} ${count === 1 ? 'fragancia' : 'fragancia
         data-catalog-pdf
       >
         Abrir PDF <span>→</span>
-      </a>
-      <a class="catalog-form__wa" href="#" target="_blank" rel="noopener" data-catalog-wa>
-        <WhatsAppIcon size={16} color="var(--navy)" />
-        Enviar por WhatsApp
       </a>
       <button class="outline-btn catalog-form__edit" type="button" data-catalog-edit>
         Editar catálogo
@@ -109,41 +80,16 @@ const fragrances = (count) => `${count} ${count === 1 ? 'fragancia' : 'fragancia
   }
 
   .catalog-form__choices--wide,
-  .catalog-form__fields,
   .catalog-form__done {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
   }
 
-  .catalog-form__fields {
-    gap: 14px;
-  }
-
   .catalog-form__end {
     display: flex;
     flex-direction: column;
     gap: 12px;
-  }
-
-  .catalog-form__wa {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    height: 56px;
-    border-radius: 28px;
-    background: var(--whatsapp);
-    color: var(--navy);
-    font: 500 11px var(--font-sans);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    transition: filter 0.3s;
-  }
-
-  .catalog-form__wa:hover {
-    color: var(--navy);
-    filter: brightness(1.1);
   }
 
   .catalog-form__edit {

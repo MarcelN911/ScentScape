@@ -1,59 +1,83 @@
 ---
 /*
- * Innenseite des Catálogo Digital: Kopfzeile und Raster 2 × 2 (Slot für die Fragancias).
- * full: ganze PDF-Seite mit Noten; sonst die kleine Vorschau.
+ * Innenseite des Catálogo Digital nach der PDF-Vorlage: grauer Grund mit Wasserzeichen und Fußzeile
+ * (Bild page.jpg), darauf die Fragancias untereinander in 4 gleich hohen Zeilen (Slot).
+ * Die erste Seite eines Abschnitts hat oben die schwarze Kopfleiste mit Titel und Ornament.
+ * Alle Größen in cqw, deshalb passt sie als kleine Vorschau genauso wie als ganze PDF-Seite.
+ * full: ganze PDF-Seite mit Marke und Beschreibung; sonst die kleine Vorschau.
  */
-/** @typedef {{ short: string, page: number, full?: boolean }} Props */
-const { short, page, full = false } = Astro.props;
+/** @typedef {{ title: string, opening?: boolean, full?: boolean }} Props */
+const { title, opening = true, full = false } = Astro.props;
 ---
 
-<div class:list={['sheet', { 'sheet--full': full }]} data-sheet>
-  <div class="sheet__page">
-    <div class="sheet__head">
-      <span>ScentScape</span>
-      <span>
-        <span data-sheet-short>{short}</span> ·{' '}
-        <span data-sheet-page>{String(page).padStart(2, '0')}</span>
-      </span>
-    </div>
-    <div class="sheet__grid" data-sheet-grid>
-      <slot />
-    </div>
+<div class:list={['sheet', { 'sheet--full': full, 'sheet--opening': opening }]} data-sheet>
+  <div class="sheet__bar">
+    <span class="sheet__title" data-sheet-title>
+      {title}
+    </span>
+    <img class="sheet__ornament" src="/assets/img/catalogo/ornament.png" alt="" />
+  </div>
+  <div class="sheet__grid" data-sheet-grid>
+    <slot />
   </div>
 </div>
 
 <style>
   .sheet {
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1.414;
+    overflow: hidden;
     container-type: inline-size;
     border-radius: 4px;
-    background: #f4ede3;
+    background: #eaeaeb url('/assets/img/catalogo/page.jpg') center / cover no-repeat;
   }
 
-  .sheet__page {
-    display: flex;
-    flex-direction: column;
-    gap: 5cqw;
-    height: 100%;
-    padding: 7cqw;
+  /* Maße aus der Vorlage: Leiste 12,6 % der Seitenhöhe, Fußlinie bei 92 % */
+  .sheet__bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    align-items: center;
+    height: 17.8cqw;
+    padding-left: 5.4cqw;
+    background: #000;
   }
 
-  .sheet__head {
+  .sheet--opening .sheet__bar {
     display: flex;
-    justify-content: space-between;
-    color: var(--wine);
-    font: 500 3cqw var(--font-sans);
-    letter-spacing: 0.6cqw;
+  }
+
+  .sheet__title {
+    color: #e5c09d;
+    font: 700 4cqw / 1 var(--font-sans);
+    letter-spacing: 0.22em;
     text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sheet__ornament {
+    position: absolute;
+    top: 1.2cqw;
+    right: 2.6cqw;
+    width: 15cqw;
+    height: auto;
   }
 
   .sheet__grid {
+    position: absolute;
+    top: 8cqw;
+    left: 7cqw;
+    right: 7cqw;
+    bottom: 15.5cqw;
     display: grid;
-    flex: 1;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 5cqw;
-    min-height: 0;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: 3cqw;
+  }
+
+  .sheet--opening .sheet__grid {
+    top: 23cqw;
   }
 </style>

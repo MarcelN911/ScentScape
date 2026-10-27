@@ -1,53 +1,19 @@
 ---
+/*
+ * Video-Bereich der Startseite: aufgefächertes Karussell.
+ * Desktop: Text links, Karten rechts. Hochformat (Handy, Tablet hochkant): alles untereinander
+ * und mittig wie die anderen Sections, dazu ein schwebender Instagram-Knopf.
+ */
+import InstagramFab from '../../components/home/InstagramFab.astro';
+import ReelIntro from '../../components/home/ReelIntro.astro';
 import VideoCard from '../../components/home/VideoCard.astro';
-import VideoThumb from '../../components/home/VideoThumb.astro';
-import InstagramPill from '../../components/ui/InstagramPill.astro';
 import { VIDEOS } from '../../data/home.js';
-import { padNumber } from '../../scripts/utils/format.js';
 ---
 
 <section class="reel" data-reel>
   <div class="reel__pin">
     <div class="reel__grid">
-      <div class="reel__intro">
-        <h2 class="reel__title">
-          <span class="line-mask">
-            <span data-reveal="mask">ScentScape</span>
-          </span>
-        </h2>
-        <div class="reel__now">
-          <p class="reel__count">
-            <span data-reel-number>01</span>{' '}
-            <span class="reel__total">/ {padNumber(VIDEOS.length)}</span>
-          </p>
-          <p class="reel__current" data-reel-title>
-            {VIDEOS[0].title}
-          </p>
-          <div class="reel__bar">
-            <span data-reel-bar></span>
-          </div>
-        </div>
-        <div class="reel__controls">
-          <button class="reel__arrow" type="button" data-reel-step="-1" aria-label="Anterior">
-            ←
-          </button>
-          <button class="reel__arrow" type="button" data-reel-step="1" aria-label="Siguiente">
-            →
-          </button>
-          <button class="reel__sound" type="button" data-reel-open>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 4l13 8-13 8z"></path>
-            </svg>
-            Ver con sonido
-          </button>
-          <InstagramPill />
-        </div>
-        <div class="reel__thumbs">
-          {VIDEOS.map((video, index) => (
-            <VideoThumb video={video} index={index} />
-          ))}
-        </div>
-      </div>
+      <ReelIntro />
       <div class="reel__stage" data-reel-stage>
         {VIDEOS.map((video, index) => (
           <VideoCard video={video} index={index} />
@@ -55,6 +21,7 @@ import { padNumber } from '../../scripts/utils/format.js';
       </div>
     </div>
   </div>
+  <InstagramFab />
 </section>
 
 <style>
@@ -80,6 +47,7 @@ import { padNumber } from '../../scripts/utils/format.js';
     display: flex;
     align-items: center;
     height: 100vh;
+    height: 100svh;
     overflow: hidden;
     padding: clamp(76px, 10vh, 90px) var(--gutter) clamp(16px, 3vh, 40px);
   }
@@ -91,112 +59,6 @@ import { padNumber } from '../../scripts/utils/format.js';
     width: 100%;
   }
 
-  .reel__intro {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(12px, 3vh, 30px);
-    min-width: 0;
-  }
-
-  .reel__title {
-    margin: 0;
-    font: 500 clamp(34px, min(6vw, 8.5vh), 100px) / 0.9 var(--font-serif);
-    letter-spacing: -0.015em;
-  }
-
-  .reel__title em {
-    font: italic 400 1.05em/1 var(--font-serif);
-    letter-spacing: 0;
-    color: var(--peach);
-  }
-
-  .reel__now {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .reel__count {
-    margin: 0;
-    font: 700 13px/1 var(--font-sans);
-    letter-spacing: 2px;
-    color: var(--peach);
-  }
-
-  .reel__total {
-    color: rgb(var(--cream-rgb) / 0.45);
-  }
-
-  .reel__current {
-    min-height: 1.1em;
-    margin: 0;
-    font: italic 400 clamp(30px, 3vw, 46px) / 1.05 var(--font-serif);
-    text-wrap: balance;
-  }
-
-  .reel__bar {
-    max-width: 360px;
-    height: 2px;
-    margin-top: 6px;
-    overflow: hidden;
-    border-radius: 1px;
-    background: rgb(var(--cream-rgb) / 0.18);
-  }
-
-  .reel__bar span {
-    display: block;
-    height: 100%;
-    background: var(--peach);
-    transform: scaleX(var(--reel-progress, 0));
-    transform-origin: 0 50%;
-  }
-
-  .reel__controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .reel__arrow {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 1px solid rgb(var(--peach-rgb) / 0.45);
-    background: none;
-    color: var(--peach);
-    font: 400 22px/1 var(--font-sans);
-  }
-
-  .reel__sound {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    height: 56px;
-    padding: 0 24px;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: var(--peach);
-    color: var(--navy);
-    font: 700 14px/1 var(--font-sans);
-  }
-
-  .reel__sound:hover {
-    background: var(--sand);
-  }
-
-  .reel__arrow:hover {
-    background: rgb(var(--peach-rgb) / 0.15);
-  }
-
-  .reel__thumbs {
-    display: none;
-    gap: 12px;
-    overflow-x: auto;
-    padding: 6px 2px;
-    scrollbar-width: none;
-  }
-
   .reel__stage {
     position: relative;
     height: var(--video-stage);
@@ -206,7 +68,108 @@ import { padNumber } from '../../scripts/utils/format.js';
     transform-origin: 50% 60%;
   }
 
-  @media (min-width: 1000px) {
+  /*
+   * Hochformat: wie das Desktop-Karussell, aber untereinander und mittig
+   * (wie die anderen Sections): Überschrift, aufgefächerte Videos, Nummer und Titel, Knöpfe.
+   * Die linke Spalte gibt ihre Teile dafür direkt ans Raster weiter (display: contents),
+   * so lässt sich die Reihenfolge mit order festlegen.
+   */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .reel {
+      height: 190vh;
+      height: 190svh;
+      /* Oben wie die Gift Card (--navy), unten weich in die Farbe des Footers (--navy-deep) */
+      background: linear-gradient(
+        180deg,
+        var(--navy) 0%,
+        #1b1634 28%,
+        #3a0a24 62%,
+        #2a0c26 80%,
+        var(--navy-deep) 96%
+      );
+    }
+
+    .reel .reel__pin {
+      padding: 84px 16px 84px;
+    }
+
+    .reel .reel__grid {
+      align-items: center;
+      gap: 0;
+      text-align: center;
+    }
+
+    .reel :global(.reel__intro) {
+      display: contents;
+    }
+
+    .reel :global(.reel__title) {
+      order: 1;
+      margin-bottom: 3svh;
+      font-size: clamp(42px, min(11vw, 7svh), 96px);
+    }
+
+    .reel .reel__stage {
+      order: 2;
+      width: 100%;
+      margin-bottom: 3svh;
+      touch-action: pan-y;
+    }
+
+    /* Titel steht unter den Karten, deshalb auf der Karte selbst ausgeblendet */
+    .reel .reel__stage :global(.video-card__foot) {
+      display: none;
+    }
+
+    .reel :global(.reel__now) {
+      order: 3;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reel :global(.reel__current) {
+      font-size: clamp(24px, 6.5vw, 38px);
+    }
+
+    .reel :global(.reel__bar) {
+      width: min(220px, 60vw);
+      margin-top: 4px;
+    }
+
+    .reel :global(.reel__controls) {
+      order: 4;
+      flex-wrap: nowrap;
+      justify-content: center;
+      margin-top: 3svh;
+    }
+
+    .reel :global(.reel__arrow) {
+      flex: none;
+      width: 48px;
+      height: 48px;
+    }
+
+    .reel :global(.reel__sound) {
+      height: 48px;
+      padding: 0 22px;
+    }
+
+    /* Instagram gibt es als schwebenden Knopf (InstagramFab) */
+    .reel :global(.instagram-pill) {
+      display: none;
+    }
+  }
+
+  /* Tablet hochkant: größere Karten, damit die Fläche gefüllt ist */
+  @media (min-width: 600px) and (max-width: 1079px) and (orientation: portrait) {
+    .reel {
+      --video-stage: min(52svh, 640px);
+      --video-spread: 70%;
+    }
+  }
+
+  /* Nebeneinander: Desktop und Tablet quer */
+  @media (min-width: 1080px), (min-width: 1000px) and (orientation: landscape) {
     .reel {
       --video-stage: clamp(420px, 64vh, 660px);
       --video-width: min(340px, 30vw, calc(var(--video-stage) * 9 / 16));
@@ -220,10 +183,6 @@ import { padNumber } from '../../scripts/utils/format.js';
       gap: clamp(40px, 5vw, 80px);
       max-width: 1500px;
       margin: 0 auto;
-    }
-
-    .reel__thumbs {
-      display: flex;
     }
   }
 </style>

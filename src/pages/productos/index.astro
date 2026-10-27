@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCatalog } from '../../scripts/catalog/load.js';
 import { getNoteImages } from '../../scripts/catalog/note-images.js';
 import { shopEntryOf } from '../../scripts/catalog/shop-entry.js';
+import MobileShopBar from '../../components/shop/MobileShopBar.astro';
 import ProfilePanel from '../../sections/shop/ProfilePanel.astro';
 import ShopResults from '../../sections/shop/ShopResults.astro';
 
@@ -36,6 +37,7 @@ const entries = catalog.map(shopEntryOf);
         <p class="shop__tagline">Distinción sin límites</p>
       </div>
       <ProfilePanel images={images} />
+      <MobileShopBar />
       <ShopResults entries={entries} />
     </div>
     <script type="application/json" data-shop-data set:html={JSON.stringify({ entries, images })} />

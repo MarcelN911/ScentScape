@@ -1,12 +1,16 @@
 /*
  * "ScentScape en video": Karussell mit aufgefächerten Karten.
  * Beim Hereinscrollen fächern die Karten auf, das vordere Video läuft stumm und schaltet am Ende weiter.
+ * Wechseln: Pfeile, Vorschaubilder, Antippen einer Nachbarkarte oder Wischen über die Karten.
+ * "Ver con sonido" oder Antippen der vorderen Karte öffnet das Video mit Ton:
+ * am Desktop als Instagram-Beitrag (video-modal.js), im Hochformat als Story (story-modal.js).
  */
 import { VIDEOS } from '../../../data/home.js';
 import { easeOut, onScrollProgress, PINNED_RANGE } from '../../effects/scroll.js';
 import { clamp } from '../../utils/motion.js';
 import { bindVideoEvents, syncPlayback } from './reel-playback.js';
 import { findReelParts, renderReel } from './reel-view.js';
+import { createStoryModal, STACKED_QUERY } from './story-modal.js';
 import { createVideoModal } from './video-modal.js';
 
 const TITLES = VIDEOS.map((video) => video.title);
@@ -36,6 +40,11 @@ const CLICK_TARGETS = [
 ];
 
 function handleClick(reel, event) {
+  /* Nach einem Wischer kommt noch ein Klick an, der darf nicht zusätzlich weiterschalten */
+  if (reel.swiped) {
+    reel.swiped = false;
+    return undefined;
+  }
   for (const [selector, handler] of CLICK_TARGETS) {
     const element = event.target.closest(selector);
     if (element) return handler(reel, element);
@@ -43,10 +52,32 @@ function handleClick(reel, event) {
   return undefined;
 }
 
+const SWIPE = 40;
+
+function onSwipeEnd(reel, distance) {
+  if (Math.abs(distance) < SWIPE) return;
+  reel.swiped = true;
+  select(reel, reel.state.index - Math.sign(distance));
+}
+
+/** Zur Seite wischen wechselt das Video (nach links = nächstes) */
+function bindSwipe(reel, signal) {
+  const { stage } = reel.parts;
+  let startX = null;
+  stage.addEventListener('pointerdown', (event) => (startX = event.clientX), { signal });
+  const onUp = (event) => {
+    if (startX !== null) onSwipeEnd(reel, event.clientX - startX);
+    startX = null;
+  };
+  stage.addEventListener('pointerup', onUp, { signal });
+}
+
 function watchVisibility(reel) {
   const observer = new IntersectionObserver(
     ([entry]) => {
       reel.state.visible = entry.isIntersecting;
+      /* Lässt den Instagram-Knopf herein- und herausschweben (InstagramFab.astro) */
+      reel.parts.section.classList.toggle('is-in-view', entry.isIntersecting);
       syncPlayback(reel.parts, reel.state);
     },
     { threshold: 0.35 },
@@ -65,15 +96,23 @@ export function animateReelFan() {
   });
 }
 
+/* Großansicht auf/zu: Karussell pausieren. Schließt die Story, zeigt das Karussell ihr letztes Video. */
+function onModalToggle(reel, open, index) {
+  reel.state.modalOpen = open;
+  if (index === undefined) syncPlayback(reel.parts, reel.state);
+  else select(reel, index);
+}
+
 function createReel(section, signal) {
   const reel = {
     parts: findReelParts(section),
     state: { index: 0, visible: false, modalOpen: false },
   };
-  reel.openModal = createVideoModal((open) => {
-    reel.state.modalOpen = open;
-    syncPlayback(reel.parts, reel.state);
-  }, signal);
+  const onToggle = (open, index) => onModalToggle(reel, open, index);
+  const openPost = createVideoModal(onToggle, signal);
+  const openStory = createStoryModal(onToggle, signal);
+  reel.openModal = (index) =>
+    openStory && matchMedia(STACKED_QUERY).matches ? openStory(index) : openPost(index);
   return reel;
 }
 
@@ -83,6 +122,7 @@ export function initReel(signal) {
   const reel = createReel(section, signal);
   section.addEventListener('click', (event) => handleClick(reel, event), { signal });
   bindVideoEvents(reel.parts, reel.state, () => select(reel, reel.state.index + 1), signal);
+  bindSwipe(reel, signal);
   select(reel, 0);
   return watchVisibility(reel);
 }

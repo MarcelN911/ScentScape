@@ -2,6 +2,7 @@
 /*
  * Linke Seite der Produktseite: großes Bild mit Galerie.
  * Gibt es Noten, ist das zweite Bild dieselbe Flasche mit dem Notenrad darüber.
+ * Handy: kompakter, Bild wischen, Punkte statt Vorschau-Leiste.
  */
 import NoteWheel from '../../components/product/NoteWheel.astro';
 import RailThumb from '../../components/product/RailThumb.astro';
@@ -49,6 +50,18 @@ const thumbs = gallery.map((src, index) => ({
     </button>
     {hasWheel && <NoteWheel notes={product.ingredients} images={images} />}
   </div>
+  {gallery.length > 1 && (
+    <div class="stage__dots">
+      {gallery.map((_, index) => (
+        <button
+          class:list={['stage__dot', { 'is-active': index === 0 }]}
+          type="button"
+          aria-label={`Imagen ${index + 1}`}
+          data-stage-thumb={index}
+        />
+      ))}
+    </div>
+  )}
   {gallery.length > 1 && (
     <div class="rail">
       <button class="rail__arrow" type="button" aria-label="Imagen anterior" data-stage-step="-1">
@@ -234,6 +247,68 @@ const thumbs = gallery.map((src, index) => ({
     overflow-x: auto;
     padding: 3px;
     scrollbar-width: none;
+  }
+
+  .stage__dots {
+    display: none;
+  }
+
+  /* Handy: Bild quadratisch über die ganze Breite, wischbar (stage.js); Punkte zeigen die Lage */
+  @media (max-width: 899px) {
+    /* Kein eigener dunkler Block: Galerie und Text darunter gehen ohne Kante ineinander über */
+    .stage {
+      gap: 14px;
+      height: auto;
+      padding: 84px 16px 4px;
+      background: radial-gradient(
+        ellipse 70% 45% at 50% 40%,
+        rgb(var(--wine-rgb) / 0.4),
+        transparent 72%
+      );
+    }
+
+    .stage__word,
+    .rail {
+      display: none;
+    }
+
+    /* Etwas breiter als hoch: so ist "Añadir al carrito" schon beim ersten Blick fast zu sehen */
+    .stage__box {
+      width: 100%;
+      max-height: none;
+      aspect-ratio: 1 / 0.86;
+      border-radius: 22px;
+      touch-action: pan-y;
+    }
+
+    .stage__fav {
+      top: 16px;
+      right: 16px;
+      width: 42px;
+      height: 42px;
+    }
+
+    .stage__dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .stage__dot {
+      width: 7px;
+      height: 7px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: rgb(var(--sand-rgb) / 0.3);
+      transition:
+        width 0.4s var(--ease),
+        background-color 0.4s;
+    }
+
+    .stage__dot.is-active {
+      width: 22px;
+      background: var(--peach);
+    }
   }
 
   @media (min-width: 900px) {

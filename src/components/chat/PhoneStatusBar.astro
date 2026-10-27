@@ -36,13 +36,18 @@
 </div>
 
 <style>
+  /*
+   * Wie beim iPhone: Uhrzeit und Symbole auf Höhe der Insel (oben 10px, 32px hoch → Mitte bei 26px),
+   * jeweils mittig im freien Bereich links und rechts von ihr (Mittelspalte = Breite der Insel).
+   */
   .status {
-    display: flex;
+    display: grid;
     flex: none;
-    justify-content: space-between;
-    align-items: flex-end;
+    grid-template-columns: 1fr 120px 1fr;
+    justify-items: center;
+    align-items: center;
     height: 52px;
-    padding: 0 30px 8px;
+    padding: 0 8px;
     background: var(--navy-card);
     color: var(--cream);
     font:
@@ -52,6 +57,7 @@
   }
 
   .status__icons {
+    grid-column: 3;
     display: flex;
     align-items: center;
     gap: 6px;

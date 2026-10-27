@@ -155,4 +155,37 @@ const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
     height: 1px;
     background: var(--peach);
   }
+
+  /*
+   * Hochformat: Die Grafik wird auf die Bildschirmbreite verkleinert (1600 Einheiten → z. B. 390px).
+   * Der Claim braucht deshalb größere Werte in SVG-Einheiten, sonst ist er nur 3px hoch.
+   */
+  @media (orientation: portrait) {
+    .intro__claim {
+      font-size: 26px;
+      letter-spacing: 12px;
+    }
+
+    .intro__row {
+      bottom: max(56px, 9svh);
+      font-size: 9px;
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
+
+    .intro__row span {
+      gap: 10px;
+    }
+
+    .intro__row i {
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 599px) and (orientation: portrait) {
+    .intro__claim {
+      font-size: 42px;
+      letter-spacing: 11px;
+    }
+  }
 </style>

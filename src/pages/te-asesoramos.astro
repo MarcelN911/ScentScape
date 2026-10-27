@@ -4,8 +4,10 @@ import PhoneMock from '../components/chat/PhoneMock.astro';
 import FaqList from '../components/faq/FaqList.astro';
 import PageIntro from '../components/page/PageIntro.astro';
 import SplitPage from '../components/page/SplitPage.astro';
+import WhatsAppIcon from '../components/ui/WhatsAppIcon.astro';
 import { FAQ_GREETING, FAQ_QUESTIONS } from '../data/faq.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_NUMBER } from '../scripts/config.js';
 
 const questions = FAQ_QUESTIONS.map(({ question, answer }) => ({ question, answer }));
 ---
@@ -27,7 +29,11 @@ const questions = FAQ_QUESTIONS.map(({ question, answer }) => ({ question, answe
           <p>¿Tu pregunta no está en la lista? Escríbenos directamente.</p>
           <ContactList size="lg" bordered={false} />
         </div>
-        <PhoneMock greeting={FAQ_GREETING} input="field" />
+        <PhoneMock
+          greeting={FAQ_GREETING}
+          input="field"
+          suggestions={FAQ_QUESTIONS.map((item) => item.question)}
+        />
       </div>
       <PageIntro
         crumb="Te asesoramos"
@@ -42,6 +48,23 @@ const questions = FAQ_QUESTIONS.map(({ question, answer }) => ({ question, answe
         lead="Envíos, cómo elegir tu perfume y cómo encontrarnos. Si tu pregunta no está aquí, Sara y Brayan te responden en persona por WhatsApp."
       />
       <FaqList />
+      <!-- Nur Handy: unter dem Handy statt der Kontaktliste daneben -->
+      <div class="faq-help reveal-late" style="--late:1.3s">
+        <p class="faq-help__title">¿Tu pregunta no está en la lista?</p>
+        <p class="faq-help__text">Sara y Brayan te responden en persona.</p>
+        <a
+          class="faq-help__wa"
+          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          target="_blank"
+          rel="noopener"
+        >
+          <WhatsAppIcon size={18} color="var(--navy)" />
+          Escríbenos por WhatsApp
+        </a>
+        <a class="faq-help__ig" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+          Instagram · {INSTAGRAM_HANDLE}
+        </a>
+      </div>
     </SplitPage>
     <script type="application/json" data-chat-data set:html={JSON.stringify(questions)} />
   </main>
@@ -78,6 +101,78 @@ const questions = FAQ_QUESTIONS.map(({ question, answer }) => ({ question, answe
     border-bottom: 1px solid rgb(var(--peach-rgb) / 0.22);
     color: rgb(var(--cream-rgb) / 0.75);
     font: 300 14px/1.6 var(--font-sans);
+  }
+
+  .faq-help {
+    display: none;
+  }
+
+  /*
+   * Handy: Fragenliste und Handy passen nicht nebeneinander. Das Handy bleibt (kleiner),
+   * die Fragen stehen im Chat als Vorschläge über dem Eingabefeld (PhoneMock suggestions).
+   * Darunter die Karte zum Schreiben statt der Kontaktliste neben dem Handy.
+   */
+  @media (max-width: 899px) {
+    /*
+     * Höhe 82 % des Bildschirms; Verhältnis 9:18,2 statt 9:19 (iPhone), damit es nicht gequetscht wirkt.
+     * Breite = Höhe × 9 / 18,2. Die Obergrenze 170vw hält es schmaler als den Bildschirm.
+     */
+    .faq-stage {
+      --phone-height: min(82svh, 170vw);
+      --phone-ratio: 9 / 18.2;
+    }
+
+    .faq-stage__aside,
+    :global([data-faq-page] .faq-label),
+    :global([data-faq-page] .faq-list) {
+      display: none;
+    }
+
+    .faq-help {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 22px;
+      border: 1px solid rgb(var(--peach-rgb) / 0.22);
+      border-radius: 24px;
+      background: rgb(var(--navy-card-rgb) / 0.45);
+      text-align: center;
+    }
+
+    .faq-help__title {
+      margin: 0;
+      color: var(--cream);
+      font: 400 23px/1.2 var(--font-serif);
+    }
+
+    .faq-help__text {
+      margin: 0 0 8px;
+      color: rgb(var(--cream-rgb) / 0.7);
+      font: 300 14px/1.6 var(--font-sans);
+    }
+
+    .faq-help__wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 52px;
+      border-radius: 26px;
+      background: var(--whatsapp);
+      color: var(--navy);
+      font: 500 11px var(--font-sans);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    .faq-help__ig {
+      margin-top: 6px;
+      color: var(--sand);
+      font: 400 12px var(--font-sans);
+      letter-spacing: 1px;
+    }
   }
 
   @media (min-width: 1200px) {

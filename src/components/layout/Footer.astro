@@ -8,6 +8,7 @@ import {
 } from '../../scripts/config.js';
 import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
 import FooterColumn from './FooterColumn.astro';
+import FooterMini from './FooterMini.astro';
 
 const year = new Date().getFullYear();
 const contact = {
@@ -45,6 +46,7 @@ const columns = [...FOOTER_COLUMNS, contact];
         </a>
       </div>
     </div>
+    <FooterMini />
     <div class="footer__columns">
       {columns.map((column) => (
         <FooterColumn column={column} />
@@ -57,9 +59,14 @@ const columns = [...FOOTER_COLUMNS, contact];
     ))}
   </div>
   <div class="footer__bottom">
-    <p>© {year} ScentScape. Todos los derechos reservados.</p>
-    <button class="footer__top" type="button" data-action="scroll-top">
-      Volver arriba ↑
+    <p>
+      © {year} ScentScape<span class="footer__rights">. Todos los derechos reservados.</span>
+      <span class="footer__legal">
+        · <a href="/terminos/">Términos</a> · <a href="/privacidad/">Privacidad</a>
+      </span>
+    </p>
+    <button class="footer__top" type="button" data-action="scroll-top" aria-label="Volver arriba">
+      <span class="footer__top-label">Volver arriba</span> ↑
     </button>
   </div>
 </footer>
@@ -226,6 +233,82 @@ const columns = [...FOOTER_COLUMNS, contact];
   .footer__top:hover {
     background: var(--peach);
     color: var(--navy);
+  }
+
+  .footer__legal {
+    display: none;
+  }
+
+  .footer__legal a {
+    color: inherit;
+  }
+
+  /*
+   * Handy und Tablet hochkant: kurzer Footer. Ohne Begleittext und ohne die vier Link-Spalten,
+   * stattdessen FooterMini (wichtigste Links, Instagram, WhatsApp). Weniger Abstände.
+   */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .footer {
+      /* Unten Platz für den Musik-Player, damit er nichts verdeckt */
+      padding: 64px 20px 80px;
+    }
+
+    .footer__brand {
+      gap: 22px;
+    }
+
+    .footer__title {
+      font-size: clamp(36px, 9vw, 56px);
+    }
+
+    .footer__text,
+    .footer__columns,
+    .footer__rights {
+      display: none;
+    }
+
+    .footer__legal {
+      display: inline;
+    }
+
+    .footer__buttons {
+      width: 100%;
+    }
+
+    .footer__btn {
+      flex: 1;
+      justify-content: center;
+      height: 48px;
+      padding: 0 16px;
+      letter-spacing: 2px;
+    }
+
+    .footer__mark {
+      margin-top: 44px;
+    }
+
+    .footer__bottom {
+      margin-top: 18px;
+      padding-top: 16px;
+    }
+
+    /* Nur der Pfeil, als kleiner runder Knopf neben dem Copyright */
+    .footer__bottom {
+      flex-wrap: nowrap;
+    }
+
+    .footer__top {
+      flex: none;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      letter-spacing: 0;
+      font-size: 13px;
+    }
+
+    .footer__top-label {
+      display: none;
+    }
   }
 
   @media (min-width: 640px) {

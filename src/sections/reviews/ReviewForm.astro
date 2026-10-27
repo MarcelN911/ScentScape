@@ -61,7 +61,7 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
         autocomplete="address-level2"
       />
     </label>
-    <label class="field-group">
+    <label class="field-group review-form__wide">
       <span class="field-label">05 · WhatsApp</span>
       <input
         class="text-input"
@@ -155,10 +155,15 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
     font: italic 400 22px var(--font-serif);
   }
 
+  /* Nombre und Ciudad nebeneinander, WhatsApp darunter über die ganze Breite */
   .review-form__people {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+  }
+
+  .review-form__wide {
+    grid-column: 1 / -1;
   }
 
   .review-form__split {

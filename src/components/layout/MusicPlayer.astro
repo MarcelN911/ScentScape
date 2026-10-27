@@ -268,6 +268,37 @@ import TrackItem from './TrackItem.astro';
       display: block;
     }
   }
+
+  /* Handy: näher an die Ecke, damit er weniger vom Inhalt verdeckt */
+  @media (max-width: 639px) {
+    .player {
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Liegt unten eine feste Leiste (z. B. Gift Card), rückt der Player darüber */
+  @media (max-width: 899px) {
+    .player {
+      transition: bottom 0.5s var(--ease);
+    }
+
+    :global(html.has-bottom-bar) .player {
+      bottom: calc(92px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Bei offenem Menü ausblenden, damit nichts über den Links liegt */
+  .player {
+    transition:
+      bottom 0.5s var(--ease),
+      opacity 0.4s;
+  }
+
+  :global(html.is-menu-open) .player {
+    opacity: 0;
+    pointer-events: none;
+  }
 </style>
 
 <script>

@@ -1,0 +1,145 @@
+---
+/*
+ * Gift Card der Startseite mit Vorder- und Rückseite.
+ * Außen: Neigung beim Scrollen und mit der Maus (--gry, --grx, --gy aus scripts/features/home/story.js).
+ * Innen: Drehen um die eigene Achse (--flip aus scripts/features/home/card-flip.js).
+ * Beide Seiten sind übereinander gestapelt, die Rückseite ist um 180° gedreht und von vorne unsichtbar.
+ */
+import StoryCardBack from './StoryCardBack.astro';
+import StoryCardFront from './StoryCardFront.astro';
+---
+
+<div class="story-card" role="button" tabindex="0" aria-label="Girar la tarjeta" data-story-card>
+  <div class="story-card__flip" data-story-flip>
+    <div class="story-card__face">
+      <StoryCardFront />
+      <span class="story-card__shade" aria-hidden="true"></span>
+      <span class="story-card__gleam" aria-hidden="true"></span>
+    </div>
+    <div class="story-card__face story-card__face--back">
+      <StoryCardBack />
+      <span class="story-card__shade" aria-hidden="true"></span>
+      <span class="story-card__gleam" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .story-card {
+    position: relative;
+    width: min(92%, 560px);
+    aspect-ratio: 1.586;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform: rotateY(calc(var(--gry, 0) * 1deg)) rotateX(calc(var(--grx, 0) * 1deg))
+      translateY(calc(var(--gy, 0) * 1px));
+    transition: transform 0.25s ease-out;
+    /* Senkrecht scrollen bleibt möglich, waagrechtes Wischen bekommt die Karte */
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .story-card:focus-visible {
+    outline: none;
+  }
+
+  .story-card:focus-visible .story-card__face {
+    outline: 1px solid var(--sand);
+    outline-offset: 6px;
+  }
+
+  /*
+   * Registriert, damit die Werte animiert werden können (card-flip.js):
+   * --flip = Drehwinkel, --lift = wie weit die Karte angehoben ist (0 … 1).
+   */
+  @property --flip {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+  }
+
+  @property --lift {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .story-card__flip {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: translateZ(calc(var(--lift) * 80px)) rotateX(calc(var(--lift) * -5deg))
+      rotateY(var(--flip)) scale(calc(1 + var(--lift) * 0.03));
+  }
+
+  .story-card__face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--card-bg);
+    color: var(--card-ink);
+    box-shadow:
+      0 calc(50px + var(--lift) * 30px) calc(100px + var(--lift) * 50px) rgb(0 0 0 / 0.55),
+      0 0 0 1px rgb(var(--cream-rgb) / 0.06);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: color 0.6s;
+  }
+
+  .story-card__face--back {
+    transform: rotateY(180deg);
+  }
+
+  .story-card__shade,
+  .story-card__gleam {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  /* Je schräger die Karte steht, desto dunkler (am stärksten hochkant, bei 90°) */
+  .story-card__shade {
+    background: #000;
+    opacity: 0;
+    opacity: calc(pow(sin(var(--flip)), 2) * 0.55);
+  }
+
+  /* Lichtstreif, der während der Drehung einmal über die Karte gleitet */
+  .story-card__gleam {
+    background: linear-gradient(
+      105deg,
+      transparent 32%,
+      rgb(255 244 228 / 0.18) 44%,
+      rgb(255 250 240 / 0.45) 50%,
+      rgb(255 244 228 / 0.18) 56%,
+      transparent 68%
+    );
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    opacity: 0;
+  }
+
+  .story-card.is-turning .story-card__gleam {
+    animation: card-gleam 1.15s cubic-bezier(0.65, 0, 0.18, 1);
+  }
+
+  @keyframes card-gleam {
+    0% {
+      background-position: 100% 0;
+      opacity: 0;
+    }
+
+    35%,
+    65% {
+      opacity: 1;
+    }
+
+    100% {
+      background-position: 0% 0;
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,17 +1,25 @@
 ---
-/* Rechte Seite: Pfad, Titel mit Buchstaben-Einblendung, Marke, Bewertung, Familien, Kaufbereich, Akkordeon. */
+/*
+ * Rechte Seite: Pfad, Titel mit Buchstaben-Einblendung, Marke, Bewertung, Familien, Kaufbereich, Akkordeon.
+ * Handy: Marke über dem Namen, kompakter, dazu Versprechen (ProductTrust) und Noten (ProductNotes).
+ */
 import AccordionItem from '../../components/product/AccordionItem.astro';
 import BuyCard from '../../components/product/BuyCard.astro';
 import PaymentLogos from '../../components/product/PaymentLogos.astro';
+import ProductKind from '../../components/product/ProductKind.astro';
+import ProductNotes from '../../components/product/ProductNotes.astro';
 import ProductRating from '../../components/product/ProductRating.astro';
+import ProductTrust from '../../components/product/ProductTrust.astro';
 import { ORIGINAL_ITEMS, SHIPPING_ITEMS } from '../../data/product.js';
 import { labelOf } from '../../scripts/catalog/theme.js';
 
-/** @typedef {{ product: object, reviews: object[] }} Props */
-const { product, reviews } = Astro.props;
+/** @typedef {{ product: object, reviews: object[], images: Record<string, string> }} Props */
+const { product, reviews, images } = Astro.props;
 const letters = [...product.name];
 const description =
   product.plainDescription || 'Pronto agregaremos la descripción de esta fragancia.';
+/* Handy: lange Beschreibungen erst gekürzt, mit "Leer más" (scripts/features/product/more.js) */
+const isLong = description.length > 220;
 ---
 
 <div class="info">
@@ -20,7 +28,7 @@ const description =
     <span>/</span>
     <span class="info__here">{product.name}</span>
   </nav>
-  <div>
+  <div class="info__head">
     <p class="info__eyebrow">
       <span></span>
       {labelOf(product)}
@@ -32,6 +40,7 @@ const description =
         </span>
       ))}
     </h1>
+    <ProductKind product={product} />
     <div class="info__meta">
       {product.brand && <span class="info__brand">{product.brand}</span>}
       <div class="info__facts">
@@ -50,9 +59,18 @@ const description =
   <div class="info__buy">
     <BuyCard product={product} />
   </div>
+  <ProductTrust />
+  <ProductNotes notes={product.ingredients} images={images} />
   <div class="info__acc" data-accordion>
     <AccordionItem number="01" title="Descripción" open>
-      <p class="info__text">{description}</p>
+      <p class="info__text" data-more-text>
+        {description}
+      </p>
+      {isLong && (
+        <button class="info__more" type="button" aria-expanded="false" data-more-toggle>
+          Leer más
+        </button>
+      )}
     </AccordionItem>
     <AccordionItem number="02" title="Envíos y pagos">
       <ul class="info__list">
@@ -87,9 +105,17 @@ const description =
   .info__crumbs,
   .info__eyebrow,
   .info__meta,
-  .info__acc {
+  .info__acc,
+  .info > :global(.trust),
+  .info > :global(.notes) {
     opacity: 0;
     transition: opacity 0.8s var(--fade-delay, 1.3s);
+  }
+
+  /* Versprechen und Noten (nur Handy) erscheinen kurz nach dem Kaufbereich */
+  .info > :global(.trust),
+  .info > :global(.notes) {
+    --fade-delay: 2.1s;
   }
 
   .info__crumbs {
@@ -224,6 +250,11 @@ const description =
     white-space: pre-line;
   }
 
+  /* "Leer más" gibt es nur auf dem Handy, auf dem Desktop steht die ganze Beschreibung */
+  .info__more {
+    display: none;
+  }
+
   .info__list {
     display: flex;
     flex-direction: column;
@@ -259,6 +290,8 @@ const description =
   :global(.is-in) .info__eyebrow,
   :global(.is-in) .info__meta,
   :global(.is-in) .info__acc,
+  :global(.is-in) .info > :global(.trust),
+  :global(.is-in) .info > :global(.notes),
   :global(.is-in) .info__buy {
     opacity: 1;
     transform: none;
@@ -275,6 +308,87 @@ const description =
   @media (min-width: 900px) {
     .info {
       padding: 130px clamp(30px, 4.5vw, 80px) 12vh;
+    }
+  }
+
+  /*
+   * Handy: alles Wichtige kompakt untereinander.
+   * Reihenfolge im Kopf: Marke, Name, "Perfume para …", Bewertung und Familien.
+   */
+  @media (max-width: 899px) {
+    .info {
+      gap: 22px;
+      padding: 18px 16px 8vh;
+    }
+
+    .info__head {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info__meta {
+      display: contents;
+    }
+
+    .info__brand {
+      order: -1;
+      margin-bottom: 8px;
+      color: var(--peach);
+      font: 500 11px/1.3 var(--font-sans);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .info__title {
+      font-size: 38px;
+    }
+
+    /* Statt Eyebrow und Familien-Zeile: "Perfume [Oriental] para Dama" (ProductKind) */
+    .info__eyebrow,
+    .info__family {
+      display: none;
+    }
+
+    /* Bewertung (nur wenn vorhanden) darunter */
+    .info__facts {
+      order: 2;
+      margin-top: 14px;
+      padding: 0;
+      border: 0;
+    }
+
+    .info__facts:not(:has(a)) {
+      display: none;
+    }
+
+    /* Beschreibung: erst 4 Zeilen, unten weich ausgeblendet; "Leer más" zeigt alles */
+    .info__text:not(.is-open):has(+ .info__more) {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      mask-image: linear-gradient(180deg, #000 55%, transparent);
+    }
+
+    .info__more {
+      display: block;
+      align-self: flex-start;
+      margin-top: 10px;
+      padding: 0 0 3px;
+      border: 0;
+      border-bottom: 1px solid rgb(var(--peach-rgb) / 0.5);
+      background: none;
+      color: var(--peach);
+      font: 500 11px var(--font-sans);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  }
+
+  /* Handy und Tablet hochkant: kein Pfad ("← Inicio / …"), zurück geht über Browser oder Wischen */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .info__crumbs {
+      display: none;
     }
   }
 </style>

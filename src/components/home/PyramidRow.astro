@@ -43,10 +43,10 @@ const shape = `width:${tier.width}%;clip-path:${tier.clip};background:${tier.bac
     transition: filter 0.4s;
   }
 
-  /* Untereinander ist die Grafik nur 260px hoch: niedrigere Stufen, damit nichts über den Text ragt */
-  @media (max-width: 759px) {
+  /* Untereinander (Handy, Tablet hochkant) ist die Grafik niedriger: flachere Stufen */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
     .pyramid__shape {
-      height: clamp(44px, 7.5vh, 64px);
+      height: clamp(44px, 8svh, 140px);
       padding-bottom: 6px;
     }
   }
@@ -70,5 +70,11 @@ const shape = `width:${tier.width}%;clip-path:${tier.clip};background:${tier.bac
   .pyramid__text {
     color: var(--sand);
     font: italic 400 clamp(16px, 1.7vw, 30px) / 1.3 var(--font-serif);
+  }
+
+  @media (min-width: 600px) and (max-width: 1079px) and (orientation: portrait) {
+    .pyramid__text {
+      font-size: 24px;
+    }
   }
 </style>

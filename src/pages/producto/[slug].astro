@@ -7,6 +7,7 @@ import { reviewsForProduct } from '../../scripts/catalog/reviews.js';
 import { labelOf } from '../../scripts/catalog/theme.js';
 import { productSchema } from '../../scripts/seo/product-schema.js';
 import { imageUrl } from '../../scripts/utils/image.js';
+import ProductBar from '../../components/product/ProductBar.astro';
 import ProductInfo from '../../sections/product/ProductInfo.astro';
 import ProductReviews from '../../sections/product/ProductReviews.astro';
 import ProductStage from '../../sections/product/ProductStage.astro';
@@ -36,11 +37,12 @@ const summary = product.plainDescription.slice(0, 150) || `${product.name} en Sc
   <main class="product" data-product-page>
     <section class="product__top">
       <ProductStage product={product} images={images} />
-      <ProductInfo product={product} reviews={reviews} />
+      <ProductInfo product={product} reviews={reviews} images={images} />
     </section>
     <ProductReviews product={product} reviews={reviews} />
     <RelatedProducts products={related} />
     <AdviceSection />
+    <ProductBar product={product} />
   </main>
 </BaseLayout>
 

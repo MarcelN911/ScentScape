@@ -1,0 +1,72 @@
+---
+/*
+ * Runder Instagram-Knopf unten links (gegenüber dem Musik-Player), nur im Hochformat.
+ * Er schwebt herein, sobald der Video-Bereich im Bild ist, und wieder heraus, wenn man weiterscrollt.
+ * Die Klasse is-in-view am Bereich setzt scripts/features/home/reel.js.
+ */
+import { INSTAGRAM_URL } from '../../scripts/config.js';
+---
+
+<a
+  class="instagram-fab"
+  href={INSTAGRAM_URL}
+  target="_blank"
+  rel="noopener"
+  aria-label="ScentScape en Instagram"
+>
+  <img src="/assets/img/instagram_white.svg" alt="" width="22" height="22" />
+</a>
+
+<style>
+  .instagram-fab {
+    display: none;
+  }
+
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .instagram-fab {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      z-index: var(--z-player);
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 30% 107%,
+        #fdf497 0%,
+        #fd5949 45%,
+        #d6249f 60%,
+        #285aeb 90%
+      );
+      box-shadow: 0 14px 30px rgb(0 0 0 / 0.4);
+      /* Versteckt: unterhalb des Bildschirmrands, kleiner und leicht gedreht */
+      opacity: 0;
+      transform: translateY(140%) scale(0.6) rotate(-20deg);
+      transition:
+        opacity 0.35s var(--ease),
+        transform 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+      pointer-events: none;
+    }
+
+    :global(.reel.is-in-view) .instagram-fab {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+  }
+
+  @media (max-width: 599px) {
+    .instagram-fab {
+      left: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-fab {
+      transition: opacity 0.3s;
+    }
+  }
+</style>

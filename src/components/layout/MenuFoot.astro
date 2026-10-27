@@ -1,0 +1,70 @@
+---
+/* Fuß des Menüs (MobileMenu.astro): Claim, Instagram und WhatsApp. Einblenden steuert das Menü. */
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_NUMBER } from '../../scripts/config.js';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+---
+
+<div class="menu__foot" style="--delay:900ms">
+  <p class="menu__tagline">
+    Distinción <em>sin límites</em>
+  </p>
+  <div class="menu__social">
+    <a href={INSTAGRAM_URL} target="_blank" rel="noopener" tabindex="-1" aria-label="Instagram">
+      <img src="/assets/img/instagram_white.svg" alt="" width="16" height="16" />
+    </a>
+    <a
+      href={`https://wa.me/${WHATSAPP_NUMBER}`}
+      target="_blank"
+      rel="noopener"
+      tabindex="-1"
+      aria-label="WhatsApp"
+    >
+      <WhatsAppIcon size={16} color="var(--cream)" />
+    </a>
+    <span>{INSTAGRAM_HANDLE}</span>
+  </div>
+</div>
+
+<style>
+  .menu__foot {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+  }
+
+  .menu__tagline {
+    margin: 0;
+    color: var(--cream);
+    font: 400 20px var(--font-serif);
+  }
+
+  .menu__tagline em {
+    color: var(--peach);
+  }
+
+  .menu__social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .menu__social a {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 50%;
+  }
+
+  .menu__social span {
+    margin-left: 4px;
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 300 11px var(--font-sans);
+  }
+</style>

@@ -2,14 +2,16 @@
 /*
  * iPhone mit WhatsApp-Chat. Nachrichten fügt scripts/features/chat/chat.js ein.
  * input="link": unten ein Feld, das WhatsApp öffnet · input="field": echtes Eingabefeld mit Senden
+ * suggestions: Fragen als Antwort-Vorschläge über dem Eingabefeld (wischbare Pillen).
+ *   Nur auf dem Handy sichtbar, auf dem Desktop steht die Fragenliste neben dem Handy.
  */
 import { WHATSAPP_NUMBER } from '../../scripts/config.js';
 import PhoneStatusBar from './PhoneStatusBar.astro';
 import PhoneChatHeader from './PhoneChatHeader.astro';
 import PhoneInputBar from './PhoneInputBar.astro';
 
-/** @typedef {{ greeting: string, input?: 'link' | 'field' }} Props */
-const { greeting, input = 'link' } = Astro.props;
+/** @typedef {{ greeting: string, input?: 'link' | 'field', suggestions?: string[] }} Props */
+const { greeting, input = 'link', suggestions = [] } = Astro.props;
 ---
 
 <div class="phone" data-phone>
@@ -19,10 +21,7 @@ const { greeting, input = 'link' } = Astro.props;
   <span class="phone__key phone__key--d"></span>
   <div class="phone__bezel">
     <div class="phone__screen">
-      <span class="phone__island" data-phone-island>
-        <span class="phone__island-dot"></span>
-        <span>escribiendo</span>
-      </span>
+      <span class="phone__island"></span>
       <PhoneStatusBar />
       <PhoneChatHeader />
       <div class="phone__body" data-chat-body>
@@ -41,6 +40,15 @@ const { greeting, input = 'link' } = Astro.props;
           <span></span>
         </div>
       </div>
+      {suggestions.length > 0 && (
+        <div class="phone__suggest" role="group" aria-label="Preguntas sugeridas">
+          {suggestions.map((text, index) => (
+            <button class="phone__chip" type="button" data-chat-question={index}>
+              {text}
+            </button>
+          ))}
+        </div>
+      )}
       <PhoneInputBar input={input} href={`https://wa.me/${WHATSAPP_NUMBER}`} />
       <span class="phone__home"></span>
     </div>
@@ -59,7 +67,8 @@ const { greeting, input = 'link' } = Astro.props;
     z-index: 2;
     height: var(--phone-height, min(880px, 94vh));
     min-height: var(--phone-min, 640px);
-    aspect-ratio: 9 / 19;
+    /* Seitenverhältnis wie ein iPhone; Seiten können es über --phone-ratio ändern */
+    aspect-ratio: var(--phone-ratio, 9 / 19);
     padding: 4px;
     border-radius: 62px;
     background: linear-gradient(145deg, #4a4a52, #1c1c21 40%, #3a3a42 70%, #18181c);
@@ -126,43 +135,17 @@ const { greeting, input = 'link' } = Astro.props;
     background: var(--navy-deep);
   }
 
+  /* Dynamic Island: schlichte schwarze Pille (ohne Animation beim Schreiben) */
   .phone__island {
     position: absolute;
     left: 50%;
     top: 10px;
     z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 120px;
     height: 32px;
-    padding: 0 12px;
     border-radius: 18px;
     background: #000;
-    color: var(--whatsapp);
-    font: 500 10px var(--font-sans);
     transform: translateX(-50%);
-    transition: width 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
-  }
-
-  .phone__island > * {
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .phone__island-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: var(--whatsapp);
-  }
-
-  .phone.is-typing .phone__island {
-    width: 190px;
-  }
-
-  .phone.is-typing .phone__island > * {
-    opacity: 1;
   }
 
   .phone__body {
@@ -273,6 +256,57 @@ const { greeting, input = 'link' } = Astro.props;
 
   .phone__typing span:nth-child(3) {
     animation-delay: 0.52s;
+  }
+
+  /* Antwort-Vorschläge: eine Reihe Pillen, waagerecht wischbar (nur Handy, siehe oben) */
+  .phone__suggest {
+    display: none;
+    flex: none;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 12px;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.12);
+    background: var(--navy-deep);
+    scrollbar-width: none;
+    /* Breite kommt vom Handy, nicht von den Pillen: sonst ziehen sie das ganze Handy breit */
+    contain: inline-size;
+  }
+
+  .phone__suggest::-webkit-scrollbar {
+    display: none;
+  }
+
+  .phone__chip {
+    flex: none;
+    padding: 8px 13px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.45);
+    border-radius: 16px;
+    background: rgb(var(--peach-rgb) / 0.08);
+    color: var(--sand);
+    font: 400 12px/1.2 var(--font-sans);
+    white-space: nowrap;
+    transition:
+      background-color 0.3s,
+      opacity 0.3s;
+  }
+
+  .phone__chip:active {
+    background: rgb(var(--peach-rgb) / 0.22);
+  }
+
+  .phone__chip:disabled {
+    cursor: wait;
+  }
+
+  /* Schon gefragt: blasser, bleibt aber antippbar */
+  .phone__chip:global(.is-asked) {
+    opacity: 0.5;
+  }
+
+  @media (max-width: 899px) {
+    .phone__suggest {
+      display: flex;
+    }
   }
 
   .phone__home {

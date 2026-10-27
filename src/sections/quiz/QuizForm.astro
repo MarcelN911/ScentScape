@@ -75,7 +75,7 @@ const loop = [...SCENT_FAMILIES, ...SCENT_FAMILIES].map((family, index) => ({
   </div>
   <div class="field-group">
     <span class="field-label">04 · Intensidad</span>
-    <div class="quiz-form__pills quiz-form__pills--small" role="radiogroup" aria-label="Intensidad">
+    <div class="quiz-form__pills" role="radiogroup" aria-label="Intensidad">
       {QUIZ_INTENSITIES.map((label, index) => (
         <button
           class="choice-pill"
@@ -100,14 +100,17 @@ const loop = [...SCENT_FAMILIES, ...SCENT_FAMILIES].map((family, index) => ({
 </form>
 
 <style>
-  .quiz-form__pills {
+  /* Immer drei nebeneinander (alle Fragen haben drei Antworten): keine bleibt allein in einer Zeile */
+  .quiz-form__pills,
+  .quiz-form__cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
   }
 
-  .quiz-form__pills--small {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  .quiz-form__pills .choice-pill {
+    min-width: 0;
+    padding: 0 8px;
   }
 
   .quiz-form__split {
@@ -140,13 +143,32 @@ const loop = [...SCENT_FAMILIES, ...SCENT_FAMILIES].map((family, index) => ({
     will-change: transform;
   }
 
-  .quiz-form__cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 10px;
-  }
-
   .quiz-form .submit-btn:not(:disabled) {
     cursor: pointer;
+  }
+
+  /* Handy: Formular ohne Kasten (SplitPage), das Band läuft bis an den Bildschirmrand */
+  @media (max-width: 899px) {
+    .quiz-form__band {
+      margin: 0 -20px;
+    }
+  }
+
+  /* Schmale Handys: Momento-Karten untereinander, Titel links und Beschreibung rechts */
+  @media (max-width: 639px) {
+    .quiz-form__cards {
+      grid-template-columns: 1fr;
+    }
+
+    .quiz-form__cards .choice-card {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .quiz-form__cards .choice-card__sub {
+      text-align: right;
+    }
   }
 </style>

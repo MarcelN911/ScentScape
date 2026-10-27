@@ -1,0 +1,58 @@
+---
+/* Nur Handy: drei kurze Versprechen unter dem Kaufbereich (Versand, Original, Bezahlung). */
+import { TRUST_ITEMS } from '../../data/product.js';
+import Icon from '../ui/Icon.astro';
+---
+
+<ul class="trust">
+  {TRUST_ITEMS.map((item) => (
+    <li>
+      <Icon name={item.icon} size={20} strokeWidth={1.5} />
+      <strong>{item.title}</strong>
+      <span>{item.text}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .trust {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .trust {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 0;
+      padding: 0;
+      border: 1px solid rgb(var(--peach-rgb) / 0.18);
+      border-radius: 18px;
+      list-style: none;
+    }
+
+    .trust li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 14px 6px;
+      color: var(--peach);
+      text-align: center;
+    }
+
+    .trust li + li {
+      border-left: 1px solid rgb(var(--peach-rgb) / 0.18);
+    }
+
+    .trust strong {
+      margin-top: 4px;
+      color: var(--cream);
+      font: 500 12px/1.2 var(--font-sans);
+    }
+
+    .trust span {
+      color: rgb(var(--cream-rgb) / 0.55);
+      font: 400 10px/1.3 var(--font-sans);
+    }
+  }
+</style>

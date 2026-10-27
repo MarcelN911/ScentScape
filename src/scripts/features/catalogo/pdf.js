@@ -1,5 +1,9 @@
-/* PDF-Seite des Catálogo Digital: Auswahl aus dem Link lesen, Fragancias auf Seiten verteilen, drucken. */
+/*
+ * PDF-Seite des Catálogo Digital: Auswahl aus dem Link lesen, Fragancias nach Abschnitten
+ * (z. B. Dama, Caballero/Unisex) auf Seiten verteilen, drucken.
+ */
 import { CATALOG_COLLECTIONS, CATALOG_PER_PAGE } from '../../../data/catalog.js';
+import { sectionsOf } from './state.js';
 
 function readChoice(search) {
   const params = new URLSearchParams(search);
@@ -18,25 +22,26 @@ function chunk(list, size) {
   );
 }
 
-function buildSheet(template, items, number, short) {
+/* Erste Seite eines Abschnitts mit schwarzer Kopfleiste, alle weiteren ohne */
+function buildSheet(template, items, title, opening) {
   const page = template.content.firstElementChild.cloneNode(true);
-  page.querySelector('[data-sheet-short]').textContent = short;
-  page.querySelector('[data-sheet-page]').textContent = String(number).padStart(2, '0');
+  page.querySelector('[data-sheet-title]').textContent = title;
+  page.querySelector('[data-sheet]').classList.toggle('sheet--opening', opening);
   page.querySelector('[data-sheet-grid]').replaceChildren(...items);
   return page;
 }
 
 function buildPages(root, choice) {
-  const { gender, short } = choice.collection;
-  const items = [...root.querySelectorAll('[data-pdf-pool] [data-sheet-item]')].filter(
-    (item) => !gender || item.dataset.gender === gender,
-  );
+  const all = [...root.querySelectorAll('[data-pdf-pool] [data-sheet-item]')];
+  const sections = sectionsOf(choice.collection, all, (item) => item.dataset.gender);
   const template = root.querySelector('[data-pdf-sheet]');
-  const sheets = chunk(items, CATALOG_PER_PAGE).map((group, index) =>
-    buildSheet(template, group, index + 2, short),
+  const sheets = sections.flatMap((section) =>
+    chunk(section.items, CATALOG_PER_PAGE).map((group, index) =>
+      buildSheet(template, group, section.title, index === 0),
+    ),
   );
   root.querySelector('[data-pdf-pages]').append(...sheets);
-  return items;
+  return sections.flatMap((section) => section.items);
 }
 
 function fillCover(root, choice, count) {

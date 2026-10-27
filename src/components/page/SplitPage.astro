@@ -1,7 +1,9 @@
 ---
 /*
  * Aufbau der Service-Seiten: links eine feste Bühne (Slot "stage"), rechts der Inhalt.
- * Unter 900px Breite stehen beide untereinander. Die Einblendungen starten, sobald <main> .is-in bekommt.
+ * Unter 900px Breite (Handy, Tablet hochkant) steht alles untereinander und mittig:
+ * zuerst der Titel (PageIntro), dann die Bühne, dann der restliche Inhalt.
+ * Die Einblendungen starten, sobald <main> .is-in bekommt.
  */
 /**
  * @typedef {object} Props
@@ -104,6 +106,93 @@ const {
 
     .split__info {
       padding: 130px clamp(30px, 4.5vw, 80px) 12vh;
+    }
+  }
+
+  /*
+   * Handy und Tablet hochkant: Titel zuerst, dann die Bühne, dann der Inhalt.
+   * Die rechte Spalte gibt ihre Teile dafür direkt ans Raster weiter (display: contents),
+   * so lässt sich die Reihenfolge mit order festlegen.
+   */
+  @media (max-width: 899px) {
+    /* minmax(0, …): breite Inhalte dürfen die Spalte nicht über den Bildschirmrand drücken */
+    .split__grid {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--gap);
+      min-height: 0;
+      padding-bottom: 12vh;
+    }
+
+    .split__info {
+      display: contents;
+    }
+
+    /* Inhalt mit Rand; auf dem Tablet höchstens 600px breit und mittig, damit er nicht verloren wirkt */
+    .split__info > :global(*) {
+      order: 3;
+      width: min(100% - 40px, 600px);
+      margin-inline: auto;
+    }
+
+    /* Titelblock aus PageIntro: ganz oben, mittig */
+    .split__info > :global(div:has(.intro-title)) {
+      order: 1;
+      padding-top: 112px;
+      text-align: center;
+    }
+
+    .split__info :global(.intro-eyebrow),
+    .split__info :global(.intro-title) {
+      justify-content: center;
+    }
+
+    /* Lange Zeilen ("Servicio 01 · Test olfativo") bleiben einzeilig, die Linien werden kürzer */
+    .split__info :global(.intro-eyebrow) {
+      gap: 10px;
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
+
+    .split__info :global(.intro-eyebrow span),
+    .split__info :global(.intro-eyebrow::after) {
+      flex-shrink: 1;
+      min-width: 12px;
+    }
+
+    /* Zweite Linie rechts vom Eyebrow, wie links */
+    .split__info :global(.intro-eyebrow::after) {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--peach);
+    }
+
+    .split__info :global(.intro-eyebrow span) {
+      width: 40px;
+    }
+
+    .split__info :global(.intro-lead) {
+      margin-inline: auto;
+      font-size: 15px;
+    }
+
+    /*
+     * Bühne ohne eigenen dunklen Block, nur der farbige Lichtschein. Nur seitlich abschneiden
+     * (großes Wort), nach unten dürfen Schatten weich auslaufen statt an einer Kante zu enden.
+     */
+    .split__stage {
+      order: 2;
+      overflow: visible;
+      overflow-x: clip;
+      padding: 12px 20px 28px;
+      background: radial-gradient(ellipse 80% 55% at 50% 45%, var(--glow), transparent 72%);
+    }
+
+    /* Formulare ohne Kasten, dafür mit Luft */
+    .split__info > :global(.form-card) {
+      padding: 0;
+      border: 0;
+      background: none;
     }
   }
 </style>

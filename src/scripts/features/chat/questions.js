@@ -9,8 +9,16 @@ function lockQuestions(root, locked) {
   root.querySelectorAll('[data-chat-question]').forEach((button) => (button.disabled = locked));
 }
 
+/* Ist der Chat nicht ganz im Bild (Handy: er steht über der Liste), scrollt die Seite zu ihm */
+function showPhone(phone) {
+  const box = phone.getBoundingClientRect();
+  const visible = box.top >= 0 && box.bottom <= innerHeight;
+  if (!visible) phone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 async function ask(root, phone, button, questions) {
   lockQuestions(root, true);
+  showPhone(phone);
   await askQuestion(phone, questions[Number(button.dataset.chatQuestion)]);
   button.classList.add('is-asked');
   lockQuestions(root, false);

@@ -1,0 +1,371 @@
+---
+/*
+ * Story-Ansicht der Videos mit Ton, wie eine Instagram-Story (nur Handy und Tablet hochkant;
+ * am Desktop öffnet stattdessen VideoModal). Gesteuert von scripts/features/home/story-modal.js.
+ * Oben Fortschrittsbalken je Video, Konto, Ton und X. Links/rechts antippen oder wischen wechselt,
+ * nach unten wischen schließt. Läuft ein Video ohne Ton (Browser blockiert), erscheint "Ver con sonido".
+ */
+import { VIDEOS } from '../../data/home.js';
+
+const SPEAKER = 'M4 9v6h4l5 4V5L8 9H4z';
+---
+
+<div
+  class="story-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Videos de ScentScape"
+  data-story-modal
+  hidden
+>
+  <div class="story-modal__frame" data-story-frame>
+    <video class="story-modal__video" playsinline preload="auto" data-story-video></video>
+    <div class="story-modal__top">
+      <div class="story-modal__segments" aria-hidden="true">
+        {VIDEOS.map(() => (
+          <span class="story-modal__segment" data-story-segment>
+            <i></i>
+          </span>
+        ))}
+      </div>
+      <div class="story-modal__account">
+        <span class="story-modal__avatar">
+          <img src="/assets/img/catalogo/ornament.png" alt="" />
+        </span>
+        <strong>scentscapeparfums_</strong>
+        <button
+          class="story-modal__icon story-modal__mute"
+          type="button"
+          aria-label="Sonido"
+          aria-pressed="true"
+          data-story-mute
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d={SPEAKER} fill="currentColor" stroke="none"></path>
+            <path class="story-modal__off" d="M17 9l5 6M22 9l-5 6"></path>
+            <path
+              class="story-modal__on"
+              d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"
+            ></path>
+          </svg>
+        </button>
+        <button class="story-modal__icon" type="button" aria-label="Cerrar" data-story-close>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <button class="story-modal__tap story-modal__tap--prev" type="button" data-story-step="-1">
+      <span class="sr-only">Anterior</span>
+    </button>
+    <button class="story-modal__tap story-modal__tap--next" type="button" data-story-step="1">
+      <span class="sr-only">Siguiente</span>
+    </button>
+    <button class="story-modal__hint" type="button" data-story-unmute>
+      <span class="story-modal__ring" aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <path d={SPEAKER}></path>
+          <path
+            d="M16.5 8.5a5 5 0 0 1 0 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          ></path>
+        </svg>
+      </span>
+      Ver con sonido
+    </button>
+    <div class="story-modal__foot">
+      <p class="story-modal__title" data-story-title></p>
+      <p class="story-modal__caption" data-story-caption></p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .story-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: center;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+    background: rgb(var(--navy-ink-rgb) / 0.94);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease);
+  }
+
+  .story-modal[hidden] {
+    display: none;
+  }
+
+  .story-modal.is-visible {
+    opacity: 1;
+  }
+
+  /* Die Story: so groß wie möglich im Format 9:16, geht beim Öffnen leicht vergrößernd auf */
+  .story-modal__frame {
+    position: relative;
+    width: min(100%, calc((100svh - 20px) * 9 / 16));
+    aspect-ratio: 9 / 16;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--navy-deep);
+    box-shadow: 0 40px 100px rgb(0 0 0 / 0.6);
+    transform: scale(0.92);
+    transition: transform 0.45s var(--ease);
+    touch-action: none;
+  }
+
+  .story-modal.is-visible .story-modal__frame {
+    transform: none;
+  }
+
+  .story-modal__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .story-modal__top,
+  .story-modal__foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 14px 16px;
+    pointer-events: none;
+  }
+
+  .story-modal__top {
+    top: 0;
+    padding-bottom: 44px;
+    background: linear-gradient(180deg, rgb(14 17 36 / 0.65), transparent);
+  }
+
+  .story-modal__segments {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .story-modal__segment {
+    flex: 1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: rgb(var(--cream-rgb) / 0.3);
+  }
+
+  .story-modal__segment i {
+    display: block;
+    height: 100%;
+    background: var(--cream);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .story-modal__segment.is-done i {
+    transform: none;
+  }
+
+  .story-modal__segment.is-active i {
+    transform: scaleX(var(--story-progress, 0));
+  }
+
+  .story-modal__account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--cream);
+    font: 600 13px/1 var(--font-sans);
+  }
+
+  .story-modal__account strong {
+    margin-right: auto;
+  }
+
+  /* Logo im Instagram-Farbring */
+  .story-modal__avatar {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+    border-radius: 50%;
+    background: conic-gradient(from 210deg, #fdf497, #fd5949, #d6249f, #285aeb, #fdf497);
+  }
+
+  .story-modal__avatar img {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    border: 2px solid var(--navy-deep);
+    border-radius: 50%;
+    background: var(--navy-deep);
+    object-fit: contain;
+  }
+
+  .story-modal__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin: -6px -6px -6px 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    pointer-events: auto;
+  }
+
+  /* Lautsprecher: durchgestrichen = stumm, mit Wellen = Ton an */
+  .story-modal__on,
+  .story-modal.is-muted .story-modal__on,
+  .story-modal:not(.is-muted) .story-modal__off {
+    display: none;
+  }
+
+  .story-modal:not(.is-muted) .story-modal__on {
+    display: inline;
+  }
+
+  /* Tippflächen: linkes Drittel zurück, rechte zwei Drittel weiter (wie bei Instagram) */
+  .story-modal__tap {
+    position: absolute;
+    top: 80px;
+    bottom: 0;
+    z-index: 1;
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .story-modal__tap--prev {
+    left: 0;
+    width: 33%;
+  }
+
+  .story-modal__tap--next {
+    right: 0;
+    width: 67%;
+  }
+
+  /* "Ver con sonido": nur sichtbar, wenn der Browser den Ton blockiert hat */
+  .story-modal__hint {
+    position: absolute;
+    left: 50%;
+    bottom: 120px;
+    z-index: 3;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    border: 0;
+    background: none;
+    color: var(--sand-light);
+    font: italic 400 17px/1 var(--font-serif);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.55);
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .story-modal.is-muted .story-modal__hint {
+    display: inline-flex;
+  }
+
+  .story-modal__ring {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.75);
+    border-radius: 50%;
+    background: rgb(14 17 36 / 0.25);
+    color: var(--peach);
+  }
+
+  .story-modal__ring::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.6);
+    border-radius: 50%;
+    animation: story-breathe 2.6s var(--ease) infinite;
+  }
+
+  @keyframes story-breathe {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  .story-modal__foot {
+    bottom: 0;
+    padding-top: 80px;
+    padding-bottom: 22px;
+    background: linear-gradient(0deg, rgb(14 17 36 / 0.85), transparent);
+  }
+
+  .story-modal__title {
+    margin: 0 0 8px;
+    color: var(--cream);
+    font: italic 400 26px/1.1 var(--font-serif);
+  }
+
+  .story-modal__caption {
+    margin: 0;
+    color: rgb(var(--cream-rgb) / 0.8);
+    font: 400 13px/1.45 var(--font-sans);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .story-modal__frame {
+      transform: none;
+    }
+
+    .story-modal__ring::after {
+      animation: none;
+    }
+  }
+</style>

@@ -7,7 +7,13 @@ import ShopControls from '../../components/shop/ShopControls.astro';
 const { images } = Astro.props;
 ---
 
-<aside class="profile" aria-label="Perfil olfativo">
+<aside class="profile" aria-label="Perfil olfativo" data-filters-sheet>
+  <div class="profile__sheet-head">
+    <span>Filtros</span>
+    <button type="button" aria-label="Cerrar filtros" data-filters-close>
+      ✕
+    </button>
+  </div>
   <div class="profile__wheel">
     <FamilyWheel images={images} />
   </div>
@@ -23,8 +29,12 @@ const { images } = Astro.props;
     </p>
     <NotesArea images={images} />
     <ShopControls />
+    <button class="profile__apply" type="button" data-filters-close>
+      Ver fragancias <span>→</span>
+    </button>
   </div>
 </aside>
+<div class="profile-backdrop" data-filters-close></div>
 
 <style>
   .profile {
@@ -115,6 +125,118 @@ const { images } = Astro.props;
   @media (min-width: 900px) {
     .profile {
       grid-template-columns: auto minmax(0, 1fr);
+    }
+  }
+
+  .profile__sheet-head,
+  .profile__apply,
+  .profile-backdrop {
+    display: none;
+  }
+
+  /*
+   * Handy und Tablet hochkant: der ganze Bereich ist ein Panel, das von unten hereinfährt
+   * ("Filtros" in MobileShopBar.astro öffnet es, Klasse is-filters-open an <html>, mobile-filters.js).
+   * Suche, Für wen und Spaltenwahl stehen dort in der Leiste, deshalb hier ausgeblendet.
+   */
+  @media (max-width: 899px) {
+    .profile {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: calc(var(--z-player) + 5);
+      gap: 18px;
+      max-height: 88svh;
+      margin: 0;
+      padding: 0 20px max(20px, env(safe-area-inset-bottom));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      border-width: 1px 0 0;
+      border-radius: 28px 28px 0 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 10%, var(--shop-glow), transparent 72%),
+        var(--navy-deep);
+      opacity: 1;
+      transition: transform 0.55s var(--ease);
+    }
+
+    /* Geschlossen: unter dem Bildschirmrand (stärker als die Einblend-Regel .is-in .profile) */
+    :global(html:not(.is-filters-open)) .profile {
+      transform: translateY(105%);
+    }
+
+    .profile__sheet-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 -20px;
+      padding: 18px 20px 12px;
+      background: var(--navy-deep);
+      color: var(--sand);
+      font: italic 400 24px var(--font-serif);
+    }
+
+    .profile__sheet-head button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgb(var(--peach-rgb) / 0.35);
+      border-radius: 50%;
+      background: none;
+      color: var(--sand);
+    }
+
+    .profile__wheel {
+      padding: 0 24px;
+    }
+
+    .profile :global(.controls__search),
+    .profile :global(.controls__group),
+    .profile :global(.density) {
+      display: none;
+    }
+
+    .profile :global(.controls) {
+      min-height: 0;
+    }
+
+    .profile__apply {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      height: 52px;
+      margin-top: 4px;
+      border: 0;
+      border-radius: 26px;
+      background: var(--peach);
+      color: var(--navy);
+      font: 500 11px var(--font-sans);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      box-shadow: 0 -12px 30px var(--navy-deep);
+    }
+
+    .profile-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: calc(var(--z-player) + 4);
+      display: block;
+      background: rgb(var(--navy-ink-rgb) / 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    :global(html.is-filters-open) .profile-backdrop {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 </style>

@@ -1,4 +1,5 @@
 ---
+import GiftMini from '../components/gift/GiftMini.astro';
 import PageIntro from '../components/page/PageIntro.astro';
 import SplitPage from '../components/page/SplitPage.astro';
 import { GIFT_COLORS, GIFT_TITLE } from '../data/gift-card.js';
@@ -24,8 +25,52 @@ import GiftStage from '../sections/gift/GiftStage.astro';
       />
       <GiftForm />
     </SplitPage>
+    <GiftMini />
   </main>
 </BaseLayout>
+
+<style is:global>
+  /*
+   * Handy und Tablet hochkant (unter 900px). Reihenfolge Titel → Karte → Formular kommt aus SplitPage,
+   * hier nur, was die Gift Card zusätzlich braucht.
+   */
+  @media (max-width: 899px) {
+    /* Bühne ohne eigenen dunklen Block, nur der farbige Lichtschein hinter der Karte */
+    [data-gift-page] .split__stage {
+      padding: 36px 20px 44px;
+      background: radial-gradient(ellipse 80% 55% at 50% 42%, var(--glow), transparent 72%);
+    }
+
+    [data-gift-page] .split__stage .gift-card {
+      width: min(100%, 520px);
+      touch-action: pan-y;
+    }
+
+    /* Etwas engere Schrift, damit "Añadir al carrito · Betrag" in eine Zeile passt */
+    [data-gift-page] .gift-form [data-gift-submit] {
+      letter-spacing: 2px;
+    }
+
+    /* Para und De nebeneinander; Eingabefelder dürfen schmaler als ihre Standardbreite werden */
+    [data-gift-page] .gift-form__names {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    [data-gift-page] .gift-form__names .text-input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    [data-gift-page] .gift-form__amounts {
+      grid-template-columns: repeat(auto-fill, minmax(min(120px, 40%), 1fr));
+    }
+
+    [data-gift-page] .gift-form__regalo {
+      align-self: center;
+      margin-bottom: 60px;
+    }
+  }
+</style>
 
 <script>
   import { onPage } from '../scripts/core/lifecycle.js';

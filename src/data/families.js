@@ -70,7 +70,8 @@ export const FAMILIES = [
   {
     id: 'Dulce',
     accent: '#E8A7B4',
-    image: `${CDN}v1780129570/nexomar/products/jplkstv2cg8g5jypninv.png`,
+    /* Lokal gespeichert: das Bild wurde in Cloudinary gelöscht */
+    image: '/assets/img/familias/dulce.png',
     bottle: 'CLOUD PINK',
     description:
       'También llamada gourmand: vainilla, caramelo, frutos rojos o praliné. Envolventes, cálidas y adictivas.',

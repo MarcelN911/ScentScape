@@ -15,11 +15,15 @@
  * @property {string} cta
  * @property {string} href
  * @property {string} background
+ * @property {boolean} [centered]  Hochformat: Titel über der Grafik, alles zentriert
  */
-const { kind, eyebrow, first, second, word, text, cta, href, background } = Astro.props;
+const { kind, eyebrow, first, second, word, text, cta, href, background, centered } = Astro.props;
 ---
 
-<section class:list={['story', `story--${kind}`]} data-story={kind}>
+<section
+  class:list={['story', `story--${kind}`, { 'story--centered': centered }]}
+  data-story={kind}
+>
   <div class="story__pin" data-story-pin>
     <slot name="intro" />
     <div class="story__panel" style={`background:${background}`}>
@@ -74,6 +78,7 @@ const { kind, eyebrow, first, second, word, text, cta, href, background } = Astr
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     overflow: hidden;
     background: var(--navy);
   }
@@ -83,6 +88,23 @@ const { kind, eyebrow, first, second, word, text, cta, href, background } = Astr
     inset: 0;
     z-index: 10;
     clip-path: inset(var(--clip, 100%) 0 0 0);
+  }
+
+  /*
+   * Weicher Übergang zur nächsten Section: nur ein schmaler Streifen ganz unten läuft in deren
+   * Grundfarbe (--navy) aus. Das große Wort bleibt darüber gut sichtbar, nur seine Unterkante
+   * läuft weich aus statt hart abgeschnitten zu werden.
+   */
+  .story__panel::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    height: 10%;
+    background: linear-gradient(180deg, rgb(var(--navy-rgb) / 0), var(--navy) 85%);
+    pointer-events: none;
   }
 
   .story__word {
@@ -100,6 +122,7 @@ const { kind, eyebrow, first, second, word, text, cta, href, background } = Astr
   .story__grid {
     position: absolute;
     inset: 0;
+    z-index: 2;
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
@@ -206,14 +229,55 @@ const { kind, eyebrow, first, second, word, text, cta, href, background } = Astr
     position: relative;
     display: grid;
     place-items: center;
-    height: min(30vh, 260px);
+    height: var(--visual-height);
     perspective: 1300px;
     transform: translate(calc(var(--vx, 0) * 1px), calc(var(--vy, 0) * 1px));
   }
 
-  @media (min-width: 760px) {
+  /* Höhe der Grafik, solange Text und Grafik untereinander stehen */
+  .story--test {
+    --visual-height: min(34svh, 300px);
+  }
+
+  .story--gift {
+    --visual-height: min(40svh, 340px);
+  }
+
+  /* Untereinander (Handy, Tablet hochkant): unten Luft für den Musik-Player */
+  .story__grid {
+    align-content: center;
+    padding-bottom: 76px;
+  }
+
+  .story__title {
+    font-size: clamp(42px, min(11vw, 7svh), 110px);
+  }
+
+  /* Tablet hochkant: alles größer, damit die Fläche gefüllt ist */
+  @media (min-width: 600px) {
+    .story__grid {
+      gap: 5svh;
+      padding-inline: 9vw;
+    }
+
+    .story__copy {
+      font-size: 18px;
+    }
+
+    .story--test {
+      --visual-height: min(38svh, 520px);
+    }
+
+    .story--gift {
+      --visual-height: min(40svh, 520px);
+    }
+  }
+
+  /* Nebeneinander: Desktop und Tablet quer */
+  @media (min-width: 1080px), (min-width: 900px) and (orientation: landscape) {
     .story__grid {
       grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+      gap: 3vw;
       padding: 9vh clamp(80px, 7vw, 150px) 7vh clamp(20px, 6vw, 110px);
     }
 
@@ -221,8 +285,94 @@ const { kind, eyebrow, first, second, word, text, cta, href, background } = Astr
       order: 0;
     }
 
+    .story__copy {
+      font-size: clamp(15px, 1.1vw, 19px);
+    }
+
+    .story__title {
+      font-size: clamp(36px, min(8vw, 15vh), 170px);
+    }
+
     .story__visual {
       height: min(78vh, 820px);
+    }
+  }
+  /*
+   * centered, nur untereinander (Handy, Tablet hochkant): Eyebrow und Titel oben, dann die Grafik,
+   * darunter Text und Button, alles mittig. Der Textblock gibt seine Teile dafür direkt ans Raster
+   * weiter (display: contents), so lässt sich ihre Reihenfolge mit order festlegen.
+   */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    /* Großes Wort etwas höher, damit es ganz über dem weichen Übergang unten steht */
+    .story__word {
+      bottom: 5svh;
+    }
+
+    /* minmax(0, …): breite Zeilen (Eyebrow) dürfen die Spalte nicht über den Rand drücken */
+    .story--centered .story__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+      justify-items: center;
+      text-align: center;
+    }
+
+    /* Grafiken mit eigener Anordnung (Pyramide mit Noten rechts) bleiben linksbündig */
+    .story--centered .story__visual {
+      text-align: left;
+    }
+
+    .story--centered .story__text {
+      display: contents;
+    }
+
+    .story--centered .story__eyebrow {
+      order: 1;
+      justify-content: center;
+      max-width: 100%;
+      margin-bottom: 2svh;
+      letter-spacing: 4px;
+      white-space: nowrap;
+    }
+
+    /* Linien links und rechts schrumpfen, wenn der Text (z. B. "Encuentra tu fragancia") lang ist */
+    .story--centered .story__line,
+    .story--centered .story__eyebrow::after {
+      flex-shrink: 1;
+      min-width: 12px;
+    }
+
+    /* Zweite Linie rechts vom Eyebrow, gleich lang wie die linke */
+    .story--centered .story__eyebrow::after {
+      content: '';
+      width: calc(var(--line, 20) * 1px);
+      height: 1px;
+      background: var(--peach);
+    }
+
+    .story--centered .story__title {
+      order: 2;
+      display: flex;
+      justify-content: center;
+      gap: 0.25em;
+      margin-bottom: 3.5svh;
+    }
+
+    .story--centered .story__visual {
+      order: 3;
+      width: 100%;
+      height: auto;
+    }
+
+    .story--centered .story__copy {
+      order: 4;
+      max-width: 440px;
+      margin-top: 3.5svh;
+    }
+
+    .story--centered .story__actions {
+      order: 5;
+      justify-content: center;
+      margin-top: 3svh;
     }
   }
 </style>

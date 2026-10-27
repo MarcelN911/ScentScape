@@ -1,7 +1,8 @@
 ---
 /*
  * Linke Bühne der Seite "Regalo": Umschlag mit der Gift Card darin.
- * Bis zum Ende der Öffnung steht sie in der Mitte des Bildschirms, danach rückt sie nach links.
+ * Bis zum Ende der Öffnung steht sie in der Mitte des Bildschirms, danach rückt sie nach links
+ * (Desktop) bzw. nach oben, damit der Text darunter Platz hat (Handy, Tablet hochkant).
  */
 import Envelope from '../../components/regalo/Envelope.astro';
 import GiftCard from '../../components/gift/GiftCard.astro';
@@ -26,7 +27,12 @@ const nines = formatCOP(gift.amount).replace(/\d/g, '9');
     </div>
     <div class="regalo-stage__controls">
       <span class="regalo-stage__hint">
-        <i></i>Haz clic para abrir<i></i>
+        <i></i>
+        <span class="regalo-stage__click">Haz clic</span>
+        <span class="regalo-stage__tap">Toca</span> para abrir<i></i>
+      </span>
+      <span class="regalo-stage__swipe" aria-hidden="true">
+        <i></i>Desliza para girarla<i></i>
       </span>
       <button class="flip-btn regalo-stage__flip" type="button" tabindex="-1" data-regalo-flip>
         <span class="flip-btn__icon">↻</span>
@@ -88,8 +94,14 @@ const nines = formatCOP(gift.amount).replace(/\d/g, '9');
   }
 
   .regalo-stage__hint,
+  .regalo-stage__swipe,
   .regalo-stage__flip {
     grid-area: 1 / 1;
+  }
+
+  /* Hinweis statt Knopf (nur Handy, siehe unten) */
+  .regalo-stage__swipe {
+    display: none;
   }
 
   .regalo-stage__hint {
@@ -161,6 +173,82 @@ const nines = formatCOP(gift.amount).replace(/\d/g, '9');
 
     :global(.is-p5) .regalo-stage__inner {
       --shift: 0%;
+    }
+  }
+
+  /* Auf Touch-Geräten "Toca para abrir" statt "Haz clic para abrir" */
+  .regalo-stage__tap {
+    display: none;
+  }
+
+  @media (hover: none) {
+    .regalo-stage__click {
+      display: none;
+    }
+
+    .regalo-stage__tap {
+      display: inline;
+    }
+  }
+
+  /*
+   * Handy und Tablet hochkant: Umschlag mittig mit Abstand zum Rand. Ist die Karte ausgepackt (.is-p5),
+   * wird die Bühne niedriger: die Karte rückt weich nach oben und der Text gleitet darunter ins Bild.
+   */
+  @media (max-width: 899px) {
+    .regalo-stage {
+      --box: min(78vw, 420px);
+      height: 100vh;
+      height: 100svh;
+      transition: height 1.6s cubic-bezier(0.65, 0, 0.25, 1);
+    }
+
+    .regalo-stage__inner {
+      gap: 36px;
+      padding: 64px 24px 24px;
+    }
+
+    .regalo-stage__box {
+      width: var(--box);
+    }
+
+    :global(.is-p5) .regalo-stage {
+      height: calc(var(--box) / 1.586 + 200px);
+    }
+
+    /* Kein "Ver reverso"-Knopf: die Karte dreht sich per Wischen (oder Antippen) */
+    .regalo-stage__flip {
+      display: none;
+    }
+
+    /* Senkrecht scrollen bleibt möglich; beim Wischen wird kein Text markiert */
+    .regalo-stage__card {
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .regalo-stage__swipe {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgb(var(--peach-rgb) / 0.75);
+      font: 400 9px var(--font-sans);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.8s 0.9s;
+      pointer-events: none;
+    }
+
+    .regalo-stage__swipe i {
+      width: 22px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    :global(.is-p5) .regalo-stage__swipe {
+      opacity: 1;
     }
   }
 </style>

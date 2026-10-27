@@ -1,105 +1,340 @@
 ---
-import { MENU_LINKS } from '../../data/navigation.js';
+/*
+ * Menü hinter dem Burger. Öffnen: eine runde Blende wächst vom Burger aus über den Bildschirm,
+ * dahinter leuchtet ein weinroter Schein auf. Danach rollen die großen Links nacheinander hoch,
+ * die Services und der Fuß blenden ein. Schließen läuft rückwärts.
+ * Bedienung: scripts/layout/menu.js (Klasse is-open, Ursprung der Blende --cx/--cy).
+ */
+import { MENU_LINKS, MENU_SERVICES } from '../../data/navigation.js';
 import { padNumber } from '../../scripts/utils/format.js';
+import MenuFoot from './MenuFoot.astro';
+
+const step = (index, base, gap) => `--delay:${base + index * gap}ms`;
 ---
 
 <div class="menu" data-menu aria-hidden="true" transition:persist="mobile-menu">
-  <nav class="menu__links" aria-label="Menú">
-    {MENU_LINKS.map((link, index) => (
-      <a class="menu__link" href={link.href} style={`--delay:${250 + index * 70}ms`} tabindex="-1">
-        <span class="menu__number">{padNumber(index + 1)}</span>
-        <span class="menu__label">{link.label}</span>
-      </a>
-    ))}
+  <div class="menu__glow" aria-hidden="true"></div>
+  <div class="menu__word" aria-hidden="true">
+    Menú · Menú ·
+  </div>
+
+  <div class="menu__top">
+    <img class="menu__logo" src="/assets/img/scentscape-logo.png" alt="ScentScape" />
+    <button
+      class="menu__close"
+      type="button"
+      data-action="close-menu"
+      aria-label="Cerrar menú"
+      tabindex="-1"
+    >
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__body" aria-label="Menú">
+    <ul class="menu__main">
+      {MENU_LINKS.map((link, index) => (
+        <li style={step(index, 380, 70)}>
+          <a class="menu__link" href={link.href} tabindex="-1" data-menu-link>
+            <span class="menu__number">{padNumber(index + 1)}</span>
+            <span class="menu__label">{link.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="menu__services" style="--delay:780ms">
+      <p class="menu__eyebrow">
+        <span></span>Servicios
+      </p>
+      <ul>
+        {MENU_SERVICES.map((service) => (
+          <li>
+            <a href={service.href} tabindex="-1" data-menu-link>
+              <strong>{service.title}</strong>
+              <small>{service.text}</small>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </nav>
-  <button
-    class="menu__close"
-    type="button"
-    data-action="close-menu"
-    aria-label="Cerrar menú"
-    tabindex="-1"
-  >
-    ✕&nbsp;&nbsp;Cerrar
-  </button>
+
+  <MenuFoot />
 </div>
 
 <style>
   .menu {
+    --cx: calc(100% - 40px);
+    --cy: 40px;
+    --r: 150vmax;
     position: fixed;
     inset: 0;
     z-index: var(--z-menu);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    overflow-y: auto;
-    padding: 100px clamp(24px, 7vw, 110px) 60px;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    padding: 0 clamp(24px, 7vw, 110px) max(28px, env(safe-area-inset-bottom));
     background: var(--navy-deep);
-    clip-path: inset(0% 0% 100% 0%);
-    transition: clip-path 0.9s var(--ease-curtain);
+    clip-path: circle(0 at var(--cx) var(--cy));
+    visibility: hidden;
+    transition:
+      clip-path 0.75s var(--ease-curtain) 0.25s,
+      visibility 0s 1s;
   }
 
   .menu.is-open {
-    clip-path: inset(0% 0% 0% 0%);
+    clip-path: circle(var(--r) at var(--cx) var(--cy));
+    visibility: visible;
+    transition:
+      clip-path 0.9s var(--ease-curtain),
+      visibility 0s;
+  }
+
+  /* Weinroter Schein, der beim Öffnen aufblüht */
+  .menu__glow {
+    position: absolute;
+    top: -20%;
+    right: -30%;
+    width: 120vmax;
+    aspect-ratio: 1;
+    background: radial-gradient(closest-side, rgb(var(--wine-rgb) / 0.55), transparent);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 0.8s,
+      transform 1.6s var(--ease);
+    pointer-events: none;
+  }
+
+  .menu.is-open .menu__glow {
+    transform: none;
+    transition-delay: 0.2s;
+  }
+
+  .menu__word {
+    position: absolute;
+    left: 0;
+    bottom: 4vh;
+    color: transparent;
+    font: italic 400 clamp(150px, 40vw, 360px) / 1 var(--font-serif);
+    white-space: nowrap;
+    -webkit-text-stroke: 1px rgb(var(--peach-rgb) / 0.08);
+    transform: translateX(10vw);
+    transition: transform 2.4s var(--ease);
+    pointer-events: none;
+  }
+
+  .menu.is-open .menu__word {
+    transform: translateX(-12vw);
+  }
+
+  .menu__top {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 92px;
+  }
+
+  .menu__logo {
+    height: 26px;
+    opacity: 0;
+    transition: opacity 0.6s 0.3s;
+  }
+
+  .menu.is-open .menu__logo,
+  .menu.is-open .menu__glow {
+    opacity: 1;
+  }
+
+  /* X aus zwei Linien, die sich beim Öffnen zueinander drehen */
+  .menu__close {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    margin-right: -4px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 50%;
+    background: none;
+  }
+
+  .menu__close span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 1px;
+    margin: -0.5px 0 0 -9px;
+    background: var(--cream);
+    transition: transform 0.7s var(--ease) 0.35s;
+  }
+
+  .menu__close span + span {
+    background: var(--peach);
+  }
+
+  .menu.is-open .menu__close span {
+    transform: rotate(45deg);
+  }
+
+  .menu.is-open .menu__close span + span {
+    transform: rotate(-45deg);
+  }
+
+  .menu__body {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 34px;
+    padding: 12px 0 28px;
+  }
+
+  .menu__main,
+  .menu__services ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Große Links: jede Zeile rollt hinter einer Maske hoch */
+  .menu__main li {
+    overflow: hidden;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.1);
   }
 
   .menu__link {
     display: flex;
     align-items: baseline;
-    gap: 22px;
-    overflow: hidden;
+    gap: 18px;
+    padding: 6px 0;
     color: var(--cream);
-    font: 400 clamp(30px, 4.6vw, 64px) / 1.12 var(--font-serif);
+    font: 400 clamp(38px, 10vw, 72px) / 1.08 var(--font-serif);
+    transform: translateY(105%);
+    transition:
+      transform 0.5s var(--ease-curtain),
+      color 0.3s;
   }
 
-  .menu__link:hover {
-    color: var(--sand);
+  .menu.is-open .menu__link {
+    transform: none;
+    transition:
+      transform 1s var(--ease) var(--delay),
+      color 0.3s;
   }
 
   .menu__number {
+    min-width: 2.4em;
     color: var(--peach);
-    font: 400 11px var(--font-sans);
+    font: 400 10px var(--font-sans);
+    font-variant-numeric: tabular-nums;
     letter-spacing: 3px;
   }
 
-  .menu__label {
-    display: inline-block;
-    transform: translateY(110%);
-    transition: transform 0.9s var(--ease) var(--delay);
+  .menu__link.is-current .menu__label {
+    color: var(--sand);
+    font-style: italic;
   }
 
-  .menu.is-open .menu__label {
-    transform: translateY(0%);
+  .menu__link.is-current .menu__number::after {
+    content: ' ●';
   }
 
-  .menu__close {
-    position: absolute;
-    top: 24px;
-    left: clamp(18px, 4vw, 56px);
-    padding: 10px 0;
-    border: 0;
-    background: none;
-    color: var(--cream);
-    font: 400 11px var(--font-sans);
-    letter-spacing: 4px;
+  /* Services und Fuß blenden nach den großen Links ein */
+  .menu__services,
+  .menu :global(.menu__foot) {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.3s,
+      transform 0.3s;
+  }
+
+  .menu.is-open .menu__services,
+  .menu.is-open :global(.menu__foot) {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.8s var(--delay),
+      transform 0.9s var(--ease) var(--delay);
+  }
+
+  .menu__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 14px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
     text-transform: uppercase;
+  }
+
+  .menu__eyebrow span {
+    width: 28px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .menu__services ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .menu__services a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.16);
+    border-radius: 16px;
+    background: rgb(var(--navy-card-rgb) / 0.45);
+    color: var(--cream);
+  }
+
+  .menu__services a.is-current {
+    border-color: var(--peach);
+  }
+
+  .menu__services strong {
+    font: 400 17px/1.15 var(--font-serif);
+  }
+
+  .menu__services small {
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 300 11px/1.35 var(--font-sans);
+  }
+
+  /* Tablet und Desktop: Services in drei Spalten, mehr Luft */
+  @media (min-width: 700px) {
+    .menu__services ul {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu.is-open {
+      transition: visibility 0s;
+    }
+
+    .menu__link,
+    .menu.is-open .menu__link {
+      transform: none;
+    }
   }
 </style>
 
 <script>
-  import { registerAction } from '../../scripts/core/actions.js';
+  import { initMenu } from '../../scripts/layout/menu.js';
 
-  const menu = document.querySelector('[data-menu]');
-
-  function setMenuOpen(open) {
-    menu.classList.toggle('is-open', open);
-    menu.setAttribute('aria-hidden', String(!open));
-    menu.querySelectorAll('a, button').forEach((el) => (el.tabIndex = open ? 0 : -1));
-    document.documentElement.classList.toggle('is-locked', open);
-  }
-
-  menu.addEventListener('click', (event) => event.target.closest('a') && setMenuOpen(false));
-  document.addEventListener('keydown', (event) => event.key === 'Escape' && setMenuOpen(false));
-  registerAction('open-menu', () => setMenuOpen(true));
-  registerAction('close-menu', () => setMenuOpen(false));
-  document.addEventListener('astro:before-preparation', () => setMenuOpen(false));
+  initMenu();
 </script>

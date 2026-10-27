@@ -34,6 +34,13 @@ export const ICONS = {
   comment: { svg: '<path d="M20.7 16.5A9 9 0 1 0 17 20.3L21 21z"/>' },
   share: { svg: '<path d="M22 3 9.2 10.1M22 3l-7 18-5.8-10.9L2 6.6z"/>' },
   bookmark: { svg: '<path d="M19 21l-7-6-7 6V3h14z"/>' },
+  download: { svg: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>' },
+  truck: {
+    svg: '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+  },
+  shield: {
+    svg: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+  },
   instagram: {
     svg: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/>',
   },

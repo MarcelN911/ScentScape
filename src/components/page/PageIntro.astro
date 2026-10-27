@@ -159,4 +159,11 @@ const words = title.map(([text, italic]) => ({
   :global(.is-in) .intro-title__mask span {
     transform: none;
   }
+
+  /* Handy und Tablet hochkant: kein Pfad ("← Inicio / …"), zurück geht über Browser oder Wischen */
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .intro-crumbs {
+      display: none;
+    }
+  }
 </style>

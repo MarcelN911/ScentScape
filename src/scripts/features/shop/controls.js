@@ -33,7 +33,8 @@ const CLICKS = [
   ['[data-shop-clear-family]', (shop) => shop.update({ family: null, notes: new Set() })],
   ['[data-gender-tab]', (shop, el) => shop.update({ gender: el.dataset.genderTab })],
   [
-    '[data-density]',
+    // Nur Buttons: auch das Ergebnis-Raster trägt data-density (für das CSS).
+    'button[data-density]',
     (shop, el) => shop.update({ density: Number(el.dataset.density), letter: null }),
   ],
   ['[data-letter]', (shop, el) => shop.update({ letter: el.dataset.letter || null })],
@@ -55,12 +56,23 @@ function handleClick(shop, event) {
   return undefined;
 }
 
+/* Suchfeld gibt es zweimal (Filterbereich und Handy-Leiste): beide zeigen denselben Text */
+function bindSearch(shop, signal) {
+  const fields = [...shop.root.querySelectorAll('[data-shop-search]')];
+  fields.forEach((field) => {
+    field.value = shop.state.query;
+    const onInput = () => {
+      fields.forEach((other) => other !== field && (other.value = field.value));
+      shop.update({ query: field.value });
+    };
+    field.addEventListener('input', onInput, { signal });
+  });
+}
+
 export function bindControls(shop, signal) {
   const { root } = shop;
   root.addEventListener('click', (event) => handleClick(shop, event), { signal });
-  const search = root.querySelector('[data-shop-search]');
-  search.value = shop.state.query;
-  search.addEventListener('input', () => shop.update({ query: search.value }), { signal });
+  bindSearch(shop, signal);
   root
     .querySelector('[data-shop-sort]')
     .addEventListener('change', (event) => shop.update({ sort: event.target.value }), { signal });

@@ -1,0 +1,100 @@
+---
+/*
+ * Kurzer Footer-Teil für Handy und Tablet hochkant (statt der vier Link-Spalten):
+ * die wichtigsten Links in einer Zeile, Instagram und WhatsApp als runde Symbole,
+ * Ort und Versand in einer Zeile. Alle anderen Links stehen im Menü.
+ */
+import { INSTAGRAM_URL, WHATSAPP_NUMBER } from '../../scripts/config.js';
+import WhatsAppIcon from '../ui/WhatsAppIcon.astro';
+
+const LINKS = [
+  { label: 'Productos', href: '/productos/' },
+  { label: 'Gift Card', href: '/gift-card/' },
+  { label: 'Nosotros', href: '/nosotros/' },
+  { label: 'Contacto', href: '/contacto/' },
+];
+---
+
+<div class="footer-mini">
+  <nav class="footer-mini__links" aria-label="Enlaces">
+    {LINKS.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+  </nav>
+  <div class="footer-mini__social">
+    <a href={INSTAGRAM_URL} target="_blank" rel="noopener" aria-label="Instagram">
+      <img src="/assets/img/instagram_white.svg" alt="" width="17" height="17" />
+    </a>
+    <a
+      href={`https://wa.me/${WHATSAPP_NUMBER}`}
+      target="_blank"
+      rel="noopener"
+      aria-label="WhatsApp"
+    >
+      <WhatsAppIcon size={17} color="var(--cream)" />
+    </a>
+    <p>Medellín · Envíos a todo Colombia</p>
+  </div>
+</div>
+
+<style>
+  .footer-mini {
+    display: none;
+  }
+
+  @media (max-width: 1079px) and (orientation: portrait), (max-width: 899px) {
+    .footer-mini {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      margin-top: 40px;
+    }
+  }
+
+  /* Links in einer Zeile, gleichmäßig verteilt, mit feinen goldenen Linien oben und unten */
+  .footer-mini__links {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    border-block: 1px solid rgb(var(--peach-rgb) / 0.15);
+  }
+
+  .footer-mini__links a {
+    color: rgb(var(--cream-rgb) / 0.85);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 600px) {
+    .footer-mini__links a {
+      font-size: 11px;
+      letter-spacing: 3px;
+    }
+  }
+
+  .footer-mini__social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-mini__social a {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 50%;
+  }
+
+  .footer-mini__social p {
+    margin: 0 0 0 6px;
+    color: rgb(var(--cream-rgb) / 0.55);
+    font: 300 12px var(--font-sans);
+  }
+</style>

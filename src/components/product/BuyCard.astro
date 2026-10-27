@@ -273,4 +273,99 @@ const message = `Hola, quiero pedir ${product.name} (${first.ml} ml) x1.`;
     background: rgb(37 211 102 / 0.14);
     color: var(--cream);
   }
+
+  /*
+   * Handy: kompakt. Größen in Dreierreihen, Menge und "Añadir al carrito" in einer Zeile,
+   * WhatsApp als ruhigere zweite Möglichkeit darunter.
+   */
+  @media (max-width: 899px) {
+    .buy {
+      gap: 16px;
+      padding: 18px;
+      border-radius: 22px;
+    }
+
+    .buy__roll {
+      height: 42px;
+    }
+
+    .buy__ghost,
+    .buy__amount {
+      font-size: 36px;
+    }
+
+    .buy__old {
+      padding-bottom: 4px;
+    }
+
+    /* Immer drei Spalten: eine einzelne Größe ist so breit wie bei drei Größen, nicht ein Balken */
+    .buy__sizes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .buy__size {
+      align-items: center;
+      gap: 4px;
+      padding: 10px 6px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .buy__size:hover {
+      transform: none;
+    }
+
+    .buy__size-ml {
+      font-size: 19px;
+    }
+
+    /* Gewählte Größe dezent (Rahmen + leichter Schimmer), damit nur "Añadir al carrito" voll leuchtet */
+    .buy__size[aria-checked='true'] {
+      border-color: var(--peach);
+      background: rgb(var(--peach-rgb) / 0.12);
+    }
+
+    .buy__size[aria-checked='true'] .buy__size-ml {
+      color: var(--sand);
+    }
+
+    .buy__size[aria-checked='true'] .buy__size-price {
+      color: rgb(var(--cream-rgb) / 0.7);
+    }
+
+    .buy__size-price {
+      font-size: 10px;
+    }
+
+    .buy__row {
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    .buy__qty {
+      flex: none;
+      height: 52px;
+    }
+
+    .buy__qty button {
+      width: 38px;
+    }
+
+    .buy__qty span {
+      min-width: 20px;
+    }
+
+    .buy__add {
+      min-width: 0;
+      height: 52px;
+      letter-spacing: 2px;
+    }
+
+    .buy__wa {
+      height: 46px;
+      border-color: rgb(37 211 102 / 0.35);
+      font-size: 11px;
+    }
+  }
 </style>

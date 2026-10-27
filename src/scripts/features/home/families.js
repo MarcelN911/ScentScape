@@ -1,6 +1,7 @@
 /*
  * "Familias olfativas": der Bereich bleibt stehen, beim Scrollen wechselt die Familie.
  * Ein Klick auf einen Namen scrollt zu der Stelle, an der diese Familie aktiv ist.
+ * Im Hochformat stehen die Namen als Laufband in einer Reihe, die aktive gleitet in die Mitte.
  */
 import { onScrollProgress, PINNED_RANGE } from '../../effects/scroll.js';
 import { padNumber } from '../../utils/format.js';
@@ -8,6 +9,7 @@ import { padNumber } from '../../utils/format.js';
 function findParts(section) {
   return {
     stage: section.querySelector('[data-families-stage]'),
+    list: section.querySelector('[data-families-list]'),
     names: [...section.querySelectorAll('[data-family-index]')],
     bottles: [...section.querySelectorAll('[data-family-bottle]')],
     descs: [...section.querySelectorAll('[data-family-desc]')],
@@ -22,6 +24,21 @@ function markLayers(elements, active) {
     element.classList.toggle('is-active', index === active);
     element.classList.toggle('is-after', index > active);
   });
+}
+
+/* Gleiche Bedingung wie im CSS von Families.astro */
+const STRIP_QUERY = '(max-width: 1079px) and (orientation: portrait), (max-width: 899px)';
+
+/** Laufband: Reihe so verschieben, dass der aktive Name in der Mitte steht */
+function centerName(parts, active) {
+  if (!matchMedia(STRIP_QUERY).matches) {
+    parts.list.style.removeProperty('--families-shift');
+    return;
+  }
+  const name = parts.names[active];
+  const middle = parts.list.parentElement.clientWidth / 2;
+  const shift = middle - (name.offsetLeft + name.offsetWidth / 2);
+  parts.list.style.setProperty('--families-shift', `${shift.toFixed(1)}px`);
 }
 
 function showFamily(parts, active) {
@@ -47,6 +64,7 @@ function followScroll(section, parts) {
     parts.stage.style.setProperty('--families-progress', progress.toFixed(4));
     const next = Math.min(parts.names.length - 1, Math.floor(progress * parts.names.length));
     if (next !== active) showFamily(parts, (active = next));
+    centerName(parts, active);
   });
 }
 

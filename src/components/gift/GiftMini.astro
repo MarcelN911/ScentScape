@@ -1,0 +1,144 @@
+---
+/*
+ * Handy: kleine Live-Vorschau der Gift Card oben am Bildschirm. Erscheint, sobald die große Karte
+ * nach oben aus dem Bild gescrollt ist und man das Formular ausfüllt; zeigt Farbe, Betrag und Namen
+ * live (scripts/features/gift/mobile.js). Antippen scrollt zurück zur großen Karte.
+ */
+import { GIFT_COLORS, GIFT_DEFAULT_AMOUNT, GIFT_DEFAULTS } from '../../data/gift-card.js';
+import { formatCOP } from '../../scripts/utils/format.js';
+
+const first = GIFT_COLORS[0];
+---
+
+<button class="gift-mini" type="button" aria-label="Ver la tarjeta" data-gift-mini>
+  <span
+    class="gift-mini__card"
+    style={`background:${first.background};color:${first.ink}`}
+    data-gift-mini-card
+  >
+    <small>Gift Card</small>
+    <strong data-gift-mini-amount>{formatCOP(GIFT_DEFAULT_AMOUNT)}</strong>
+  </span>
+  <span class="gift-mini__text">
+    <span>
+      Para <em data-gift-mini-to>{GIFT_DEFAULTS.to}</em>
+    </span>
+    <span>
+      De <em data-gift-mini-from>{GIFT_DEFAULTS.from}</em> ·
+      <span data-gift-mini-color>{first.name}</span>
+    </span>
+  </span>
+  <span class="gift-mini__up" aria-hidden="true">
+    ↑
+  </span>
+</button>
+
+<style>
+  .gift-mini {
+    display: none;
+  }
+
+  @media (max-width: 899px) {
+    .gift-mini {
+      position: fixed;
+      top: 90px;
+      left: 12px;
+      right: 12px;
+      z-index: calc(var(--z-header) - 1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 8px 16px 8px 8px;
+      border: 1px solid rgb(var(--peach-rgb) / 0.22);
+      border-radius: 18px;
+      background: rgb(var(--navy-rgb) / 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 18px 40px rgb(0 0 0 / 0.35);
+      color: var(--cream);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(-16px) scale(0.96);
+      transition:
+        opacity 0.4s var(--ease),
+        transform 0.5s var(--ease),
+        top 0.6s var(--ease);
+      pointer-events: none;
+    }
+
+    .gift-mini.is-shown {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    /* Ist der Header weggescrollt, rutscht die Vorschau ganz nach oben */
+    :global(html:has(.site-header.is-hidden)) .gift-mini {
+      top: max(12px, env(safe-area-inset-top));
+    }
+  }
+
+  /* Die Karte im Kleinformat, gleiche Farbe wie die große */
+  .gift-mini__card {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 84px;
+    aspect-ratio: 1.586;
+    padding: 7px 8px;
+    border-radius: 8px;
+    box-shadow: 0 6px 14px rgb(0 0 0 / 0.35);
+    transition:
+      background 0.6s,
+      color 0.6s;
+  }
+
+  .gift-mini__card small {
+    font: 600 6px var(--font-sans);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .gift-mini__card strong {
+    font: 400 15px/1 var(--font-serif);
+    font-variant-numeric: lining-nums;
+  }
+
+  .gift-mini__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 400 11px var(--font-sans);
+    letter-spacing: 0.5px;
+  }
+
+  .gift-mini__text > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gift-mini__text em {
+    color: var(--sand);
+    font: italic 400 15px var(--font-serif);
+  }
+
+  .gift-mini__up {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.4);
+    border-radius: 50%;
+    color: var(--peach);
+    font-size: 13px;
+  }
+</style>

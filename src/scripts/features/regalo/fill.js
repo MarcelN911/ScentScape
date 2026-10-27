@@ -92,5 +92,10 @@ export function fillGift(root, gift) {
 
 /** Betrag rollt von 9 auf die richtigen Ziffern */
 export function rollAmount(root, gift) {
-  setOdometer(root.querySelector('[data-gift-card] [data-odometer]'), formatCOP(gift.amount), 90);
+  const card = root.querySelector('[data-gift-card]');
+  setOdometer(card.querySelector('[data-odometer]'), formatCOP(gift.amount), 90);
+  /* Auch die Beschriftung für Screenreader auf den echten Betrag setzen (statt 999.999) */
+  card
+    .querySelector('[data-gift-amount-wrap]')
+    .setAttribute('aria-label', `${formatCOP(gift.amount)} COP`);
 }

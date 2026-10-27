@@ -1,0 +1,166 @@
+---
+/*
+ * Linke Spalte des Video-Bereichs (Desktop) und Textteil der Fächer-Variante auf dem Handy:
+ * Überschrift, Nummer und Titel des aktiven Videos, Fortschritt, Pfeile, "Ver con sonido",
+ * Instagram und die runden Vorschaubilder. Nummer, Titel und Fortschritt setzt reel-view.js.
+ */
+import { VIDEOS } from '../../data/home.js';
+import { padNumber } from '../../scripts/utils/format.js';
+import InstagramPill from '../ui/InstagramPill.astro';
+import VideoThumb from './VideoThumb.astro';
+---
+
+<div class="reel__intro">
+  <h2 class="reel__title">
+    <span class="line-mask">
+      <span data-reveal="mask">ScentScape</span>
+    </span>
+  </h2>
+  <div class="reel__now">
+    <p class="reel__count">
+      <span data-reel-number>01</span> <span class="reel__total">/ {padNumber(VIDEOS.length)}</span>
+    </p>
+    <p class="reel__current" data-reel-title>
+      {VIDEOS[0].title}
+    </p>
+    <div class="reel__bar">
+      <span data-reel-bar></span>
+    </div>
+  </div>
+  <div class="reel__controls">
+    <button class="reel__arrow" type="button" data-reel-step="-1" aria-label="Anterior">
+      ←
+    </button>
+    <button class="reel__arrow" type="button" data-reel-step="1" aria-label="Siguiente">
+      →
+    </button>
+    <button class="reel__sound" type="button" data-reel-open>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 4l13 8-13 8z"></path>
+      </svg>
+      Ver con sonido
+    </button>
+    <InstagramPill />
+  </div>
+  <div class="reel__thumbs">
+    {VIDEOS.map((video, index) => (
+      <VideoThumb video={video} index={index} />
+    ))}
+  </div>
+</div>
+<style>
+  /* Über den aufgefächerten Videokarten, damit die Knöpfe immer klickbar bleiben */
+  .reel__intro {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 3vh, 30px);
+    min-width: 0;
+  }
+
+  .reel__title {
+    margin: 0;
+    font: 500 clamp(34px, min(6vw, 8.5vh), 100px) / 0.9 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .reel__title em {
+    font: italic 400 1.05em/1 var(--font-serif);
+    letter-spacing: 0;
+    color: var(--peach);
+  }
+
+  .reel__now {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .reel__count {
+    margin: 0;
+    font: 700 13px/1 var(--font-sans);
+    letter-spacing: 2px;
+    color: var(--peach);
+  }
+
+  .reel__total {
+    color: rgb(var(--cream-rgb) / 0.45);
+  }
+
+  .reel__current {
+    min-height: 1.1em;
+    margin: 0;
+    font: italic 400 clamp(30px, 3vw, 46px) / 1.05 var(--font-serif);
+    text-wrap: balance;
+  }
+
+  .reel__bar {
+    max-width: 360px;
+    height: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: rgb(var(--cream-rgb) / 0.18);
+  }
+
+  .reel__bar span {
+    display: block;
+    height: 100%;
+    background: var(--peach);
+    transform: scaleX(var(--reel-progress, 0));
+    transform-origin: 0 50%;
+  }
+
+  .reel__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .reel__arrow {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--peach-rgb) / 0.45);
+    background: none;
+    color: var(--peach);
+    font: 400 22px/1 var(--font-sans);
+  }
+
+  .reel__sound {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--peach);
+    color: var(--navy);
+    font: 700 14px/1 var(--font-sans);
+  }
+
+  .reel__sound:hover {
+    background: var(--sand);
+  }
+
+  .reel__arrow:hover {
+    background: rgb(var(--peach-rgb) / 0.15);
+  }
+
+  .reel__thumbs {
+    display: none;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 6px 2px;
+    scrollbar-width: none;
+  }
+
+  @media (min-width: 1080px), (min-width: 1000px) and (orientation: landscape) {
+    .reel__thumbs {
+      display: flex;
+    }
+  }
+</style>
