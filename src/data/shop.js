@@ -10,6 +10,7 @@ export const SORT_OPTIONS = [
   { value: 'asc', label: 'Precio ↑' },
   { value: 'desc', label: 'Precio ↓' },
   { value: 'az', label: 'A – Z' },
+  { value: 'brand', label: 'Marca A – Z' },
 ];
 
 /* Ansicht: Index (Liste mit Vorschau), 3 oder 4 Spalten */

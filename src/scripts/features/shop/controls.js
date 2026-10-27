@@ -1,5 +1,6 @@
 /* Alle Bedienelemente der Seite "Productos" → Änderungen am Zustand. */
 import { turnTo } from './wheel.js';
+import { bindSort, closeSort } from './sort.js';
 
 /** Familie wählen; noch einmal tippen nimmt sie wieder weg. */
 export function pickFamily(shop, family, index) {
@@ -31,6 +32,13 @@ const CLICKS = [
   ['[data-toggle-note]', (shop, el) => toggleNote(shop, el.dataset.toggleNote)],
   ['[data-notes-all]', (shop) => shop.update({ notes: new Set() })],
   ['[data-shop-clear-family]', (shop) => shop.update({ family: null, notes: new Set() })],
+  [
+    '[data-sort-option]',
+    (shop, el) => {
+      closeSort(shop.root);
+      shop.update({ sort: el.dataset.sortOption });
+    },
+  ],
   ['[data-gender-tab]', (shop, el) => shop.update({ gender: el.dataset.genderTab })],
   [
     // Nur Buttons: auch das Ergebnis-Raster trägt data-density (für das CSS).
@@ -73,7 +81,5 @@ export function bindControls(shop, signal) {
   const { root } = shop;
   root.addEventListener('click', (event) => handleClick(shop, event), { signal });
   bindSearch(shop, signal);
-  root
-    .querySelector('[data-shop-sort]')
-    .addEventListener('change', (event) => shop.update({ sort: event.target.value }), { signal });
+  bindSort(root, signal);
 }

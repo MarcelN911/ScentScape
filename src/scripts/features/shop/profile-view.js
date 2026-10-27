@@ -1,6 +1,7 @@
 /* Rechte Seite des Panels: Titel, Hinweis, Noten der Familie, Reiter, Ansicht, aktive Filter. */
 import { scentColor } from '../../../data/scent.js';
 import { countWith } from './filter.js';
+import { renderSort } from './sort.js';
 
 const HINT_ALL = 'Gira la rueda y elige una familia olfativa. Después puedes afinar con sus notas.';
 const hintFor = (family) =>
@@ -48,7 +49,7 @@ function renderToggles(root, state) {
   root.querySelectorAll('button[data-density]').forEach((button) => {
     button.setAttribute('aria-pressed', String(Number(button.dataset.density) === state.density));
   });
-  root.querySelector('[data-shop-sort]').value = state.sort;
+  renderSort(root, state.sort);
 }
 
 function renderLetters(root, result) {

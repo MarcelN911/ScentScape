@@ -1,8 +1,15 @@
-/* Dropdown "Servicios": öffnet bei Hover und Fokus, schließt mit kurzer Verzögerung und mit Escape. */
+/* Dropdown "Servicios": öffnet bei Hover, Fokus und Klick, schließt mit kurzer Verzögerung und mit Escape. */
 const CLOSE_DELAY = 160;
 
 function setOpen(dropdown, open) {
   dropdown.classList.toggle('is-open', open);
+  dropdown.querySelector('.dropdown__toggle')?.setAttribute('aria-expanded', String(open));
+}
+
+/* Klick auf "Servicios" öffnet das Dropdown oder lässt es offen (z. B. auf dem Touchscreen ohne Hover) */
+function bindClick(dropdown) {
+  const toggle = dropdown.querySelector('.dropdown__toggle');
+  toggle?.addEventListener('click', () => setOpen(dropdown, true));
 }
 
 function bindHover(dropdown) {
@@ -32,5 +39,6 @@ export function initDropdown() {
   if (!dropdown) return;
   bindHover(dropdown);
   bindFocus(dropdown);
+  bindClick(dropdown);
   document.addEventListener('astro:before-preparation', () => setOpen(dropdown, false));
 }

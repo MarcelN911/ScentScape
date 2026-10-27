@@ -28,14 +28,58 @@ import Icon from '../ui/Icon.astro';
     </label>
   </div>
   <div class="controls__end">
-    <label class="field-pill field-pill--sort">
+    <!--
+      Eigenes Dropdown statt <select>: die Liste eines <select> zeichnet der Browser selbst,
+      sie lässt sich kaum gestalten. "popover" legt die Liste über alles (auch über overflow: hidden)
+      und schließt sie bei Klick daneben oder Escape. Bedienung: scripts/features/shop/sort.js
+    -->
+    <button
+      class="field-pill sort"
+      type="button"
+      popovertarget="shop-sort-menu"
+      aria-haspopup="listbox"
+      data-sort-toggle
+    >
       Orden
-      <select aria-label="Ordenar" data-shop-sort>
-        {SORT_OPTIONS.map((option) => (
-          <option value={option.value}>{option.label}</option>
-        ))}
-      </select>
-    </label>
+      <span class="sort__value" data-sort-value>
+        {SORT_OPTIONS[0].label}
+      </span>
+      <svg
+        width="10"
+        height="10"
+        viewBox="0 0 10 10"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.4"
+        aria-hidden="true"
+      >
+        <path d="M2 3.5l3 3 3-3"></path>
+      </svg>
+    </button>
+    <div class="sort__panel" id="shop-sort-menu" popover role="listbox" aria-label="Ordenar">
+      {SORT_OPTIONS.map((option, index) => (
+        <button
+          class="sort__option"
+          type="button"
+          role="option"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          data-sort-option={option.value}
+        >
+          {option.label}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <path d="M2.5 6.2l2.4 2.4 4.6-5"></path>
+          </svg>
+        </button>
+      ))}
+    </div>
     <div class="density" role="group" aria-label="Columnas">
       {DENSITIES.map((density) => (
         <button
@@ -156,25 +200,99 @@ import Icon from '../ui/Icon.astro';
     outline: none;
   }
 
-  .field-pill--sort {
+  /* Knopf "Orden": sieht aus wie die anderen Pillen */
+  .sort {
     font: 400 10px var(--font-sans);
     letter-spacing: 2px;
     text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.3s;
   }
 
-  .field-pill select {
+  .sort:hover,
+  .sort.is-open {
+    border-color: rgb(var(--peach-rgb) / 0.6);
+  }
+
+  .sort__value {
     margin-left: 8px;
-    border: 0;
-    background: none;
     color: var(--cream);
     font: 400 13px var(--font-sans);
     letter-spacing: 0;
     text-transform: none;
+  }
+
+  .sort svg {
+    transition: transform 0.4s;
+  }
+
+  .sort.is-open svg {
+    transform: rotate(180deg);
+  }
+
+  /* Aufgeklappte Liste, gleicher Look wie das Servicios-Menü im Header. Lage setzt sort.js */
+  .sort__panel {
+    position: fixed;
+    inset: auto;
+    width: 220px;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 20px;
+    background: rgb(var(--navy-deep-rgb) / 0.96);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
+    color: var(--cream);
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.25s,
+      transform 0.35s var(--ease);
+  }
+
+  /* Startzustand beim Öffnen: leicht versetzt und durchsichtig, dann gleitet die Liste herein */
+  @starting-style {
+    .sort__panel:popover-open {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .sort__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .sort__option:hover,
+  .sort__option:focus-visible {
+    background: rgb(var(--peach-rgb) / 0.1);
     outline: none;
   }
 
-  .field-pill option {
-    background: var(--navy-deep);
+  .sort__option[aria-selected='true'] {
+    color: var(--peach);
+  }
+
+  /* Häkchen nur beim gewählten Eintrag */
+  .sort__option svg {
+    opacity: 0;
+  }
+
+  .sort__option[aria-selected='true'] svg {
+    opacity: 1;
   }
 
   .controls__end {

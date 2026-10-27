@@ -2,12 +2,19 @@
 import { SERVICE_LINKS } from '../../data/navigation.js';
 import { padNumber } from '../../scripts/utils/format.js';
 
-/** @typedef {{ link: { key: string, label: string, href: string } }} Props */
+/** @typedef {{ link: { key: string, label: string } }} Props */
 const { link } = Astro.props;
 ---
 
 <div class="dropdown" data-dropdown>
-  <a class="dropdown__toggle" href={link.href} data-nav-link={link.key} aria-haspopup="true">
+  <!-- Button statt Link: ein Klick öffnet nur das Dropdown und lädt keine neue Seite -->
+  <button
+    class="dropdown__toggle"
+    type="button"
+    data-nav-link={link.key}
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
     {link.label}
     <svg
       width="10"
@@ -20,7 +27,7 @@ const { link } = Astro.props;
     >
       <path d="M2 3.5l3 3 3-3"></path>
     </svg>
-  </a>
+  </button>
   <div class="dropdown__panel" role="menu">
     {SERVICE_LINKS.map((item, index) => (
       <a class="dropdown__item" href={item.href} role="menuitem">
@@ -44,8 +51,11 @@ const { link } = Astro.props;
     align-items: center;
     gap: 8px;
     padding: 11px 15px;
+    border: 0;
     border-radius: 20px;
+    background: transparent;
     color: var(--cream);
+    cursor: pointer;
     font: 400 11px var(--font-sans);
     letter-spacing: 2.5px;
     text-transform: uppercase;

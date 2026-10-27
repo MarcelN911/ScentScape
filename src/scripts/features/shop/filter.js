@@ -17,11 +17,18 @@ function matchesBase(entry, state, words) {
   return words.every((word) => entry.search.includes(word));
 }
 
+/* Nach Marke, bei gleicher Marke nach Name. Produkte ohne Marke stehen am Ende. */
+function byBrand(a, b) {
+  if (!a.brand !== !b.brand) return a.brand ? -1 : 1;
+  return a.brand.localeCompare(b.brand, 'es') || a.name.localeCompare(b.name, 'es');
+}
+
 const COMPARE = {
   asc: (a, b) => a.price - b.price,
   desc: (a, b) => b.price - a.price,
   az: (a, b) => a.name.localeCompare(b.name, 'es'),
   dest: (a, b) => a.order - b.order,
+  brand: byBrand,
 };
 
 function byNotes(entries, notes) {
