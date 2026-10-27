@@ -79,10 +79,16 @@ const fragrances = (count) => `${count} ${count === 1 ? 'fragancia' : 'fragancia
     gap: 10px;
   }
 
-  .catalog-form__choices--wide,
-  .catalog-form__done {
+  .catalog-form__choices--wide {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  /* PDF fertig: "Abrir PDF" und "Editar catálogo" nebeneinander, gleich breit */
+  .catalog-form__done {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
@@ -93,8 +99,15 @@ const fragrances = (count) => `${count} ${count === 1 ? 'fragancia' : 'fragancia
   }
 
   .catalog-form__edit {
-    grid-column: 1 / -1;
     height: 56px;
     border-radius: 28px;
+  }
+
+  /* Schmale Handys: etwas engere Schrift, damit beide Texte in eine Zeile passen */
+  @media (max-width: 479px) {
+    .catalog-form__done > * {
+      padding: 0 10px;
+      letter-spacing: 1.5px;
+    }
   }
 </style>

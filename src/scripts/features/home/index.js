@@ -5,6 +5,7 @@ import { animateBestsellers } from './bestsellers.js';
 import { initCardFlip } from './card-flip.js';
 import { animateFamilies } from './families.js';
 import { animateHero } from './hero.js';
+import { watchHeroVideo } from './hero-video.js';
 import { initIntro } from './intro.js';
 import { animateReelFan, initReel } from './reel.js';
 import { animateStories, initStoryColors } from './story.js';
@@ -28,6 +29,7 @@ function animateSections(signal) {
 export function initHome(signal) {
   if (!document.querySelector('[data-home]')) return undefined;
   initIntro(signal);
+  watchHeroVideo(signal);
   withGsap(signal, () => animateSections(signal));
   initGiftCard(signal);
   return initReel(signal);
