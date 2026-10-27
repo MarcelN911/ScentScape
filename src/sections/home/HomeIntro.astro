@@ -1,14 +1,14 @@
 ---
 /*
- * Intro der Startseite: Das Logo steht 3 Sekunden, dann zoomt die Kamera durch das "O" ins Video.
- * Das Logo ist dabei ein Loch in der dunklen Fläche (SVG-Maske), dahinter läuft schon das Hero-Video.
+ * Intro der Startseite: Das Logo steht 3 Sekunden, dann schrumpft das Intro wie das Menü in den Burger.
+ * Das Logo ist ein Loch in der dunklen Fläche (SVG-Maske), dahinter läuft schon das Hero-Video.
  * Ohne Strich über dem Claim: in der Vorlage ist er angelegt, im Browser aber nie sichtbar.
  */
 const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
 ---
 
 <div class="intro" data-intro aria-hidden="true">
-  <svg class="intro__svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" data-intro-svg>
+  <svg class="intro__svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
     <defs>
       <radialGradient id="intro-veil" gradientUnits="userSpaceOnUse" cx="800" cy="430" r="980">
         <stop offset="0" stop-color="#1F2344"></stop>
@@ -29,12 +29,12 @@ const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
         height="8900"
       >
         <rect x="-4000" y="-4000" width="9600" height="8900" fill="#FFFCF2"></rect>
-        <g data-intro-zoom>
+        <g>
           <image class="intro__fade" href="/assets/img/scentscape-logo-black.png" {...LOGO} />
         </g>
       </mask>
       <mask id="intro-logo" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">
-        <g data-intro-zoom>
+        <g>
           <image href="/assets/img/scentscape-logo-white.png" {...LOGO} />
         </g>
       </mask>
@@ -47,10 +47,10 @@ const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
       fill="url(#intro-veil)"
       mask="url(#intro-portal)"
     ></rect>
-    <g data-intro-zoom data-intro-logo>
+    <g>
       <image class="intro__fade" href="/assets/img/scentscape-logo.png" {...LOGO} />
     </g>
-    <g mask="url(#intro-logo)" data-intro-logo data-intro-sheen>
+    <g mask="url(#intro-logo)">
       <rect
         x="-500"
         y="180"
@@ -75,7 +75,7 @@ const LOGO = { x: 150, y: 254, width: 1300, height: 351 };
       Elegancia · Carácter · Distinción
     </text>
   </svg>
-  <div class="intro__row" data-intro-fine>
+  <div class="intro__row">
     <span>
       <i></i>Est. 2024
     </span>

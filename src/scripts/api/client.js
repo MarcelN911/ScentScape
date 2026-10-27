@@ -12,6 +12,8 @@ export const ENDPOINTS = {
     `${API_BASE}/api/public/checkout/pedido/${id}?shopId=${SHOP_ID}&t=${encodeURIComponent(token)}`,
   retryBold: (id) => `${API_BASE}/api/public/checkout/pedido/${id}/bold`,
   heart: (productId) => `${API_BASE}/api/products/${productId}/heart`,
+  discount: `${API_BASE}/api/public/discount?shopId=${SHOP_ID}`,
+  register: `${API_BASE}/api/public/register`,
 };
 
 export async function getJson(url) {

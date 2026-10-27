@@ -59,14 +59,23 @@
   --ease-pop: cubic-bezier(0.3, 1.6, 0.5, 1);
 
   /* Ebenen */
+  --promo-h: 34px;
+  /* Wie weit alles unter dem Header nach unten rutscht, solange die Aktionsleiste zu sehen ist */
+  --promo-offset: 0px;
   --z-header: 50;
+  --z-promo: 55;
   --z-progress: 60;
   --z-toast: 65;
   --z-menu: 70;
   --z-curtain: 100;
   --z-player: 140;
-  --z-cart-overlay: 150;
-  --z-cart: 151;
+  --z-drawer-overlay: 150;
+  --z-drawer: 151;
   --z-intro: 200;
   --z-modal: 240;
+}
+
+/* Aktionsleiste sichtbar (PromoBar.astro): Header und alles, was unter ihm klebt, rutschen darunter */
+html.has-promo {
+  --promo-offset: var(--promo-h);
 }

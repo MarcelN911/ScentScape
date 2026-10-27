@@ -1,86 +1,70 @@
 /*
- * Intro der Startseite. 3 s Pause, dann 2,4 s Zoom durch das Logo. Klick oder Taste überspringt die Pause.
- * Während des Intros ist das Scrollen gesperrt.
+ * Intro der Startseite. Das Logo steht 3 s, dann schließt sich das Intro wie das Menü:
+ * ein Kreis schrumpft in den Burger-Knopf, dahinter wird das Hero-Video sichtbar.
+ * Klick oder Taste überspringt die Pause. Während des Intros ist das Scrollen gesperrt.
+ * Kommt man von einer anderen Seite, liegt der leere Vorhang darunter (curtain.js),
+ * dann blendet das Intro weich darüber ein, damit es wie ein einziger Ladescreen wirkt.
  */
-import { clamp, prefersReducedMotion } from '../../utils/motion.js';
+import { burgerCircle, circleClip, EASE_CIRCLE } from '../../utils/burger-circle.js';
+import { prefersReducedMotion } from '../../utils/motion.js';
+import { lockScroll } from '../../utils/scroll-lock.js';
 
 const HOLD = 3000;
-const ZOOM = 2400;
-const [ORIGIN_X, ORIGIN_Y] = [737, 359];
+/* Gleiche Zeit wie beim Schließen des Menüs */
+const CLOSE = 750;
+const VIDEO_ZOOM = 'scale(1.1)';
+const FADE_IN = 400;
 
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const smooth = (t) => t * t * (3 - 2 * t);
-
-/** Alle Werte eines Frames aus dem Fortschritt 0 … 1 */
-function frameOf(progress) {
-  const p = progress * 0.7;
-  const zoom = clamp(p / 0.44);
-  return {
-    scale: Math.pow(121, Math.pow(zoom, 1.35)),
-    videoScale: 1.25 - smooth(zoom) * 0.25,
-    logo: 1 - clamp(p / 0.3),
-    svg: 1 - clamp((p - 0.46) / 0.2),
-    fine: 1 - clamp(p * 6),
-    sheen: p <= 0.01,
-  };
+function cameFromOtherPage() {
+  return document.querySelector('[data-curtain]')?.dataset.target === 'home';
 }
 
-function paint(parts, frame) {
-  const scale = frame.scale.toFixed(3);
-  const transform = `translate(${ORIGIN_X} ${ORIGIN_Y}) scale(${scale}) translate(${-ORIGIN_X} ${-ORIGIN_Y})`;
-  parts.zooms.forEach((group) => group.setAttribute('transform', transform));
-  parts.logos.forEach((group) => group.setAttribute('opacity', frame.logo.toFixed(3)));
-  parts.fine.forEach((element) => (element.style.opacity = frame.fine.toFixed(2)));
-  parts.svg.style.opacity = frame.svg.toFixed(3);
-  parts.sheen.style.display = frame.sheen ? '' : 'none';
-  parts.video?.style.setProperty('transform', `scale(${frame.videoScale.toFixed(3)})`);
+function finish(parts, state) {
+  clearTimeout(state.timer);
+  lockScroll('intro', false);
+  parts.video?.style.removeProperty('transform');
+  parts.intro.classList.add('is-done');
+  parts.hero?.classList.add('is-in');
+}
+
+/* Kreis schrumpft in den Burger, das Video zoomt dabei leicht heraus */
+function close(parts, state) {
+  if (state.closing) return;
+  state.closing = true;
+  clearTimeout(state.timer);
+  const circle = burgerCircle();
+  const timing = { duration: CLOSE, easing: EASE_CIRCLE, fill: 'forwards' };
+  const shrink = [circle.r, 0].map((radius) => ({ clipPath: circleClip(circle, radius) }));
+  parts.video?.animate([{ transform: VIDEO_ZOOM }, { transform: 'none' }], timing);
+  state.timer = setTimeout(() => parts.hero?.classList.add('is-in'), CLOSE / 2);
+  parts.intro.animate(shrink, timing).finished.then(() => finish(parts, state));
+}
+
+/* Logo und Claim leuchten auf; nach einem Seitenwechsel blendet das ganze Intro weich ein */
+function lightUp(intro) {
+  if (cameFromOtherPage()) intro.animate([{ opacity: 0 }, { opacity: 1 }], FADE_IN);
+  requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('is-lit')));
 }
 
 function findParts(intro) {
   return {
     intro,
-    svg: intro.querySelector('[data-intro-svg]'),
-    zooms: intro.querySelectorAll('[data-intro-zoom]'),
-    logos: intro.querySelectorAll('[data-intro-logo]'),
-    fine: intro.querySelectorAll('[data-intro-fine]'),
-    sheen: intro.querySelector('[data-intro-sheen]'),
     video: document.querySelector('[data-hero-video]'),
     hero: document.querySelector('[data-hero]'),
   };
-}
-
-function finish(parts, state) {
-  cancelAnimationFrame(state.frame);
-  document.documentElement.style.overflow = '';
-  paint(parts, frameOf(1));
-  parts.intro.classList.add('is-done');
-  parts.hero?.classList.add('is-in');
-}
-
-function step(parts, state, now) {
-  const progress = clamp((now - state.start - HOLD) / ZOOM);
-  const eased = easeInOut(progress);
-  paint(parts, frameOf(eased));
-  if (eased > 0.82) parts.hero?.classList.add('is-in');
-  if (progress >= 1) return finish(parts, state);
-  state.frame = requestAnimationFrame((time) => step(parts, state, time));
-}
-
-function skipPause(state) {
-  const elapsed = performance.now() - state.start;
-  if (elapsed < HOLD) state.start = performance.now() - HOLD;
 }
 
 export function initIntro(signal) {
   const intro = document.querySelector('[data-intro]');
   if (!intro) return;
   const parts = findParts(intro);
-  const state = { start: performance.now(), frame: 0 };
+  const state = { closing: false, timer: 0 };
   if (prefersReducedMotion()) return finish(parts, state);
-  document.documentElement.style.overflow = 'hidden';
-  requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('is-lit')));
-  state.frame = requestAnimationFrame((time) => step(parts, state, time));
-  intro.addEventListener('click', () => skipPause(state), { signal });
-  addEventListener('keydown', () => skipPause(state), { signal });
+  lockScroll('intro', true);
+  parts.video?.style.setProperty('transform', VIDEO_ZOOM);
+  lightUp(intro);
+  state.timer = setTimeout(() => close(parts, state), HOLD);
+  intro.addEventListener('click', () => close(parts, state), { signal });
+  addEventListener('keydown', () => close(parts, state), { signal });
   signal.addEventListener('abort', () => finish(parts, state));
 }

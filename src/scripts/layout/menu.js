@@ -4,16 +4,14 @@
  * Die Seite, auf der man ist, wird im Menü markiert.
  */
 import { registerAction } from '../core/actions.js';
+import { burgerCircle } from '../utils/burger-circle.js';
+import { lockScroll } from '../utils/scroll-lock.js';
 
 function originFromBurger(menu) {
-  const burger = document.querySelector('.site-header__burger');
-  const box = burger?.getBoundingClientRect();
-  const x = box ? box.left + box.width / 2 : innerWidth - 40;
-  const y = box ? box.top + box.height / 2 : 40;
-  const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const { x, y, r } = burgerCircle();
   menu.style.setProperty('--cx', `${x}px`);
   menu.style.setProperty('--cy', `${y}px`);
-  menu.style.setProperty('--r', `${Math.ceil(radius)}px`);
+  menu.style.setProperty('--r', `${r}px`);
 }
 
 /* Aktuelle Seite markieren: der längste passende Pfad gewinnt (/productos/ vor /) */
@@ -38,14 +36,19 @@ function setOpen(menu, open) {
   menu.classList.toggle('is-open', open);
   menu.setAttribute('aria-hidden', String(!open));
   menu.querySelectorAll('a, button').forEach((element) => (element.tabIndex = open ? 0 : -1));
-  document.documentElement.classList.toggle('is-locked', open);
+  lockScroll('menu', open);
   document.documentElement.classList.toggle('is-menu-open', open);
 }
 
 export function initMenu() {
   const menu = document.querySelector('[data-menu]');
   if (!menu) return;
-  menu.addEventListener('click', (event) => event.target.closest('a') && setOpen(menu, false));
+  /* Links und der Favoriten-Knopf schließen das Menü */
+  const closesMenu = 'a, [data-action="open-wishlist"]';
+  menu.addEventListener(
+    'click',
+    (event) => event.target.closest(closesMenu) && setOpen(menu, false),
+  );
   document.addEventListener('keydown', (event) => event.key === 'Escape' && setOpen(menu, false));
   registerAction('open-menu', () => setOpen(menu, true));
   registerAction('close-menu', () => setOpen(menu, false));

@@ -1,0 +1,111 @@
+---
+/*
+ * Aktionsleiste über dem Header: läuft endlos durch, erscheint ab etwas Scroll.
+ * Inhalt (Aktionen aus nexomar + feste Hinweise) und Verhalten: scripts/promo/bar.js
+ * Die Aktion wird schon beim Build geholt und als JSON in die Seite geschrieben. Im Browser holt
+ * bar.js den aktuellen Stand; klappt das nicht (z. B. lokal), gilt dieser.
+ */
+import { loadPromoOnce } from '../../scripts/promo/data.js';
+
+const promo = await loadPromoOnce();
+---
+
+<div class="promo-bar" data-promo-bar transition:persist="promo-bar">
+  <div class="promo-bar__viewport" data-marquee>
+    <div class="promo-bar__track" data-marquee-track>
+      <span class="promo-bar__half" data-promo-half></span>
+      <span class="promo-bar__half" data-promo-half aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <script type="application/json" data-promo-data set:html={JSON.stringify(promo)} />
+  <template data-promo-item>
+    <span class="promo-bar__item">
+      <span class="promo-bar__gem" aria-hidden="true">
+        ✦
+      </span>
+      <span data-promo-text></span>
+      <button class="promo-bar__action" type="button" data-promo-action hidden></button>
+    </span>
+  </template>
+</div>
+
+<style>
+  .promo-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-promo);
+    height: var(--promo-h);
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.22);
+    background: linear-gradient(
+      90deg,
+      var(--navy-ink),
+      rgb(var(--wine-rgb) / 0.55),
+      var(--navy-ink)
+    );
+    background-color: var(--navy-ink);
+    transform: translateY(-100%);
+    transition: transform 0.5s var(--ease);
+  }
+
+  :global(html.has-promo) .promo-bar {
+    transform: none;
+  }
+
+  .promo-bar__viewport {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .promo-bar__track,
+  .promo-bar__half {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+
+  .promo-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 26px;
+    color: var(--cream);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .promo-bar__gem {
+    color: var(--peach);
+  }
+
+  /* "Desbloquear →": der Teil, auf den man tippen soll */
+  .promo-bar__action {
+    padding: 4px 0;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--sand-rgb) / 0.6);
+    background: none;
+    color: var(--sand);
+    font: 600 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .promo-bar__action:hover {
+    border-color: var(--sand);
+  }
+</style>
+
+<script>
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+  import { initPromoBar } from '../../scripts/promo/bar.js';
+
+  onFirstPage(initPromoBar);
+</script>

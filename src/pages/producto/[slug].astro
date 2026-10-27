@@ -31,7 +31,6 @@ const summary = product.plainDescription.slice(0, 150) || `${product.name} en Sc
   title={`${product.name} — ${labelOf(product)} | ScentScape Medellín`}
   description={summary}
   image={imageUrl(product.images[0], 1200)}
-  curtainX="52.381%"
 >
   <script type="application/ld+json" slot="head" set:html={productSchema(product, reviews)} />
   <main class="product" data-product-page>

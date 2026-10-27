@@ -1,5 +1,6 @@
 /* Großansicht eines Videos mit Ton, im Stil eines Instagram-Beitrags. */
 import { VIDEOS } from '../../../data/home.js';
+import { lockScroll } from '../../utils/scroll-lock.js';
 
 function findModalParts() {
   const modal = document.querySelector('[data-video-modal]');
@@ -55,7 +56,7 @@ function openModal(modal, index) {
   modal.current = index;
   show(modal.parts, index);
   modal.parts.modal.hidden = false;
-  document.documentElement.classList.add('is-locked');
+  lockScroll('video', true);
   modal.parts.modal.querySelector('[data-video-close]').focus();
   modal.onToggle(true);
 }
@@ -64,7 +65,7 @@ function closeModal(modal) {
   if (modal.parts.modal.hidden) return;
   modal.parts.player.pause();
   modal.parts.modal.hidden = true;
-  document.documentElement.classList.remove('is-locked');
+  lockScroll('video', false);
   modal.onToggle(false);
 }
 

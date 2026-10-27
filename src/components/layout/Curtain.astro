@@ -1,5 +1,6 @@
 <div class="curtain" data-curtain aria-hidden="true" transition:persist="curtain">
-  <span class="curtain__line" data-curtain-line></span>
+  <img class="curtain__logo" src="/assets/img/scentscape-logo.png" alt="" />
+  <span class="curtain__rim" data-curtain-rim></span>
 </div>
 
 <style>
@@ -17,25 +18,35 @@
     display: block;
   }
 
-  .curtain__line {
+  /* Logo in der Mitte: liegt im Vorhang, der Kreis deckt es mit auf und nimmt es wieder mit */
+  .curtain__logo {
     position: absolute;
-    left: var(--curtain-x, 50%);
     top: 50%;
-    width: 1px;
-    height: 0;
-    background: linear-gradient(180deg, transparent, var(--sand), transparent);
-    box-shadow: 0 0 24px 2px rgb(var(--sand-rgb) / 0.6);
+    left: 50%;
+    width: clamp(260px, 45vw, 640px);
+    max-width: none;
     transform: translate(-50%, -50%);
   }
 
-  .curtain[data-mode='row'] .curtain__line {
-    left: 50%;
+  /* Leuchtender Rand: ein Kreis genau so groß wie die Blende, das Leuchten liegt innen */
+  .curtain__rim {
+    position: absolute;
     width: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--sand), transparent);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1px var(--sand),
+      inset 0 0 24px 2px rgb(var(--sand-rgb) / 0.6);
+    opacity: 0;
+    transform: translate(-50%, -50%);
   }
 
-  .curtain[data-mode='none'] .curtain__line {
+  .curtain[data-mode='none'] .curtain__rim {
+    display: none;
+  }
+
+  /* Auf dem Weg zur Startseite bleibt der Vorhang leer: dort ist das Intro der einzige Ladescreen */
+  .curtain[data-target='home'] .curtain__logo {
     display: none;
   }
 </style>

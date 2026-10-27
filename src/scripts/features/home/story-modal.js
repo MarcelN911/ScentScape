@@ -7,6 +7,7 @@
  */
 import { VIDEOS } from '../../../data/home.js';
 import { duck } from '../music/audio.js';
+import { lockScroll } from '../../utils/scroll-lock.js';
 
 export const STACKED_QUERY = '(max-width: 1079px) and (orientation: portrait), (max-width: 899px)';
 const SWIPE = 40; // so weit zur Seite wischen = nächstes/voriges Video
@@ -63,7 +64,7 @@ function close(story) {
   story.parts.video.pause();
   duck(false);
   story.parts.root.classList.remove('is-visible');
-  document.documentElement.classList.remove('is-locked');
+  lockScroll('story', false);
   setTimeout(() => story.open || (story.parts.root.hidden = true), 350);
   story.onToggle(false, story.index);
 }
@@ -84,7 +85,7 @@ function go(story, step) {
 function open(story, index) {
   Object.assign(story, { index, open: true, muted: false });
   story.parts.root.hidden = false;
-  document.documentElement.classList.add('is-locked');
+  lockScroll('story', true);
   requestAnimationFrame(() => story.parts.root.classList.add('is-visible'));
   render(story);
   story.onToggle(true);

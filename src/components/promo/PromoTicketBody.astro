@@ -1,0 +1,208 @@
+---
+/*
+ * Unterer Teil des Gutschein-Tickets (PromoModal.astro): Formular mit Name und WhatsApp (feste +57,
+ * wir liefern nur innerhalb Kolumbiens) und danach die Bestätigung. Kerben und Perforation oben.
+ * --notch (Größe der Kerben) kommt vom Fenster.
+ */
+---
+
+<div class="ticket__body">
+  <section data-promo-form-view>
+    <p class="ticket__intro" data-promo-text></p>
+    <form class="ticket__form" data-promo-form novalidate>
+      <label class="ticket__field">
+        <span>Tu nombre</span>
+        <input name="name" type="text" placeholder="Nombre" autocomplete="given-name" />
+      </label>
+      <label class="ticket__field">
+        <span>Tu WhatsApp</span>
+        <span class="ticket__phone">
+          <span class="ticket__prefix">+57</span>
+          <input
+            name="phone"
+            type="tel"
+            inputmode="numeric"
+            placeholder="300 123 4567"
+            autocomplete="tel-national"
+          />
+        </span>
+      </label>
+      <p class="ticket__error" data-promo-error role="alert"></p>
+      <button class="ticket__button" type="submit" data-promo-submit>
+        Obtener mi código
+      </button>
+      <p class="ticket__privacy">
+        Sin spam. Solo te escribimos por tu pedido. <a href="/privacidad/">Privacidad</a>
+      </p>
+    </form>
+  </section>
+
+  <section class="ticket__done" data-promo-done-view hidden>
+    <p class="ticket__greeting" data-promo-greeting></p>
+    <p class="ticket__applied" data-promo-applied></p>
+    <button class="ticket__button" type="button" data-action="open-cart" data-promo-close>
+      Ver mi bolsa
+    </button>
+    <button class="ticket__ghost" type="button" data-promo-close>
+      Seguir comprando
+    </button>
+  </section>
+</div>
+
+<style>
+  /* Unterer Teil: Kerben oben links und rechts, darüber die Perforation */
+  .ticket__body {
+    position: relative;
+    padding: 26px 26px 24px;
+    border-radius: 0 0 22px 22px;
+    background: linear-gradient(180deg, #1b1f3b, #12152b);
+    mask:
+      radial-gradient(circle var(--notch) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+
+  .ticket__body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(var(--notch) + 8px);
+    right: calc(var(--notch) + 8px);
+    border-top: 2px dashed rgb(var(--peach-rgb) / 0.35);
+  }
+
+  .ticket__intro {
+    margin: 0 0 18px;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.55 var(--font-sans);
+  }
+
+  .ticket__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ticket__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ticket__field > span:first-child {
+    color: var(--peach);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .ticket__field input,
+  .ticket__phone {
+    height: 48px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 14px;
+    background: rgb(var(--navy-ink-rgb) / 0.6);
+    transition: border-color 0.3s;
+  }
+
+  .ticket__field input {
+    min-width: 0;
+    padding: 0 14px;
+    color: var(--cream);
+    font: 400 16px var(--font-sans);
+  }
+
+  .ticket__field input:focus,
+  .ticket__phone:focus-within {
+    border-color: var(--peach);
+    outline: none;
+  }
+
+  /* +57 steht fest vor der Nummer: wir liefern nur innerhalb Kolumbiens */
+  .ticket__phone {
+    display: flex;
+    align-items: center;
+  }
+
+  .ticket__prefix {
+    padding: 0 12px 0 14px;
+    border-right: 1px solid rgb(var(--peach-rgb) / 0.25);
+    color: var(--sand);
+    font: 500 15px var(--font-sans);
+  }
+
+  .ticket__phone input {
+    flex: 1;
+    height: 100%;
+    border: 0;
+    background: none;
+  }
+
+  .ticket__phone input:focus {
+    outline: none;
+  }
+
+  .ticket__error {
+    margin: 0;
+    color: #f2a39b;
+    font: 400 12px/1.4 var(--font-sans);
+  }
+
+  .ticket__error:empty {
+    display: none;
+  }
+
+  .ticket__button,
+  .ticket__ghost {
+    height: 52px;
+    margin-top: 4px;
+    border: 1px solid var(--peach);
+    border-radius: 26px;
+    background: linear-gradient(90deg, var(--peach), var(--sand));
+    color: var(--navy);
+    font: 600 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .ticket__button:disabled {
+    opacity: 0.6;
+  }
+
+  .ticket__ghost {
+    border-color: rgb(var(--peach-rgb) / 0.4);
+    background: none;
+    color: var(--sand);
+  }
+
+  .ticket__privacy {
+    margin: 2px 0 0;
+    color: rgb(var(--cream-rgb) / 0.45);
+    font: 300 11px var(--font-sans);
+    text-align: center;
+  }
+
+  .ticket__privacy a {
+    color: var(--sand);
+  }
+
+  .ticket__done {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ticket__done[hidden] {
+    display: none;
+  }
+
+  .ticket__greeting {
+    margin: 0;
+    font: 400 30px/1.1 var(--font-serif);
+  }
+
+  .ticket__applied {
+    margin: 0 0 8px;
+    color: rgb(var(--cream-rgb) / 0.75);
+    font: 300 14px/1.5 var(--font-sans);
+  }
+</style>

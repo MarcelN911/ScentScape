@@ -1,123 +1,35 @@
 ---
+import Drawer from '../ui/Drawer.astro';
 import Icon from '../ui/Icon.astro';
 import CartLineTemplate from './CartLineTemplate.astro';
 import CartTotals from './CartTotals.astro';
 ---
 
-<div class="cart-root" data-cart-root transition:persist="cart">
-  <div class="cart-overlay" data-action="close-cart"></div>
-  <aside class="cart" aria-label="Tu bolsa" role="dialog" data-cart>
-    <div class="cart__head">
-      <div class="cart__heading">
-        <span class="cart__eyebrow">ScentScape · Bolsa</span>
-        <h2 class="cart__title">
-          Tu <em>bolsa</em>
-        </h2>
-      </div>
-      <button class="cart__close" type="button" data-action="close-cart" aria-label="Cerrar">
-        ✕
-      </button>
+<Drawer name="cart" label="Tu bolsa" eyebrow="ScentScape · Bolsa">
+  <Fragment slot="title">
+    Tu <em>bolsa</em>
+  </Fragment>
+  <div class="cart__view">
+    <div class="cart__shipping">
+      <span class="cart__ship-text" data-ship-text></span>
+      <span class="cart__ship-track">
+        <span class="cart__ship-bar" data-ship-bar></span>
+      </span>
     </div>
-    <div class="cart__view">
-      <div class="cart__shipping">
-        <span class="cart__ship-text" data-ship-text></span>
-        <span class="cart__ship-track">
-          <span class="cart__ship-bar" data-ship-bar></span>
-        </span>
+    <div class="drawer__list">
+      <div class="drawer__empty" data-cart-empty>
+        <Icon name="bag" size={44} strokeWidth={1.2} />
+        <p>Tu bolsa está vacía</p>
+        <a href="/productos/">Ver productos →</a>
       </div>
-      <div class="cart__list">
-        <div class="cart__empty" data-cart-empty>
-          <Icon name="bag" size={44} strokeWidth={1.2} />
-          <p>Tu bolsa está vacía</p>
-          <a href="/productos/">Ver productos →</a>
-        </div>
-        <div data-cart-lines></div>
-      </div>
-      <CartTotals />
+      <div data-cart-lines></div>
     </div>
-    <CartLineTemplate />
-  </aside>
-</div>
+    <CartTotals />
+  </div>
+  <CartLineTemplate />
+</Drawer>
 
 <style>
-  .cart-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: var(--z-cart-overlay);
-    background: rgb(8 10 22 / 0.62);
-    backdrop-filter: blur(4px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s;
-  }
-
-  .cart {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: var(--z-cart);
-    display: flex;
-    flex-direction: column;
-    width: min(460px, 100vw);
-    border-left: 1px solid rgb(var(--peach-rgb) / 0.22);
-    background: linear-gradient(180deg, #1b1f3b, #12152b);
-    box-shadow: -40px 0 80px rgb(0 0 0 / 0.5);
-    color: var(--cream);
-    transform: translateX(104%);
-    transition: transform 0.7s var(--ease);
-  }
-
-  [data-cart-open] .cart-overlay {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  [data-cart-open] .cart {
-    transform: translateX(0);
-  }
-
-  .cart__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 26px 28px 20px;
-  }
-
-  .cart__heading {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .cart__eyebrow {
-    color: var(--peach);
-    font: 400 10px var(--font-sans);
-    letter-spacing: 5px;
-    text-transform: uppercase;
-  }
-
-  .cart__title {
-    margin: 0;
-    font: 400 36px/1 var(--font-serif);
-  }
-
-  .cart__title em {
-    color: var(--sand);
-  }
-
-  .cart__close {
-    flex: none;
-    width: 44px;
-    height: 44px;
-    border: 1px solid rgb(var(--peach-rgb) / 0.35);
-    border-radius: 22px;
-    background: none;
-    color: var(--sand);
-    font-size: 16px;
-  }
-
   .cart__view {
     display: flex;
     flex: 1;
@@ -155,43 +67,6 @@ import CartTotals from './CartTotals.astro';
     height: 100%;
     background: linear-gradient(90deg, var(--peach), var(--sand));
     transition: width 0.8s var(--ease);
-  }
-
-  .cart__list {
-    flex: 1;
-    overflow: auto;
-    padding: 0 28px;
-  }
-
-  .cart__empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    height: 100%;
-    min-height: 260px;
-    color: var(--peach);
-    text-align: center;
-  }
-
-  .cart__empty p {
-    margin: 0;
-    color: var(--cream);
-    font: 400 24px var(--font-serif);
-  }
-
-  .cart__empty a {
-    display: inline-flex;
-    align-items: center;
-    height: 48px;
-    padding: 0 24px;
-    border: 1px solid rgb(var(--peach-rgb) / 0.45);
-    border-radius: 24px;
-    color: var(--sand);
-    font: 500 11px var(--font-sans);
-    letter-spacing: 3px;
-    text-transform: uppercase;
   }
 </style>
 

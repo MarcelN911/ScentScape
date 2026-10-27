@@ -1,0 +1,155 @@
+---
+/*
+ * Seitenleiste, die von rechts hereinfährt (Bolsa, Favoritos): Kopf mit Titel und Schließen-Knopf.
+ * Öffnen und Schließen: data-action="open-{name}" / "close-{name}", gesteuert von scripts/layout/drawer.js.
+ * Der Titel kommt über <Fragment slot="title">, der Inhalt in den normalen Slot.
+ * Für den Inhalt gibt es zwei gemeinsame Klassen: drawer__list (scrollt) und drawer__empty (leer).
+ */
+/**
+ * @typedef {object} Props
+ * @property {string} name     z. B. "cart" → Aktionen open-cart / close-cart
+ * @property {string} label    Name der Leiste für Screenreader
+ * @property {string} eyebrow  kleine Zeile über dem Titel
+ */
+const { name, label, eyebrow } = Astro.props;
+---
+
+<div class="drawer-root" data-drawer={name} transition:persist={name}>
+  <div class="drawer-overlay" data-action={`close-${name}`}></div>
+  <aside class="drawer" aria-label={label} role="dialog">
+    <div class="drawer__head">
+      <div class="drawer__heading">
+        <span class="drawer__eyebrow">{eyebrow}</span>
+        <h2 class="drawer__title">
+          <slot name="title" />
+        </h2>
+      </div>
+      <button class="drawer__close" type="button" data-action={`close-${name}`} aria-label="Cerrar">
+        ✕
+      </button>
+    </div>
+    <slot />
+  </aside>
+</div>
+
+<style>
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-drawer-overlay);
+    background: rgb(8 10 22 / 0.62);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-drawer);
+    display: flex;
+    flex-direction: column;
+    width: min(460px, 100vw);
+    border-left: 1px solid rgb(var(--peach-rgb) / 0.22);
+    background: linear-gradient(180deg, #1b1f3b, #12152b);
+    box-shadow: -40px 0 80px rgb(0 0 0 / 0.5);
+    color: var(--cream);
+    transform: translateX(104%);
+    transition: transform 0.7s var(--ease);
+  }
+
+  [data-open] .drawer-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  [data-open] .drawer {
+    transform: translateX(0);
+  }
+
+  .drawer__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 26px 28px 20px;
+  }
+
+  .drawer__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .drawer__eyebrow {
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .drawer__title {
+    margin: 0;
+    font: 400 36px/1 var(--font-serif);
+  }
+
+  .drawer__title :global(em) {
+    color: var(--sand);
+  }
+
+  .drawer__close {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 22px;
+    background: none;
+    color: var(--sand);
+    font-size: 16px;
+  }
+
+  /* Gemeinsame Teile für den Inhalt: scrollende Liste und Hinweis, wenn sie leer ist */
+  .drawer :global(.drawer__list) {
+    flex: 1;
+    overflow: auto;
+    padding: 0 28px;
+  }
+
+  .drawer :global(.drawer__empty) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    height: 100%;
+    min-height: 260px;
+    color: var(--peach);
+    text-align: center;
+  }
+
+  .drawer :global(.drawer__empty[hidden]) {
+    display: none;
+  }
+
+  .drawer :global(.drawer__empty p) {
+    margin: 0;
+    color: var(--cream);
+    font: 400 24px var(--font-serif);
+  }
+
+  .drawer :global(.drawer__empty a) {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 24px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.45);
+    border-radius: 24px;
+    color: var(--sand);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+</style>

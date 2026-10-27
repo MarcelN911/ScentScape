@@ -1,0 +1,160 @@
+---
+/*
+ * Seitenleiste "Favoritos": alle Produkte mit Herz. Öffnen über data-action="open-wishlist".
+ * Die Einträge baut scripts/features/wishlist-drawer.js aus der Vorlage <template data-wish-item>.
+ */
+import Drawer from '../ui/Drawer.astro';
+import Icon from '../ui/Icon.astro';
+---
+
+<Drawer name="wishlist" label="Tus favoritos" eyebrow="ScentScape · Favoritos">
+  <Fragment slot="title">
+    Tus <em>favoritos</em>
+  </Fragment>
+  <div class="drawer__list">
+    <div class="drawer__empty" data-wish-empty hidden>
+      <Icon name="heart" size={44} strokeWidth={1.2} />
+      <p data-wish-message>Aún no tienes favoritos</p>
+      <small class="wish-hint">Toca el corazón de un perfume para guardarlo aquí.</small>
+      <a href="/productos/">Ver productos →</a>
+    </div>
+    <ul class="wish-list" data-wish-list></ul>
+  </div>
+  <a class="wish-more" href="/productos/">
+    Seguir explorando →
+  </a>
+
+  <template data-wish-item>
+    <li class="wish">
+      <a class="wish__link" data-wish-link>
+        <img class="wish__image" data-wish-image alt="" loading="lazy" />
+        <span class="wish__info">
+          <span class="wish__label" data-wish-label></span>
+          <span class="wish__name" data-wish-name></span>
+          <span class="wish__price" data-wish-price></span>
+        </span>
+      </a>
+      <button
+        class="wish__heart"
+        type="button"
+        data-action="toggle-wish"
+        aria-pressed="true"
+        aria-label="Quitar de favoritos"
+      >
+        <Icon name="heart" size={16} strokeWidth={1.6} />
+      </button>
+    </li>
+  </template>
+</Drawer>
+
+<style>
+  .wish-hint {
+    max-width: 240px;
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 300 13px/1.5 var(--font-sans);
+  }
+
+  .wish-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .wish {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.12);
+    animation: fade-in 0.4s var(--ease);
+  }
+
+  .wish__link {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    color: var(--cream);
+  }
+
+  .wish__image {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    background: rgb(var(--sand-rgb) / 0.08);
+    object-fit: cover;
+  }
+
+  .wish__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .wish__label {
+    color: var(--peach);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .wish__name {
+    overflow: hidden;
+    font: 400 19px/1.15 var(--font-serif);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+
+  .wish__link:hover .wish__name {
+    color: var(--sand);
+  }
+
+  .wish__price {
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 400 13px var(--font-sans);
+  }
+
+  /* Gefülltes Herz: ein Klick nimmt das Produkt wieder aus den Favoriten */
+  .wish__heart {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.3);
+    border-radius: 50%;
+    background: none;
+    color: var(--peach);
+    transition: background-color 0.3s;
+  }
+
+  .wish__heart:hover {
+    background: rgb(var(--peach-rgb) / 0.12);
+  }
+
+  .wish__heart :global(svg) {
+    fill: currentColor;
+  }
+
+  .wish-more {
+    margin: 0 28px max(24px, env(safe-area-inset-bottom));
+    padding: 16px 0 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+    color: var(--sand);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+</style>
+
+<script>
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+  import { initWishlistDrawer } from '../../scripts/features/wishlist-drawer.js';
+
+  onFirstPage(initWishlistDrawer);
+</script>

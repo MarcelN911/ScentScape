@@ -7,6 +7,7 @@
  */
 import { MENU_LINKS, MENU_SERVICES } from '../../data/navigation.js';
 import { padNumber } from '../../scripts/utils/format.js';
+import Icon from '../ui/Icon.astro';
 import MenuFoot from './MenuFoot.astro';
 
 const step = (index, base, gap) => `--delay:${base + index * gap}ms`;
@@ -20,6 +21,16 @@ const step = (index, base, gap) => `--delay:${base + index * gap}ms`;
 
   <div class="menu__top">
     <img class="menu__logo" src="/assets/img/scentscape-logo.png" alt="ScentScape" />
+    <button
+      class="menu__fav"
+      type="button"
+      data-action="open-wishlist"
+      aria-label="Abrir favoritos"
+      tabindex="-1"
+    >
+      <Icon name="heart" size={15} strokeWidth={1.6} />
+      Favoritos <span data-wish-count></span>
+    </button>
     <button
       class="menu__close"
       type="button"
@@ -142,6 +153,7 @@ const step = (index, base, gap) => `--delay:${base + index * gap}ms`;
   }
 
   .menu__logo {
+    margin-right: auto;
     height: 26px;
     opacity: 0;
     transition: opacity 0.6s 0.3s;
@@ -149,6 +161,34 @@ const step = (index, base, gap) => `--delay:${base + index * gap}ms`;
 
   .menu.is-open .menu__logo,
   .menu.is-open .menu__glow {
+    opacity: 1;
+  }
+
+  /* Favoriten: schließt das Menü und öffnet die Seitenleiste "Favoritos" */
+  .menu__fav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    margin-right: 10px;
+    padding: 0 16px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 22px;
+    background: none;
+    color: var(--cream);
+    font: 500 10px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.6s 0.3s;
+  }
+
+  .menu__fav span {
+    color: var(--sand);
+    letter-spacing: 1px;
+  }
+
+  .menu.is-open .menu__fav {
     opacity: 1;
   }
 

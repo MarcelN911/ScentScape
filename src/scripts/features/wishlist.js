@@ -1,9 +1,11 @@
 /*
  * Herzen (Merkliste). Gespeichert wie auf der alten Seite unter "elixir_hearts".
  * Beim ersten Herz eines Produkts wird nexomar informiert (zählt die Beliebtheit).
+ * Jede Änderung löst EVENTS.wishChange aus, darauf reagiert die Seitenleiste "Favoritos".
  */
 import { ENDPOINTS } from '../api/client.js';
 import { registerAction } from '../core/actions.js';
+import { EVENTS, emit } from '../core/events.js';
 import { onPage } from '../core/lifecycle.js';
 import { readJson, writeJson } from '../utils/storage.js';
 
@@ -11,6 +13,11 @@ const STORAGE_KEY = 'elixir_hearts';
 
 function savedHearts() {
   return readJson(localStorage, STORAGE_KEY, {});
+}
+
+/** IDs der Produkte mit Herz, das zuletzt markierte zuerst */
+export function heartIds() {
+  return Object.keys(savedHearts()).reverse();
 }
 
 function renderCount(saved) {
@@ -38,6 +45,7 @@ function toggleHeart(button) {
   }
   writeJson(localStorage, STORAGE_KEY, saved);
   renderHearts();
+  emit(EVENTS.wishChange);
 }
 
 registerAction('toggle-wish', toggleHeart);

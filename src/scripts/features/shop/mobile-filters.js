@@ -2,11 +2,13 @@
  * Handy: Filter-Panel öffnen und schließen ("Filtros" in der Leiste, ✕, "Ver fragancias",
  * Tippen auf den dunklen Hintergrund oder Escape). Klasse is-filters-open an <html>.
  */
+import { lockScroll } from '../../utils/scroll-lock.js';
+
 const OPEN_CLASS = 'is-filters-open';
 
 function setOpen(open) {
   document.documentElement.classList.toggle(OPEN_CLASS, open);
-  document.documentElement.classList.toggle('is-locked', open);
+  lockScroll('filters', open);
 }
 
 export function bindMobileFilters(root, signal) {

@@ -115,7 +115,8 @@ import CheckoutSummary from '../../sections/checkout/CheckoutSummary.astro';
 
     .checkout__summary {
       position: sticky;
-      top: 110px;
+      top: calc(110px + var(--promo-offset));
+      transition: top 0.5s var(--ease);
       align-self: start;
     }
   }

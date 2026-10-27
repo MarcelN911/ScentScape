@@ -18,10 +18,15 @@ import ServicesDropdown from './ServicesDropdown.astro';
     <a class="site-header__icon" href="/productos/" aria-label="Buscar">
       <Icon name="search" size={18} strokeWidth={1.5} />
     </a>
-    <a class="site-header__fav" href="/productos/" aria-label="Favoritos">
+    <button
+      class="site-header__fav"
+      type="button"
+      data-action="open-wishlist"
+      aria-label="Abrir favoritos"
+    >
       <Icon name="heart" size={18} strokeWidth={1.5} />
       <span data-wish-count></span>
-    </a>
+    </button>
     <button
       class="site-header__bag"
       type="button"
@@ -50,7 +55,7 @@ import ServicesDropdown from './ServicesDropdown.astro';
 <style>
   .site-header {
     position: fixed;
-    top: 14px;
+    top: calc(14px + var(--promo-offset));
     left: clamp(10px, 2vw, 28px);
     right: clamp(10px, 2vw, 28px);
     z-index: var(--z-header);
@@ -63,6 +68,7 @@ import ServicesDropdown from './ServicesDropdown.astro';
     border: 1px solid rgb(var(--peach-rgb) / 0);
     border-radius: 32px;
     transition:
+      top 0.5s var(--ease),
       transform 0.6s var(--ease),
       background-color 0.5s,
       border-color 0.5s,
@@ -110,7 +116,9 @@ import ServicesDropdown from './ServicesDropdown.astro';
     justify-content: center;
     gap: 6px;
     height: 44px;
+    border: 0;
     border-radius: 22px;
+    background: none;
     color: var(--cream);
     font: 400 11px var(--font-sans);
     transition: background-color 0.3s;
@@ -195,6 +203,7 @@ import ServicesDropdown from './ServicesDropdown.astro';
       padding-left: 16px;
     }
 
+    /* Die Favoriten erreicht man auf dem Handy über das Burger-Menü */
     .site-header__icon,
     .site-header__fav {
       display: none;

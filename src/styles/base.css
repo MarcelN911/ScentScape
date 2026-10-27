@@ -75,8 +75,13 @@ input[type='range'] {
   display: none !important;
 }
 
-html.is-locked {
+/* Seite gesperrt, solange ein Fenster offen ist (scripts/utils/scroll-lock.js).
+   body zusätzlich: Safari auf dem iPhone scrollt sonst unter dem Finger weiter.
+   overscroll-behavior: ein Wisch im Fenster zieht die Seite dahinter nicht mit. */
+html.is-locked,
+html.is-locked body {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -54,7 +54,7 @@ import Icon from '../ui/Icon.astro';
 <style>
   .preview {
     position: sticky;
-    top: 96px;
+    top: calc(96px + var(--promo-offset));
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -64,7 +64,9 @@ import Icon from '../ui/Icon.astro';
       radial-gradient(ellipse 90% 60% at 50% 0%, var(--halo, transparent), transparent 70%),
       rgb(var(--navy-deep-rgb) / 0.75);
     box-shadow: 0 40px 90px rgb(0 0 0 / 0.45);
-    transition: background 0.8s;
+    transition:
+      top 0.5s var(--ease),
+      background 0.8s;
   }
 
   .preview__media {

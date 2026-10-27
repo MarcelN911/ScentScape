@@ -1,6 +1,9 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import CartDrawer from '../components/cart/CartDrawer.astro';
+import WishlistDrawer from '../components/wishlist/WishlistDrawer.astro';
+import PromoBar from '../components/promo/PromoBar.astro';
+import PromoModal from '../components/promo/PromoModal.astro';
 import Curtain from '../components/layout/Curtain.astro';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
@@ -17,8 +20,7 @@ import '../styles/global.css';
  * @property {string} [image]    Vorschaubild für WhatsApp, Facebook usw.
  * @property {boolean} [noindex] Seite nicht bei Google aufnehmen
  * @property {boolean} [bare]    ohne Navigation und Footer (z. B. Druckversion)
- * @property {string} [curtainX]  Lage der Lichtlinie im Vorhang ab 900px Breite, z. B. '47.619%'
- * @property {'line' | 'row' | 'none'} [curtainMode] senkrechte Linie, waagerechte Linie oder keine
+ * @property {'line' | 'none'} [curtainMode] Vorhang mit leuchtendem Rand oder ohne
  * @property {boolean} [header]  Navigation anzeigen (Regalo zeigt nur das Logo)
  * @property {boolean} [footer]  Footer anzeigen (Regalo hat keinen)
  * @property {'reveal' | 'scroll'} [wordmark] SCENTSCAPE im Footer: einmal einblenden oder mit dem Scroll hochfahren
@@ -30,7 +32,6 @@ const {
   image = '/assets/img/og-banner.png',
   noindex = false,
   bare = false,
-  curtainX = '50%',
   curtainMode = 'line',
   header = true,
   footer = true,
@@ -64,10 +65,11 @@ const ogImage = new URL(image, Astro.site);
     </script>
     <ClientRouter fallback="none" />
   </head>
-  <body data-curtain-x={curtainX} data-curtain-mode={curtainMode} data-wordmark={wordmark}>
+  <body data-curtain-mode={curtainMode} data-wordmark={wordmark}>
     {!bare && (
       <>
         <ScrollProgress />
+        {header && <PromoBar />}
         {header && <Header />}
         {header && <MobileMenu />}
       </>
@@ -78,6 +80,8 @@ const ogImage = new URL(image, Astro.site);
       <>
         <Toast />
         <CartDrawer />
+        <WishlistDrawer />
+        {header && <PromoModal />}
         <MusicPlayer />
         <Curtain />
       </>

@@ -2,6 +2,7 @@ export const EVENTS = {
   cartChange: 'ss:cart-change',
   cartOpen: 'ss:cart-open',
   toast: 'ss:toast',
+  wishChange: 'ss:wish-change',
 };
 
 export function emit(name, detail) {
