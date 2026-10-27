@@ -4,6 +4,7 @@ import { bindTilt, startIdle } from '../gift/card.js';
 import { readGift } from './data.js';
 import { fillGift, rollAmount } from './fill.js';
 import { clearSteps, openGift, paint, resetGift } from './sequence.js';
+import { startVideoMode } from './video.js';
 
 const isDone = (regalo) => regalo.state.phase >= 5;
 
@@ -118,5 +119,6 @@ export function initRegaloPage(signal) {
   fillGift(root, regalo.gift);
   bindRegalo(regalo, signal);
   paint(regalo);
+  startVideoMode(regalo, openGift, signal);
   setTimeout(() => root.classList.add('is-in'), 80);
 }

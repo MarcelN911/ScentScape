@@ -5,10 +5,11 @@
 import { GIFT_COLORS } from '../../../data/gift-card.js';
 import { prefersReducedMotion } from '../../utils/motion.js';
 
+// Nur auf und ab, ohne Kippen: eine schräge Karte zeichnet der Browser leicht unscharf
 const FLOAT = [
-  { transform: 'translateY(0) rotateZ(0deg)' },
-  { transform: 'translateY(-10px) rotateZ(-.6deg)' },
-  { transform: 'translateY(0) rotateZ(0deg)' },
+  { transform: 'translateY(0)' },
+  { transform: 'translateY(-10px)' },
+  { transform: 'translateY(0)' },
 ];
 const SWEEP_EASE = 'cubic-bezier(.4,0,.2,1)';
 const SWEEP = [

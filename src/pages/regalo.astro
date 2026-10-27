@@ -16,6 +16,12 @@ import RegaloStage from '../sections/regalo/RegaloStage.astro';
   footer={false}
   noindex
 >
+  <!-- Video-Modus sofort beim Laden setzen, damit der Musik-Player nicht einmal kurz aufblitzt -->
+  <script is:inline>
+    if (new URLSearchParams(location.search).has('video')) {
+      document.documentElement.classList.add('is-video');
+    }
+  </script>
   <main class="regalo" data-regalo-page>
     <div class="regalo__glow" aria-hidden="true"></div>
     <div class="regalo__word" aria-hidden="true">
@@ -170,6 +176,17 @@ import RegaloStage from '../sections/regalo/RegaloStage.astro';
     .regalo:global(.is-p5) .regalo__glow {
       left: 25%;
     }
+  }
+
+  /* Video-Modus (/regalo/?video, scripts/features/regalo/video.js): nichts außer der Animation */
+  :global(html.is-video),
+  :global(html.is-video *) {
+    cursor: none !important;
+  }
+
+  :global(html.is-video [data-player]),
+  :global(html.is-video [data-regalo-replay]) {
+    display: none !important;
   }
 </style>
 
