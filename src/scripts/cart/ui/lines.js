@@ -1,5 +1,6 @@
 /* Zeigt die Warenkorb-Zeilen. Vorhandene Zeilen werden aktualisiert statt neu gebaut (keine erneute Animation). */
 import { formatCOP } from '../../utils/format.js';
+import { lineImageOf } from '../gift-image.js';
 import { lineMetaOf } from '../line-meta.js';
 import { lineTotal } from '../pricing.js';
 import { changeQuantity, getItems, removeItem } from '../store.js';
@@ -16,7 +17,7 @@ function fillPrices(line, item) {
 
 function fillLine(line, item) {
   line.dataset.sku = item.sku;
-  line.querySelector('[data-line-image]').src = item.image || FALLBACK_IMAGE;
+  line.querySelector('[data-line-image]').src = lineImageOf(item) || FALLBACK_IMAGE;
   line.querySelector('[data-line-name]').textContent = item.name;
   line.querySelector('[data-line-meta]').textContent = lineMetaOf(item) || 'ScentScape';
   line.querySelector('[data-line-qty]').textContent = item.quantity;

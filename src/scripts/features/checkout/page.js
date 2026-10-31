@@ -14,6 +14,7 @@ import { bindCodes, renderCodes } from './codes.js';
 import { payOnline } from './online-order.js';
 import { activeMethod, bindPayment, renderPayment } from './payment.js';
 import { fillRemembered, rememberCustomer } from './remember.js';
+import { bindSelects } from './select.js';
 import { renderSummary } from './summary.js';
 import { orderByWhatsApp } from './whatsapp-order.js';
 
@@ -76,6 +77,7 @@ async function submit(page, event) {
 function bind(page, signal) {
   const form = page.root.querySelector('[data-checkout-form]');
   fillRemembered(form);
+  bindSelects(form, signal);
   form.addEventListener('submit', (event) => submit(page, event), { signal });
   form.addEventListener('input', () => showError(form, null), { signal });
   bindCodes(page.root, signal);

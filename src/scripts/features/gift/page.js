@@ -1,6 +1,7 @@
 /* Seite "Gift Card": Farbe, Betrag, Namen, Nachricht, Lieferart, Vorschau und "In den Warenkorb". */
 import { GIFT_COLORS, GIFT_DEFAULTS, GIFT_DELIVERY } from '../../../data/gift-card.js';
 import { addWithFeedback } from '../../cart/add-to-cart.js';
+import { giftCardImage } from '../../cart/gift-image.js';
 import { formatCOP } from '../../utils/format.js';
 import { bindTilt, setColor, setFlipped, startIdle } from './card.js';
 import {
@@ -112,7 +113,7 @@ function giftItem(gift) {
     giftCard: true,
     name: `Gift Card ${details.color}`,
     brand: 'ScentScape',
-    image: '/assets/img/scentscape-logo.png',
+    image: giftCardImage(details.color),
     regularPrice: value,
     quantity: 1,
   };

@@ -9,6 +9,7 @@ import { bindPreview, renderPreview } from './preview-control.js';
 import { renderProfile } from './profile-view.js';
 import { renderResults } from './results-view.js';
 import { stopReveal } from './reveal.js';
+import { bindReturn, restoreState, scrollBack } from './return.js';
 import { createState, isIndexMode, resetPaging } from './state.js';
 import { renderWheel } from './wheel.js';
 
@@ -46,17 +47,24 @@ function createShop(root) {
   return shop;
 }
 
+function bindAll(shop, signal) {
+  bindControls(shop, signal);
+  bindReturn(shop, signal);
+  bindPreview(shop, signal);
+  bindMobileFilters(shop.root, signal);
+  initMarquee(shop.root, signal);
+}
+
 export function initShop(signal) {
   const root = document.querySelector('[data-shop]');
   if (!root) return;
   const shop = createShop(root);
-  bindControls(shop, signal);
-  bindPreview(shop, signal);
-  bindMobileFilters(root, signal);
-  initMarquee(root, signal);
+  const returnTo = restoreState(shop.state);
+  bindAll(shop, signal);
   // Auf dem Handy feuert "resize" auch beim Scrollen (Adressleiste): Karten dabei stehen lassen.
   addEventListener('resize', () => render(shop, true), { signal });
   render(shop);
+  if (returnTo) requestAnimationFrame(() => scrollBack(root, returnTo));
   setTimeout(() => root.classList.add('is-in'), 80);
   signal.addEventListener('abort', stopReveal);
 }

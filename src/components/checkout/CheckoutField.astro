@@ -22,12 +22,69 @@ const common = {
     {field.optional && <span class="field__optional">· opcional</span>}
   </label>
   {field.kind === 'select' && (
-    <select class="text-input field__select" {...common}>
-      <option value="">Elige…</option>
-      {DEPARTMENTS.map((name) => (
-        <option value={name}>{name}</option>
-      ))}
-    </select>
+    <div class="pick" data-pick>
+      {/* Das echte <select> hält nur den Wert (Formular, Autofill); bedient wird der Knopf darunter.
+          Bedienung: scripts/features/checkout/select.js */}
+      <select class="pick__native" tabindex="-1" aria-hidden="true" {...common} id={`${id}-native`}>
+        <option value="">Elige…</option>
+        {DEPARTMENTS.map((name) => (
+          <option value={name}>{name}</option>
+        ))}
+      </select>
+      <button
+        class="text-input pick__toggle is-empty"
+        type="button"
+        id={id}
+        popovertarget={`${id}-list`}
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        data-pick-toggle
+      >
+        <span data-pick-value>Elige…</span>
+        <svg
+          width="12"
+          height="8"
+          viewBox="0 0 12 8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          aria-hidden="true"
+        >
+          <path d="M1 1l5 5 5-5"></path>
+        </svg>
+      </button>
+      <div
+        class="pick__panel"
+        id={`${id}-list`}
+        popover
+        role="listbox"
+        aria-label={field.label}
+        data-pick-panel
+      >
+        {DEPARTMENTS.map((name) => (
+          <button
+            class="pick__option"
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-pick-option={name}
+          >
+            {name}
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path d="M2.5 6.2l2.4 2.4 4.6-5"></path>
+            </svg>
+          </button>
+        ))}
+      </div>
+    </div>
   )}
   {field.kind === 'textarea' && (
     <textarea
@@ -62,18 +119,110 @@ const common = {
     opacity: 0.7;
   }
 
-  .field__select {
-    appearance: none;
-    padding-right: 44px;
-    background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23f0be91' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E")
-        no-repeat right 20px center,
-      var(--field);
+  .pick {
+    position: relative;
   }
 
-  .field__select option {
-    background: var(--navy);
+  /* Unsichtbar, aber im Formular (display: none würde Autofill verhindern) */
+  .pick__native {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pick__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .pick__toggle.is-empty {
+    color: rgb(var(--cream-rgb) / 0.5);
+  }
+
+  .pick__toggle:hover,
+  .pick__toggle.is-open {
+    border-color: rgb(var(--peach-rgb) / 0.6);
+  }
+
+  .pick__toggle svg {
+    flex: none;
+    color: var(--peach);
+    transition: transform 0.4s;
+  }
+
+  .pick__toggle.is-open svg {
+    transform: rotate(180deg);
+  }
+
+  /* Aufgeklappte Liste, gleicher Look wie "Orden" im Shop. Lage und Breite setzt select.js */
+  .pick__panel {
+    position: fixed;
+    inset: auto;
+    max-height: 320px;
+    margin: 0;
+    padding: 6px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid rgb(var(--peach-rgb) / 0.25);
+    border-radius: 20px;
+    background: rgb(var(--navy-deep-rgb) / 0.96);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
     color: var(--cream);
+    scrollbar-color: rgb(var(--peach-rgb) / 0.35) transparent;
+    scrollbar-width: thin;
+    transition:
+      opacity 0.25s,
+      transform 0.35s var(--ease);
+  }
+
+  @starting-style {
+    .pick__panel:popover-open {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .pick__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .pick__option:hover,
+  .pick__option:focus-visible {
+    background: rgb(var(--peach-rgb) / 0.1);
+    outline: none;
+  }
+
+  .pick__option[aria-selected='true'] {
+    color: var(--peach);
+  }
+
+  .pick__option svg {
+    opacity: 0;
+  }
+
+  .pick__option[aria-selected='true'] svg {
+    opacity: 1;
   }
 
   .field__area {

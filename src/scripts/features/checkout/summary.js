@@ -1,4 +1,5 @@
 /* Rechte Spalte von "Finalizar compra": Positionen und Summen. Rechnet nicht selbst, zeigt nur summaryOf(). */
+import { lineImageOf } from '../../cart/gift-image.js';
 import { lineMetaOf } from '../../cart/line-meta.js';
 import { lineTotal } from '../../cart/pricing.js';
 import { shippingHint, shippingValue } from '../../cart/shipping-text.js';
@@ -10,7 +11,7 @@ const minus = (amount) => `−${formatCOP(amount)} COP`;
 function lineOf(template, item) {
   const line = template.content.firstElementChild.cloneNode(true);
   line.classList.toggle('is-gift', Boolean(item.giftCard));
-  line.querySelector('[data-line-image]').src = item.image || FALLBACK_IMAGE;
+  line.querySelector('[data-line-image]').src = lineImageOf(item) || FALLBACK_IMAGE;
   line.querySelector('[data-line-qty]').textContent = item.quantity;
   line.querySelector('[data-line-name]').textContent = item.name;
   line.querySelector('[data-line-meta]').textContent = lineMetaOf(item) || 'ScentScape';
