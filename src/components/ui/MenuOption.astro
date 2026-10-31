@@ -1,0 +1,70 @@
+---
+/*
+ * Ein Eintrag in einer aufklappbaren Auswahlliste ("Orden" im Shop, "Departamento" im Checkout).
+ * Der gewählte Eintrag (aria-selected="true") ist pfirsichfarben und zeigt ein Häkchen.
+ * Weitere Attribute (z. B. data-sort-option) landen direkt am Knopf.
+ */
+
+/** @typedef {{ selected?: boolean, [attribute: string]: unknown }} Props */
+const { selected = false, ...attributes } = Astro.props;
+---
+
+<button
+  class="menu-option"
+  type="button"
+  role="option"
+  aria-selected={selected ? 'true' : 'false'}
+  {...attributes}
+>
+  <slot />
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    aria-hidden="true"
+  >
+    <path d="M2.5 6.2l2.4 2.4 4.6-5"></path>
+  </svg>
+</button>
+
+<style>
+  .menu-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--cream);
+    font: 400 14px var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .menu-option:hover,
+  .menu-option:focus-visible {
+    background: rgb(var(--peach-rgb) / 0.1);
+    outline: none;
+  }
+
+  .menu-option[aria-selected='true'] {
+    color: var(--peach);
+  }
+
+  /* Häkchen nur beim gewählten Eintrag */
+  .menu-option svg {
+    opacity: 0;
+  }
+
+  .menu-option[aria-selected='true'] svg {
+    opacity: 1;
+  }
+</style>

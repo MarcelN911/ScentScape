@@ -4,6 +4,7 @@
  * Die Angaben stehen in data/checkout.js (CHECKOUT_FIELDS).
  */
 import { DEPARTMENTS } from '../../data/checkout.js';
+import MenuOption from '../ui/MenuOption.astro';
 
 /** @typedef {{ field: import('../../data/checkout.js').CHECKOUT_FIELDS[number] }} Props */
 const { field } = Astro.props;
@@ -62,26 +63,7 @@ const common = {
         data-pick-panel
       >
         {DEPARTMENTS.map((name) => (
-          <button
-            class="pick__option"
-            type="button"
-            role="option"
-            aria-selected="false"
-            data-pick-option={name}
-          >
-            {name}
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              aria-hidden="true"
-            >
-              <path d="M2.5 6.2l2.4 2.4 4.6-5"></path>
-            </svg>
-          </button>
+          <MenuOption data-pick-option={name}>{name}</MenuOption>
         ))}
       </div>
     </div>
@@ -187,42 +169,6 @@ const common = {
       opacity: 0;
       transform: translateY(8px);
     }
-  }
-
-  .pick__option {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 11px 14px;
-    border: 0;
-    border-radius: 14px;
-    background: none;
-    color: var(--cream);
-    font: 400 14px var(--font-sans);
-    text-align: left;
-    cursor: pointer;
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-  }
-
-  .pick__option:hover,
-  .pick__option:focus-visible {
-    background: rgb(var(--peach-rgb) / 0.1);
-    outline: none;
-  }
-
-  .pick__option[aria-selected='true'] {
-    color: var(--peach);
-  }
-
-  .pick__option svg {
-    opacity: 0;
-  }
-
-  .pick__option[aria-selected='true'] svg {
-    opacity: 1;
   }
 
   .field__area {
