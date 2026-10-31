@@ -93,7 +93,7 @@ Die Action startet bei jedem Push auf `main`, jede Nacht, per Knopf („Run work
 **nexomar stößt den Build an**, wenn ein Produkt gespeichert wird:
 
 ```
-POST https://api.github.com/repos/MarcelN911/ElixirS-B/dispatches
+POST https://api.github.com/repos/MarcelN911/ScentScape/dispatches
 Authorization: Bearer <GitHub-Token mit Recht "Contents: write" für dieses Repo>
 Accept: application/vnd.github+json
 
