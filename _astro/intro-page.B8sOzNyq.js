@@ -1,0 +1,1 @@
+function e(){let e=document.querySelector(`[data-intro-page]`);e&&setTimeout(()=>e.classList.add(`is-in`),80)}export{e as t};

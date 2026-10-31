@@ -1,0 +1,1 @@
+var e=new Set;function t(){document.documentElement.classList.toggle(`is-locked`,e.size>0)}function n(n,r){r?e.add(n):e.delete(n),t()}typeof document<`u`&&document.addEventListener(`astro:after-swap`,t);export{n as t};

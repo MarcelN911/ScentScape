@@ -1,0 +1,1 @@
+var e=new Map;function t(t,n){e.set(t,n)}function n(t){let n=t.target.closest(`[data-action]`),r=n&&e.get(n.dataset.action);r&&(t.preventDefault(),r(n,t))}document.addEventListener(`click`,n);export{t};

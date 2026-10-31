@@ -1,0 +1,1 @@
+function e(e,t,n){try{let r=e.getItem(t);return r?JSON.parse(r):n}catch{return n}}function t(e,t,n){try{e.setItem(t,JSON.stringify(n))}catch{}}function n(e,t){try{e.removeItem(t)}catch{}}export{n,t as r,e as t};

@@ -1,0 +1,1 @@
+var e={cartChange:`ss:cart-change`,cartOpen:`ss:cart-open`,toast:`ss:toast`,wishChange:`ss:wish-change`};function t(e,t){window.dispatchEvent(new CustomEvent(e,{detail:t}))}function n(e,t,n){window.addEventListener(e,e=>t(e.detail),n)}function r(n,r={}){t(e.toast,{message:n,...r})}export{r as i,t as n,n as r,e as t};

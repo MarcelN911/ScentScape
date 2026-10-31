@@ -1,0 +1,1 @@
+import{r as e,t}from"./events.UymBi2u8.js";var n=document.querySelector(`[data-toast]`),r=0;function i({message:e,cart:t=!1}){n.querySelector(`[data-toast-text]`).textContent=e,n.querySelector(`[data-toast-bag]`).hidden=!t,n.classList.add(`is-visible`),clearTimeout(r),r=setTimeout(()=>n.classList.remove(`is-visible`),2600)}e(t.toast,i);

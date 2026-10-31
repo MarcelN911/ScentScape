@@ -1,0 +1,1 @@
+import{n as e}from"./lifecycle.GtSOtI_B.js";import{t}from"./questions.BSKUujpF.js";function n(e){let n=document.querySelector(`[data-faq-page]`);if(!n)return;let r=JSON.parse(n.querySelector(`[data-chat-data]`).textContent);t(n,r,e),setTimeout(()=>n.classList.add(`is-in`),80)}e(n);

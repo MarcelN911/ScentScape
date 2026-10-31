@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /regalo/
+Disallow: /catalogo/imprimir/
+Disallow: /checkout/
+
+Sitemap: https://scentscape.com.co/sitemap.xml

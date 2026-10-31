@@ -1,0 +1,1 @@
+function e(){return window.matchMedia(`(prefers-reduced-motion: reduce)`).matches}function t(e,t=0,n=1){return Math.min(n,Math.max(t,e))}export{e as n,t};
