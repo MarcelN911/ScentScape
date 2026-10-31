@@ -8,7 +8,7 @@ on:
     branches: [main]
   workflow_dispatch:
   repository_dispatch:
-    types: [nexomar-update]
+    types: [nexomar-update, products-updated]
 
 concurrency:
   group: deploy

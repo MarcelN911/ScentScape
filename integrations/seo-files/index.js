@@ -4,16 +4,17 @@
 import { writeFile } from 'node:fs/promises';
 import { getCatalog } from '../../src/scripts/catalog/load.js';
 import { htaccess } from './htaccess.js';
+import { loadLegacyProductPaths } from './legacy-urls.js';
 import { robotsTxt } from './robots.js';
 import { sitemapXml } from './sitemap.js';
 
 async function writeFiles(dir, site, pages) {
-  const products = await getCatalog();
+  const [products, legacyPaths] = await Promise.all([getCatalog(), loadLegacyProductPaths()]);
   const pathnames = pages.map((page) => page.pathname);
   await Promise.all([
     writeFile(new URL('sitemap.xml', dir), sitemapXml(site, pathnames)),
     writeFile(new URL('robots.txt', dir), robotsTxt(site)),
-    writeFile(new URL('.htaccess', dir), htaccess(products)),
+    writeFile(new URL('.htaccess', dir), htaccess(products, legacyPaths)),
   ]);
 }
 

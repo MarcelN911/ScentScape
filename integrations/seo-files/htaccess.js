@@ -47,7 +47,18 @@ function productRules(products) {
   ]);
 }
 
-export function htaccess(products) {
+/* /perfume/<alter-slug>/ → /producto/<slug>/; unbekannte /perfume/-Adressen → Shop */
+function perfumeRules(products, legacyPaths) {
+  const rules = products
+    .filter((product) => legacyPaths[product.id])
+    .map(
+      (product) =>
+        `RewriteRule ^${escapeRegex(legacyPaths[product.id])}/?$ /producto/${product.slug}/ [R=301,L]`,
+    );
+  return [...rules, 'RewriteRule ^perfume(/.*)?$ /productos/ [R=301,L]'];
+}
+
+export function htaccess(products, legacyPaths = {}) {
   return [
     ...HEADER,
     '',
@@ -57,6 +68,7 @@ export function htaccess(products) {
     '# Alte Produktseiten',
     ...productRules(products),
     'RewriteRule ^producto\\.html$ /productos/? [R=301,L]',
+    ...perfumeRules(products, legacyPaths),
     '',
   ].join('\n');
 }
