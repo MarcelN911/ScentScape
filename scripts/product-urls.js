@@ -165,12 +165,5 @@ window.SS_PRODUCT_URLS = {
   "6a7e131e3904190f42ac65bb": "/perfume/terren/",
   "6a7e146d3904190f42ac65bc": "/perfume/okinawa/",
   "6a7e1c143904190f42ac65bd": "/perfume/by-llermo/",
-  "6abcde43b97640976d78367e": "/perfume/212-heroes-men/",
-  "6ace2771b327aa4d090d048c": "/perfume/prueba-6/",
-  "6ace2ac6ab3ab040533af171": "/perfume/prueba-2/",
-  "6ace2afaab3ab040533af172": "/perfume/prueba-3/",
-  "6ace2ca2ab3ab040533af173": "/perfume/prueba-4/",
-  "6ace74f1ab3ab040533af174": "/perfume/prueba-5/",
-  "6ace7564ab3ab040533af175": "/perfume/prueba-1/",
-  "6ace7623ab3ab040533af176": "/perfume/prueba-7/"
+  "6abcde43b97640976d78367e": "/perfume/212-heroes-men/"
 };
