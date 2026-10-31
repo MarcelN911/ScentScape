@@ -21,7 +21,7 @@ aber mit echten Daten aus der nexomar-API.
 
 Weil die Seite statisch gebaut wird, entstehen Produktseiten beim Build. Ablauf (Phase 8):
 
-1. GitHub Action baut die Seite und lädt `dist/` per FTP zu Hostinger hoch.
+1. GitHub Action baut die Seite und legt `dist/` auf den Branch `live`, den Hostinger per Git abholt.
 2. nexomar ruft beim Speichern eines Produkts einen GitHub-Webhook auf (`repository_dispatch`), dann baut die Seite neu.
 3. Preise, Verfügbarkeit und Bewertungen sind so aktuell wie der letzte Build. Der Rabattcode und die Bestellung
    laufen live gegen nexomar (der Server rechnet die Preise selbst nach).
@@ -85,17 +85,10 @@ legacy/          alte Seite, nur als Vorlage
 
 ## Deploy (Hostinger)
 
-Die GitHub Action `.github/workflows/deploy.yml` baut die Seite und lädt `dist/` per FTP hoch.
-Sie startet bei jedem Push auf `main`, per Knopf („Run workflow“) und wenn nexomar sie anstößt.
-
-**Einmalig einrichten** (GitHub → Settings → Secrets and variables → Actions):
-
-| Secret           | Inhalt                                                 |
-| ---------------- | ------------------------------------------------------ |
-| `FTP_SERVER`     | FTP-Host aus Hostinger (z. B. `ftp.scentscape.com.co`) |
-| `FTP_USERNAME`   | FTP-Benutzer                                           |
-| `FTP_PASSWORD`   | FTP-Passwort                                           |
-| `FTP_SERVER_DIR` | optional, Standard `public_html/`                      |
+Die GitHub Action `.github/workflows/deploy.yml` baut die Seite und legt das fertige `dist/`
+als neuen Commit auf den Branch **`live`**. Hostinger holt sich `live` per Git-Deploy (hPanel → Git)
+automatisch ab. `main` enthält nur den Quellcode und darf deshalb nie direkt bei Hostinger hängen.
+Die Action startet bei jedem Push auf `main`, jede Nacht, per Knopf („Run workflow“) und wenn nexomar sie anstößt.
 
 **nexomar stößt den Build an**, wenn ein Produkt gespeichert wird:
 
@@ -104,7 +97,7 @@ POST https://api.github.com/repos/MarcelN911/ElixirS-B/dispatches
 Authorization: Bearer <GitHub-Token mit Recht "Contents: write" für dieses Repo>
 Accept: application/vnd.github+json
 
-{ "event_type": "nexomar-update" }
+{ "event_type": "nexomar-update" }   (das alte "products-updated" geht auch)
 ```
 
 Den Token nur auf dem nexomar-Server speichern, nie im Browser-Code.
@@ -191,7 +184,7 @@ So läuft eine Zahlung über Bold:
 
 - [ ] Foto für El Ritual, Momento 01 „Manos envolviendo la seda“ (bis dahin zeigt die Fläche die Seidenfarbe)
 - [ ] Feldnamen von Familie und Noten in der nexomar-API (heute leitet die Seite die Noten aus dem Text ab)
-- [ ] FTP-Zugang als GitHub-Secrets, Webhook in nexomar
+- [ ] Webhook in nexomar prüfen (event_type "nexomar-update" oder "products-updated")
 
 ### Link für die Regalo-Seite
 

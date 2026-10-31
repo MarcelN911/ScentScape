@@ -1,14 +1,20 @@
-# Baut die Seite und lädt sie per FTP zu Hostinger hoch.
-# Läuft bei jedem Push auf main, per Knopfdruck und wenn nexomar Produkte ändert
-# (repository_dispatch mit event_type "nexomar-update", siehe README).
+# Baut die Seite und legt das fertige Ergebnis (dist/) auf den Branch "live".
+# Hostinger holt sich "live" per Git-Deploy automatisch ab (hPanel → Git).
+# Läuft bei jedem Push auf main, per Knopfdruck, jede Nacht (frische Preise und Bewertungen)
+# und wenn nexomar Produkte ändert (repository_dispatch "nexomar-update" oder "products-updated").
 name: Deploy
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '17 7 * * *' # 02:17 Uhr Kolumbien
   workflow_dispatch:
   repository_dispatch:
     types: [nexomar-update, products-updated]
+
+permissions:
+  contents: write
 
 concurrency:
   group: deploy
@@ -29,11 +35,20 @@ jobs:
       - run: npm run check
       - run: npm run build
 
-      - name: Upload zu Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || 'public_html/' }}
+      # Neuer Commit auf "live" mit genau dem Inhalt von dist/ (gelöschte Seiten verschwinden mit).
+      # Die bisherige Historie bleibt erhalten, damit Hostinger normal "git pull" machen kann.
+      - name: dist/ auf Branch "live" legen
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir "$RUNNER_TEMP/live" && cd "$RUNNER_TEMP/live"
+          git init -q -b live
+          git config user.name "scentscape-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth 1 origin live; then git reset -q --soft FETCH_HEAD; fi
+          cp -a "$GITHUB_WORKSPACE/dist/." .
+          git add -A
+          if git diff --cached --quiet; then echo "Keine Änderungen."; exit 0; fi
+          git commit -q -m "deploy: ${GITHUB_SHA::7}"
+          git push -q origin HEAD:live
