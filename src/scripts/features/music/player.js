@@ -51,10 +51,13 @@ function bindList(root) {
   );
 }
 
+/* Klicks rund um die Videos starten die Musik nicht: Sie würde sonst nach dem Video loslaufen */
+const NO_AUTOSTART = '[data-reel], [data-video-modal], [data-story-modal]';
+
 function startOnFirstInteraction(root, render) {
   if (!player.wantsMusic()) return;
   const start = (event) => {
-    if (root.contains(event.target)) return;
+    if (root.contains(event.target) || event.target.closest?.(NO_AUTOSTART)) return;
     removeEventListener('pointerdown', start, true);
     removeEventListener('keydown', start, true);
     if (!music.playing) player.play();

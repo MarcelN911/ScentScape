@@ -1,5 +1,6 @@
-/* Großansicht eines Videos mit Ton, im Stil eines Instagram-Beitrags. */
+/* Großansicht eines Videos mit Ton, im Stil eines Instagram-Beitrags. Die Hintergrundmusik pausiert so lange. */
 import { VIDEOS } from '../../../data/home.js';
+import { holdForVideo } from '../music/audio.js';
 import { lockScroll } from '../../utils/scroll-lock.js';
 
 function findModalParts() {
@@ -57,6 +58,7 @@ function openModal(modal, index) {
   show(modal.parts, index);
   modal.parts.modal.hidden = false;
   lockScroll('video', true);
+  holdForVideo(true);
   modal.parts.modal.querySelector('[data-video-close]').focus();
   modal.onToggle(true);
 }
@@ -66,6 +68,7 @@ function closeModal(modal) {
   modal.parts.player.pause();
   modal.parts.modal.hidden = true;
   lockScroll('video', false);
+  holdForVideo(false);
   modal.onToggle(false);
 }
 

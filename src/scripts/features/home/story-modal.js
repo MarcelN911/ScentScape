@@ -3,10 +3,10 @@
  * - Startet mit Ton. Blockiert der Browser den Ton, läuft das Video stumm und "Ver con sonido" erscheint.
  * - Links antippen = zurück, rechts = weiter, zur Seite wischen ebenso; nach unten wischen,
  *   X oder Escape schließt. Am Ende eines Videos kommt das nächste, nach dem letzten schließt sie.
- * - Solange Ton läuft, ist die Hintergrundmusik still.
+ * - Solange Ton läuft, pausiert die Hintergrundmusik (und läuft danach weiter, wenn sie vorher lief).
  */
 import { VIDEOS } from '../../../data/home.js';
-import { duck } from '../music/audio.js';
+import { holdForVideo } from '../music/audio.js';
 import { lockScroll } from '../../utils/scroll-lock.js';
 
 export const STACKED_QUERY = '(max-width: 1079px) and (orientation: portrait), (max-width: 899px)';
@@ -28,7 +28,7 @@ function findParts(root) {
 function renderSound(story) {
   story.parts.root.classList.toggle('is-muted', story.muted);
   story.parts.mute.setAttribute('aria-pressed', String(!story.muted));
-  duck(story.open && !story.muted);
+  holdForVideo(story.open && !story.muted);
 }
 
 /* Mit Ton abspielen; klappt das nicht, stumm weiter */
@@ -62,7 +62,7 @@ function close(story) {
   if (!story.open) return;
   story.open = false;
   story.parts.video.pause();
-  duck(false);
+  holdForVideo(false);
   story.parts.root.classList.remove('is-visible');
   lockScroll('story', false);
   setTimeout(() => story.open || (story.parts.root.hidden = true), 350);
