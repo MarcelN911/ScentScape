@@ -3,7 +3,7 @@
  * irgendwo auf der Seite (Browser erlauben Ton erst nach einer Nutzeraktion).
  */
 import * as player from './audio.js';
-import { renderPlayer, renderTime, setListOpen } from './view.js';
+import { markVolumeSupport, renderPlayer, renderTime, setListOpen } from './view.js';
 
 const { music } = player;
 
@@ -32,9 +32,8 @@ function bindSound(root, render) {
     player.setMuted(!music.muted);
     render();
   });
-  root.querySelector('[data-player-volume]').addEventListener('input', (event) => {
-    player.setVolume(Number(event.target.value));
-    render();
+  root.querySelectorAll('[data-player-volume]').forEach((slider) => {
+    slider.addEventListener('input', () => (player.setVolume(Number(slider.value)), render()));
   });
 }
 
@@ -72,6 +71,7 @@ export function initMusicPlayer() {
   bindPlayback(root, render);
   bindSound(root, render);
   bindList(root);
+  markVolumeSupport(root);
   startOnFirstInteraction(root, render);
   /* Titelwechsel am Ende eines Songs oder Anhalten von außen: Anzeige neu zeichnen */
   player.onChange(render);

@@ -1,0 +1,123 @@
+---
+/*
+ * Lautstärke direkt im Player: Der Lautsprecher-Knopf bleibt sichtbar, der Regler klappt auf,
+ * sobald die Maus darüber ist oder er per Tastatur fokussiert wird.
+ * Den gefüllten Teil der Leiste zeichnet CSS aus --volume (setzt view.js).
+ * Auf Touch-Geräten bleibt er zu: Dort gibt es den Regler in der Playlist-Karte,
+ * und iPhones erlauben Webseiten ohnehin keine eigene Lautstärke.
+ */
+import Icon from '../ui/Icon.astro';
+---
+
+<div class="sound">
+  <input
+    class="sound__slider"
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    step="1"
+    data-player-volume
+    aria-label="Volumen"
+  />
+  <button class="sound__mute" type="button" data-player-mute aria-label="Silenciar">
+    <Icon name="volume" size={16} class="player__when-sound" />
+    <Icon name="mute" size={16} class="player__when-muted" />
+  </button>
+</div>
+
+<style>
+  .sound {
+    display: flex;
+    align-items: center;
+  }
+
+  .sound__mute {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--cream);
+  }
+
+  .sound__slider {
+    width: 0;
+    height: 38px;
+    margin: 0;
+    opacity: 0;
+    background: none;
+    cursor: pointer;
+    appearance: none;
+    transition:
+      width 0.4s var(--ease),
+      margin 0.4s var(--ease),
+      opacity 0.3s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sound:hover .sound__slider,
+    .sound:focus-within .sound__slider {
+      width: 84px;
+      margin-left: 8px;
+      opacity: 1;
+    }
+  }
+
+  :global(.player[data-no-volume]) .sound__slider {
+    display: none;
+  }
+
+  /* Leiste: links pfirsichfarben bis zur aktuellen Lautstärke, rechts gedämpft */
+  .sound__slider::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      var(--peach) calc(var(--volume, 50) * 1%),
+      rgb(var(--cream-rgb) / 0.25) 0
+    );
+  }
+
+  .sound__slider::-moz-range-track {
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(var(--cream-rgb) / 0.25);
+  }
+
+  .sound__slider::-moz-range-progress {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--peach);
+  }
+
+  .sound__slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4.5px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cream);
+    appearance: none;
+  }
+
+  .sound__slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cream);
+  }
+
+  .sound__slider:focus-visible {
+    outline: none;
+  }
+
+  .sound__slider:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgb(var(--peach-rgb) / 0.35);
+  }
+</style>

@@ -2,6 +2,7 @@
 import { TRACKS } from '../../data/tracks.js';
 import Icon from '../ui/Icon.astro';
 import TrackItem from './TrackItem.astro';
+import VolumeSlider from './VolumeSlider.astro';
 ---
 
 <div
@@ -25,7 +26,7 @@ import TrackItem from './TrackItem.astro';
     </div>
     <label class="player__volume">
       <span>VOL</span>
-      <input type="range" min="0" max="100" value="60" data-player-volume aria-label="Volumen" />
+      <input type="range" min="0" max="100" value="50" data-player-volume aria-label="Volumen" />
     </label>
   </div>
   <div class="player__pill">
@@ -52,10 +53,7 @@ import TrackItem from './TrackItem.astro';
       <Icon name="play" size={12} class="player__when-paused" />
       <Icon name="pause" size={12} class="player__when-playing" />
     </button>
-    <button class="player__mute" type="button" data-player-mute aria-label="Silenciar">
-      <Icon name="volume" size={16} class="player__when-sound" />
-      <Icon name="mute" size={16} class="player__when-muted" />
-    </button>
+    <VolumeSlider />
   </div>
 </div>
 
@@ -153,8 +151,7 @@ import TrackItem from './TrackItem.astro';
     font: 500 10px/1.4 var(--font-sans);
   }
 
-  .player__play,
-  .player__mute {
+  .player__play {
     display: grid;
     place-items: center;
     width: 38px;
@@ -169,11 +166,6 @@ import TrackItem from './TrackItem.astro';
 
   .player[data-waiting] .player__play {
     animation: wait-pulse 1.6s ease-out infinite;
-  }
-
-  .player__mute {
-    background: none;
-    color: var(--cream);
   }
 
   .player:not([data-playing]) :global(.player__when-playing),
@@ -241,6 +233,10 @@ import TrackItem from './TrackItem.astro';
 
   .player__volume input {
     flex: 1;
+  }
+
+  .player[data-no-volume] .player__volume {
+    display: none;
   }
 
   @keyframes wait-pulse {
