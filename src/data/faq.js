@@ -20,7 +20,7 @@ export const CHAT_QUESTIONS = [
   ['¿Dónde se encuentra ScentScape?', 'ScentScape nace en Medellín, Colombia, en 2024.'],
   [
     '¿Cómo puedo contactarlos?',
-    'Por WhatsApp al +57 321 810 1882 o por Instagram en @Scentscapeparfums_.',
+    'Por WhatsApp al +57 310 395 5208 o por Instagram en @Scentscapeparfums_.',
   ],
 ].map(([question, answer]) => ({ question, answer }));
 
@@ -58,6 +58,6 @@ export const FAQ_QUESTIONS = [
   {
     category: 'ScentScape',
     question: '¿Cómo puedo contactarlos?',
-    answer: 'Por WhatsApp al +57 321 810 1882 o por Instagram en @Scentscapeparfums_.',
+    answer: 'Por WhatsApp al +57 310 395 5208 o por Instagram en @Scentscapeparfums_.',
   },
 ];

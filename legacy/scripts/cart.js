@@ -5,7 +5,7 @@
 // and WhatsApp checkout
 // ============================================
 
-const WHATSAPP_NUMBER         = '+573218101882';
+const WHATSAPP_NUMBER         = '+573103955208';
 const FREE_SHIPPING_THRESHOLD = 500000;
 const CART_STORAGE_KEY        = 'elixir_cart';
 

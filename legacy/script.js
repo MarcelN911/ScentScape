@@ -227,7 +227,7 @@ const productsPerLoad = 20;
  * Used by the floating WhatsApp button on every page.
  */
 function openWhatsAppContact() {
-    const phone   = '573218101882';
+    const phone   = '573103955208';
     const message = encodeURIComponent('Hola, quiero información y asesoría sobre sus perfumes.');
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
 }
