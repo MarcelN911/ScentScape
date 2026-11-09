@@ -3,23 +3,34 @@
  * Rechte Seite von "Familias olfativas": Flasche und Beschreibung der aktiven Familie,
  * darunter Satz und Link. Welche Familie aktiv ist, setzt scripts/features/home/families.js.
  * Desktop: Flasche und Text nebeneinander. Hochformat: große Flasche, alles darunter zentriert.
+ * Die Flaschen sind die "Foto sin fondo" der Produkte (familyBottles). Fehlt eine, steht an
+ * ihrer Stelle ein leerer Platzhalter, damit die Reihenfolge zu den Namen passt.
  */
 import { FAMILIES } from '../../data/families.js';
+import { getCatalog } from '../../scripts/catalog/load.js';
+import { familyBottles } from '../../scripts/catalog/queries.js';
 import { imageUrl } from '../../scripts/utils/image.js';
+
+const bottles = familyBottles(await getCatalog());
 ---
 
 <div class="families__showcase">
   <div class="families__top">
     <div class="families__bottles">
-      {FAMILIES.map((family, index) => (
-        <img
-          class:list={['families__bottle', { 'is-active': index === 0, 'is-after': index > 0 }]}
-          src={imageUrl(family.image, 700)}
-          alt={family.bottle}
-          loading="lazy"
-          data-family-bottle
-        />
-      ))}
+      {bottles.map((bottle, index) => {
+        const layer = ['families__bottle', { 'is-active': index === 0, 'is-after': index > 0 }];
+        return bottle ? (
+          <img
+            class:list={layer}
+            src={imageUrl(bottle.image, 700)}
+            alt={bottle.name}
+            loading="lazy"
+            data-family-bottle
+          />
+        ) : (
+          <span class:list={layer} aria-hidden="true" data-family-bottle />
+        );
+      })}
     </div>
     <div class="families__descs">
       {FAMILIES.map((family, index) => (

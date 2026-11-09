@@ -1,11 +1,16 @@
 /*
  * Zustand des Players. Spielt die MP3-Dateien aus data/tracks.js über ein <audio>-Element ab.
  * Der Player bleibt beim Seitenwechsel stehen, deshalb läuft die Musik weiter.
- * Gespeichert (localStorage): ob Musik gewünscht ist (ss_music), stumm und Lautstärke.
+ * Gespeichert (localStorage): ob Musik gewünscht ist (ss_music) und stumm.
+ * Lautstärke (sessionStorage): Jeder neue Besuch beginnt wieder leise (DEFAULT_VOLUME), damit niemand erschrickt.
  * Stelle im Song (sessionStorage, nur für diesen Tab): Wird die Seite neu geladen, geht es dort weiter.
  * Ein neuer Besuch (neuer Tab) beginnt mit dem ersten Titel der Playlist (data/tracks.js).
  */
 import { TRACKS } from '../../../data/tracks.js';
+import { readJson, writeJson } from '../../utils/storage.js';
+
+const DEFAULT_VOLUME = 50;
+const VOLUME_KEY = 'ss_music_vol';
 
 const read = (key, fallback) => {
   try {
@@ -48,10 +53,9 @@ const saved = readPosition();
 export const music = {
   playing: false,
   muted: read('ss_music_muted', '0') === '1',
-  volume: Number(read('ss_music_vol', 60)),
+  volume: Number(readJson(sessionStorage, VOLUME_KEY, DEFAULT_VOLUME)),
   index: saved.index,
   elapsed: saved.time,
-  ducked: false, // kurz still, solange ein Video mit Ton läuft
 };
 
 export const wantsMusic = () => read('ss_music', '1') !== '0';
@@ -68,9 +72,11 @@ export function onChange(callback) {
 /* Das <audio>-Element entsteht erst beim ersten Abspielen (spart Ladezeit) */
 let element = null;
 
+/* Das Ohr hört Lautstärke nicht linear: quadriert klingt 50 % am Regler auch wie die Hälfte */
+const loudness = (percent) => (percent / 100) ** 2;
+
 function applyVolume() {
-  const silent = music.muted || music.ducked;
-  element.volume = silent ? 0 : music.volume / 100;
+  element.volume = music.muted ? 0 : loudness(music.volume);
 }
 
 /* Beim Titelwechsel meldet das Element kurz "pause", das soll den Player nicht anhalten */
@@ -120,7 +126,11 @@ function startAudio() {
     });
 }
 
+/* true, solange die Musik nur wegen eines Videos pausiert (siehe holdForVideo) */
+let heldForVideo = false;
+
 export function play() {
+  heldForVideo = false;
   save('ss_music', 1);
   startAudio();
 }
@@ -149,12 +159,23 @@ export function setMuted(muted) {
 
 export function setVolume(percent) {
   music.volume = percent;
-  save('ss_music_vol', percent);
+  writeJson(sessionStorage, VOLUME_KEY, percent);
   setMuted(false);
 }
 
-/** Musik stumm schalten, solange ein Video mit Ton läuft. Die Einstellung wird dabei nicht gespeichert. */
-export function duck(on) {
-  music.ducked = on;
-  if (element) applyVolume();
+/**
+ * Musik anhalten, solange ein Video mit Ton läuft. Danach geht sie nur weiter, wenn sie vorher lief.
+ * Anders als pause() wird dabei nichts gespeichert: Der Besucher hat die Musik ja nicht ausgeschaltet.
+ */
+export function holdForVideo(on) {
+  if (on && music.playing) {
+    heldForVideo = true;
+    music.playing = false;
+    audio().pause();
+    notify();
+  } else if (!on && heldForVideo) {
+    heldForVideo = false;
+    startAudio();
+    notify();
+  }
 }

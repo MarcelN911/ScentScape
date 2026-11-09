@@ -2,8 +2,8 @@ export const SITE_URL = 'https://scentscape.com.co';
 export const SHOP_ID = '6a0de7a797ebb49fffb11079';
 export const API_BASE = import.meta.env?.PUBLIC_API_BASE ?? 'https://nexomar.co';
 
-export const WHATSAPP_NUMBER = '573218101882';
-export const PHONE_DISPLAY = '+57 321 810 1882';
+export const WHATSAPP_NUMBER = '573103955208';
+export const PHONE_DISPLAY = '+57 310 395 5208';
 export const EMAIL = 'scentscapeparfums@gmail.com';
 export const INSTAGRAM_URL = 'https://www.instagram.com/scentscapeparfums_/';
 export const INSTAGRAM_HANDLE = '@Scentscapeparfums_';

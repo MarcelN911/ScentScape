@@ -5,6 +5,7 @@ import { BESTSELLER_SLUGS } from '../data/home.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCatalog } from '../scripts/catalog/load.js';
 import { bestsellers, findBySlug } from '../scripts/catalog/queries.js';
+import { storeSchema } from '../scripts/seo/store-schema.js';
 import Bestsellers from '../sections/home/Bestsellers.astro';
 import Families from '../sections/home/Families.astro';
 import GiftStory from '../sections/home/GiftStory.astro';
@@ -25,6 +26,7 @@ const moreCount = Math.floor((catalog.length - favorites.length) / 10) * 10;
   curtainMode="none"
   wordmark="scroll"
 >
+  <script type="application/ld+json" slot="head" set:html={storeSchema()} />
   <HomeIntro />
   <main class="home" data-home>
     <HomeHero />

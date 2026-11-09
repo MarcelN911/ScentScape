@@ -1,4 +1,5 @@
 /* Alle Bedienelemente der Seite "Productos" → Änderungen am Zustand. */
+import { loadMore } from './auto-more.js';
 import { turnTo } from './wheel.js';
 import { bindSort, closeSort } from './sort.js';
 
@@ -50,10 +51,7 @@ const CLICKS = [
     '[data-shop-clear]',
     (shop) => shop.update({ gender: 'Todos', family: null, notes: new Set(), query: '' }),
   ],
-  [
-    '[data-more-button]',
-    (shop) => shop.update({ shown: shop.state.shown + 24 }, { keepPage: true }),
-  ],
+  ['[data-more-button]', (shop) => loadMore(shop)],
 ];
 
 function handleClick(shop, event) {

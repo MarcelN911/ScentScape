@@ -28,9 +28,17 @@ export function renderPlayer(root) {
   root.toggleAttribute('data-muted', music.muted);
   root.toggleAttribute('data-waiting', !music.playing && wantsMusic());
   root.querySelector('[data-player-title]').textContent = currentTrack().title;
-  root.querySelector('[data-player-volume]').value = music.volume;
+  root.querySelectorAll('[data-player-volume]').forEach((slider) => (slider.value = music.volume));
+  root.style.setProperty('--volume', music.volume);
   renderButtons(root);
   renderTime(root);
+}
+
+/** iPhones ignorieren eine eigene Lautstärke (nur die Tasten am Gerät zählen): Regler dort ausblenden */
+export function markVolumeSupport(root) {
+  const probe = new Audio();
+  probe.volume = 0.5;
+  root.toggleAttribute('data-no-volume', probe.volume !== 0.5);
 }
 
 export function setListOpen(root, open) {

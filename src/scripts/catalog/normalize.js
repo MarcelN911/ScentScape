@@ -6,13 +6,30 @@ import { lowestPrice, readSizes } from './sizes.js';
 
 const GENDER_LABELS = { D: 'Dama', C: 'Caballero', U: 'Unisex' };
 
+/* Ersatz, wenn ein Produkt kein brauchbares Foto hat */
+const PLACEHOLDER_IMAGE = '/assets/img/scentscape-logo.png';
+
+/*
+ * Nur echte Links (https://…). nexomar hat früher bei einem gescheiterten Upload
+ * das ganze Foto als Text gespeichert (data:image/…;base64, über 1 MB).
+ * Das landete im HTML jeder Seite mit dem Produkt: die Startseite hatte 2,6 MB statt 60 KB.
+ */
+const isLink = (url) => typeof url === 'string' && /^https?:\/\//i.test(url);
+
+function imagesOf(raw) {
+  const links = (raw.imagenes ?? []).filter(isLink);
+  return links.length ? links : [PLACEHOLDER_IMAGE];
+}
+
 function identityOf(raw) {
   return {
     id: String(raw._id),
     name: raw.nombre.trim(),
     brand: fields.readBrand(raw),
     category: raw.categoria ?? '',
-    images: raw.imagenes ?? [],
+    images: imagesOf(raw),
+    /* Freigestelltes Foto (Panel: "Foto sin fondo"), nur für Sections der Startseite */
+    cutout: isLink(raw.imagenSinFondo) ? raw.imagenSinFondo : '',
     description: raw.descripcion ?? '',
     plainDescription: plainDescription(raw.descripcion),
     hasCoverPhoto: fields.readHasCoverPhoto(raw),

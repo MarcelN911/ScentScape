@@ -4,13 +4,14 @@ const { video, index } = Astro.props;
 ---
 
 <article class="video-card" data-video-card={index} data-cursor="Ver">
+  <!-- Adresse erst, wenn die Seite fertig ist und man in die Nähe scrollt (reel-preload.js) -->
   <video
     class="video-card__video"
-    src={`${video.src}#t=0.6`}
+    data-src={video.src}
     poster={video.poster}
     muted
     playsinline
-    preload="metadata"
+    preload="none"
   ></video>
   <div class="video-card__shade"></div>
   <span class="video-card__tag">Reel {String(index + 1).padStart(2, '0')}</span>

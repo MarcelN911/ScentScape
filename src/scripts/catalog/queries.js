@@ -8,6 +8,21 @@ function popularity(product) {
   return (product.badge ? 1000 : 0) + (product.featured ? 500 : 0) + product.hearts;
 }
 
+/**
+ * Pro Duftfamilie das Produkt, dessen freigestellte Flasche die Startseite zeigt:
+ * zuerst das in families.js vorgesehene, sonst das beliebteste der Familie.
+ * Nur Produkte mit "Foto sin fondo" kommen in Frage; hat keins, bleibt der Platz leer (null).
+ */
+export function familyBottles(catalog) {
+  return FAMILIES.map((family) => {
+    const candidates = catalog.filter((product) => product.cutout && product.family === family.id);
+    const chosen =
+      candidates.find((product) => product.slug === family.featured) ??
+      [...candidates].sort((a, b) => popularity(b) - popularity(a))[0];
+    return chosen ? { image: chosen.cutout, name: chosen.name } : null;
+  });
+}
+
 export function bestsellers(catalog, limit) {
   return [...catalog].sort((a, b) => popularity(b) - popularity(a)).slice(0, limit);
 }

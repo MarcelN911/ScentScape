@@ -1,7 +1,8 @@
 ---
 /*
- * Formular "Escribe tu reseña": Sterne, Fragancia, Name, Ciudad, WhatsApp, Text.
- * Geht an nexomar und erscheint nach der Prüfung. Bedienung: scripts/features/reviews/form.js
+ * Formular "Escribe tu reseña": Sterne, Fragancia, Name, Ciudad, Handynummer, Text.
+ * Geht an nexomar: Passen Name, Fragancia und Nummer zu einer Bestellung, wird die Bewertung
+ * sofort veröffentlicht, sonst gibt der Shop sie von Hand frei. Die Nummer wird nie angezeigt. Bedienung: scripts/features/reviews/form.js
  */
 import SearchCombo from '../../components/ui/SearchCombo.astro';
 import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
@@ -62,16 +63,27 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
       />
     </label>
     <label class="field-group review-form__wide">
-      <span class="field-label">05 · WhatsApp</span>
+      <span class="field-label">05 · Número de celular</span>
       <input
         class="text-input"
         name="phone"
         type="tel"
         inputmode="tel"
         maxlength={REVIEW_LIMITS.phone}
-        placeholder="No se publica"
+        placeholder="Ej. 300 123 4567"
         autocomplete="tel"
+        aria-describedby="review-phone-note"
       />
+      <span class="review-form__private" id="review-phone-note">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
+        <span>
+          <strong>Privado, nunca se publica.</strong> Solo lo usamos para confirmar tu compra. Si
+          coincide con tu pedido, tu reseña se publica al instante.
+        </span>
+      </span>
     </label>
   </div>
   <label class="field-group">
@@ -101,7 +113,10 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
   <h3 class="review-thanks__title">
     ¡Gracias, <em data-review-thanks-name></em>!
   </h3>
-  <p>Recibimos tu reseña. La publicaremos después de revisarla.</p>
+  <p>
+    Recibimos tu reseña. Si tus datos coinciden con tu compra, ya está publicada. Si no, la
+    revisamos y la publicamos pronto.
+  </p>
   <div class="review-thanks__actions">
     <button class="outline-btn" type="button" data-review-again>
       Escribir otra
@@ -155,7 +170,7 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
     font: italic 400 22px var(--font-serif);
   }
 
-  /* Nombre und Ciudad nebeneinander, WhatsApp darunter über die ganze Breite */
+  /* Nombre und Ciudad nebeneinander, Handynummer darunter über die ganze Breite */
   .review-form__people {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -164,6 +179,31 @@ import { RATING_LABELS, REVIEW_LIMITS } from '../../data/reviews.js';
 
   .review-form__wide {
     grid-column: 1 / -1;
+  }
+
+  /* Hinweis unter der Nummer: Schloss + Erklärung, warum wir sie brauchen */
+  .review-form__private {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: rgb(var(--cream-rgb) / 0.65);
+    font: 300 12px/1.6 var(--font-sans);
+  }
+
+  .review-form__private strong {
+    color: var(--sand);
+    font-weight: 500;
+  }
+
+  .review-form__private svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    fill: none;
+    stroke: var(--peach);
+    stroke-width: 1.8;
+    stroke-linecap: round;
   }
 
   .review-form__split {
