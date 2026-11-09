@@ -49,7 +49,8 @@ const { reviews } = Astro.props;
       </div>
     </div>
     <div
-      class="carousel"
+      class="carousel reveal-late"
+      style="--late:2s"
       role="region"
       aria-roledescription="carrusel"
       aria-label="Reseñas de clientes"
@@ -61,7 +62,7 @@ const { reviews } = Astro.props;
     <p class="wall__empty" data-review-empty hidden>
       No hay reseñas con este filtro todavía.
     </p>
-    <div class="controls" data-carousel-controls>
+    <div class="controls reveal-late" style="--late:2.3s" data-carousel-controls>
       <div class="controls__row">
         <button
           class="controls__arrow"

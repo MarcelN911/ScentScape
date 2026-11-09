@@ -31,9 +31,9 @@ export const REVIEW_TITLE = [
 export const REVIEW_MISSING = {
   rating: 'Elige una calificación para continuar.',
   name: 'Escribe tu nombre.',
-  phone: 'Escribe tu WhatsApp. No se publica, solo lo usamos para verificar la compra.',
+  phone: 'Escribe tu número de celular. Es privado, solo lo usamos para confirmar tu compra.',
   text: 'Tu reseña necesita al menos 10 caracteres.',
-  ready: 'Todo listo. Revisaremos tu reseña antes de publicarla.',
+  ready: 'Todo listo. Si tus datos coinciden con tu compra, tu reseña se publica al instante.',
   send: 'No se pudo enviar tu reseña. Intenta de nuevo.',
 };
 
