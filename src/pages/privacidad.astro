@@ -1,4 +1,9 @@
 ---
+/*
+ * Política de Privacidad nach Ley 1581 de 2012 (Habeas Data) und Decreto 1377 de 2013
+ * (heute im Decreto 1074 de 2015). Nennt alle Stellen, an denen die Seite Daten sammelt:
+ * Checkout, Bewertungen, Gutschein-Ticket, WhatsApp, und wer sie bekommt (nexomar, Bold, Versand).
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { EMAIL, PHONE_DISPLAY } from '../scripts/config.js';
 import LegalPage from '../sections/legal/LegalPage.astro';
@@ -11,22 +16,18 @@ import LegalPage from '../sections/legal/LegalPage.astro';
   <LegalPage
     title="Política de"
     accent="Privacidad"
-    updated="Última actualización: abril de 2026 · Conforme a la Ley 1581 de 2012 (Habeas Data)"
+    updated="Vigente desde noviembre de 2026 · Conforme a la Ley 1581 de 2012 (Habeas Data)"
   >
     <h2>1. Responsable del tratamiento</h2>
-    <p>
-      El responsable del tratamiento de los datos personales recopilados a través de este sitio web
-      y por medio de WhatsApp es:
-    </p>
     <ul>
       <li>
-        <strong>Nombre del responsable:</strong> Sara y Brayan
+        <strong>Responsables:</strong> Sara y Brayan
       </li>
       <li>
         <strong>Nombre comercial:</strong> ScentScape
       </li>
       <li>
-        <strong>Ciudad:</strong> Medellín, Colombia
+        <strong>Domicilio:</strong> Medellín, Colombia
       </li>
       <li>
         <strong>WhatsApp:</strong> {PHONE_DISPLAY}
@@ -36,95 +37,144 @@ import LegalPage from '../sections/legal/LegalPage.astro';
       </li>
     </ul>
 
-    <h2>2. Datos personales que recopilamos</h2>
-    <p>
-      Cuando realizas un pedido o nos contactas por WhatsApp, podemos recopilar los siguientes
-      datos:
-    </p>
+    <h2>2. Qué datos recopilamos</h2>
+    <h3>Al hacer un pedido</h3>
     <ul>
-      <li>Nombre completo</li>
-      <li>Número de celular (a través de WhatsApp)</li>
-      <li>Dirección de entrega (ciudad, barrio, dirección)</li>
+      <li>Nombre completo, número de celular y, si lo indicas, correo electrónico.</li>
+      <li>Dirección de entrega: dirección, ciudad y departamento.</li>
+      <li>Los productos que compras, el valor y el estado del pago.</li>
     </ul>
-    <p>
-      No solicitamos ni almacenamos información bancaria, contraseñas ni datos sensibles. El
-      formulario de pedido en nuestro sitio web genera únicamente un mensaje de texto precompuesto
-      que es enviado a nuestro WhatsApp; ningún dato es almacenado en servidores propios.
-    </p>
-
-    <h2>3. Finalidad del tratamiento</h2>
-    <p>Los datos personales que nos proporcionas se utilizan exclusivamente para:</p>
+    <h3>Al escribir una reseña</h3>
     <ul>
-      <li>Gestionar y entregar tu pedido (coordinación de envío, confirmación del pedido).</li>
+      <li>Nombre, ciudad, calificación y texto de la reseña: se publican en el sitio.</li>
       <li>
-        Comunicarnos contigo sobre el estado de tu pedido, resolver dudas o enviar información
-        relacionada con tu compra.
+        Número de celular: <strong>nunca se publica</strong>. Solo lo usamos para confirmar que la
+        reseña viene de una compra real.
       </li>
     </ul>
-    <p>
-      No utilizamos tus datos para publicidad de terceros, ni los compartimos con empresas externas,
-      salvo con los operadores logísticos estrictamente necesarios para realizar la entrega (quienes
-      reciben únicamente nombre y dirección de entrega).
-    </p>
-
-    <h2>4. Almacenamiento y conservación</h2>
-    <p>
-      Los datos compartidos por WhatsApp quedan registrados en la aplicación de mensajería según sus
-      propias políticas de privacidad (Meta / WhatsApp Inc.). ScentScape no los transfiere, exporta
-      ni almacena en bases de datos propias.
-    </p>
-    <p>
-      Conservamos el historial de conversaciones de WhatsApp únicamente por el tiempo necesario para
-      gestionar tu pedido y cumplir con obligaciones legales aplicables.
-    </p>
-
-    <h2>5. Derechos del titular (Habeas Data)</h2>
-    <p>De conformidad con la Ley 1581 de 2012, tienes derecho a:</p>
+    <h3>Al pedir un código de descuento</h3>
     <ul>
-      <li>Conocer los datos personales que hemos tratado.</li>
-      <li>Actualizar o corregir datos inexactos o incompletos.</li>
-      <li>
-        Suprimir tus datos cuando no sean necesarios para la finalidad con la que fueron
-        recopilados, o cuando hayas revocado tu autorización.
-      </li>
-      <li>
-        Revocar la autorización de tratamiento en cualquier momento, sin efectos retroactivos.
-      </li>
-      <li>
-        Presentar quejas ante la Superintendencia de Industria y Comercio (SIC) si consideras que
-        tus derechos han sido vulnerados.
-      </li>
+      <li>Nombre y número de WhatsApp, para darte el código y atender tu pedido.</li>
+    </ul>
+    <h3>Al escribirnos por WhatsApp</h3>
+    <ul>
+      <li>Los datos que nos compartas en la conversación.</li>
     </ul>
     <p>
-      Para ejercer cualquiera de estos derechos, escríbenos directamente por WhatsApp al{' '}
-      {PHONE_DISPLAY}o al correo {EMAIL}. Atenderemos tu solicitud en un plazo máximo de 10 días
-      hábiles.
+      <strong>No recibimos ni guardamos datos de tarjetas ni de cuentas bancarias.</strong> En los
+      pagos en línea, esos datos los ingresas directamente en Bold. Tampoco pedimos datos sensibles
+      ni datos de menores de edad.
     </p>
 
-    <h2>6. Autorización</h2>
-    <p>
-      Al enviarnos un mensaje de WhatsApp con tu pedido o al completar el formulario en nuestro
-      sitio web, el titular autoriza a ScentScape a tratar sus datos personales conforme a lo
-      descrito en esta política, de acuerdo con el Artículo 9 de la Ley 1581 de 2012.
-    </p>
-
-    <h2>7. Modificaciones a esta política</h2>
-    <p>
-      ScentScape puede actualizar esta política en cualquier momento. Los cambios se publicarán en
-      esta misma página con la fecha de actualización indicada. Te recomendamos revisarla
-      periódicamente.
-    </p>
-
-    <h2>8. Contacto</h2>
-    <p>Para consultas relacionadas con el tratamiento de tus datos personales:</p>
+    <h2>3. Para qué usamos tus datos</h2>
     <ul>
-      <li>WhatsApp: {PHONE_DISPLAY}</li>
+      <li>Registrar, cobrar, preparar y entregar tu pedido.</li>
+      <li>Escribirte sobre tu pedido, tu pago, el envío, cambios o devoluciones.</li>
+      <li>Verificar y publicar reseñas.</li>
+      <li>Entregarte y validar códigos de descuento y gift cards.</li>
+      <li>Atender tus preguntas, peticiones, quejas y reclamos.</li>
+      <li>Cumplir obligaciones legales, contables y de protección al consumidor.</li>
+    </ul>
+    <p>
+      No vendemos tus datos ni los usamos para publicidad de terceros. Solo te escribimos por temas
+      de tus compras, salvo que nos autorices otra cosa.
+    </p>
+
+    <h2>4. Con quién compartimos tus datos</h2>
+    <p>Solo compartimos lo necesario con quienes nos ayudan a atender tu compra:</p>
+    <ul>
       <li>
-        Correo: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <strong>NEXOMAR:</strong> la plataforma donde gestionamos pedidos, inventario y reseñas.
+        Guarda los datos de tus pedidos por encargo nuestro.
+      </li>
+      <li>
+        <strong>Bold:</strong> procesa los pagos en línea. Recibe tu nombre, celular, correo (si lo
+        diste), dirección y el valor a pagar.
+      </li>
+      <li>
+        <strong>Empresas de transporte:</strong> reciben nombre, celular y dirección para entregar
+        el paquete.
+      </li>
+      <li>
+        <strong>WhatsApp (Meta):</strong> si nos escribes o pides por WhatsApp, la conversación
+        queda también sujeta a las políticas de WhatsApp.
       </li>
     </ul>
     <p>
-      También puedes consultar los <a href="/terminos/">Términos y Condiciones de ScentScape</a>.
+      Algunos de estos proveedores pueden guardar la información en servidores fuera de Colombia.
+      Solo trabajamos con proveedores que protegen los datos de forma adecuada y los usan únicamente
+      para el servicio que nos prestan.
+    </p>
+
+    <h2>5. Datos guardados en tu dispositivo</h2>
+    <p>
+      Para hacerte más fácil la próxima compra, el sitio guarda en tu propio navegador (no en
+      nuestros servidores) tu bolsa, tus favoritos, tus datos de entrega y tus preferencias de
+      música. Puedes borrarlos cuando quieras desde la configuración de tu navegador. No usamos
+      cookies de publicidad ni de seguimiento.
+    </p>
+
+    <h2>6. Cuánto tiempo guardamos tus datos</h2>
+    <p>
+      Guardamos los datos de pedidos mientras sean necesarios para atender tu compra, la garantía y
+      las devoluciones, y durante el tiempo que exigen las normas contables y tributarias. Las
+      reseñas permanecen publicadas hasta que pidas retirarlas. Luego los datos se eliminan o se
+      anonimizan.
+    </p>
+
+    <h2>7. Tus derechos (Habeas Data)</h2>
+    <p>Según la Ley 1581 de 2012, tienes derecho a:</p>
+    <ul>
+      <li>Conocer, actualizar y corregir tus datos personales.</li>
+      <li>Pedir prueba de la autorización que nos diste.</li>
+      <li>Saber cómo hemos usado tus datos.</li>
+      <li>
+        Revocar tu autorización o pedir que borremos tus datos, cuando no exista una obligación
+        legal o contractual de conservarlos.
+      </li>
+      <li>
+        Presentar quejas ante la Superintendencia de Industria y Comercio (SIC), después de haber
+        hecho tu solicitud ante nosotros.
+      </li>
+      <li>Acceder gratis a tus datos personales.</li>
+    </ul>
+
+    <h2>8. Cómo ejercer tus derechos</h2>
+    <p>
+      Escríbenos por WhatsApp al {PHONE_DISPLAY} o al correo <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      , con tu nombre, tu número de celular y lo que necesitas.
+    </p>
+    <ul>
+      <li>
+        <strong>Consultas</strong> (saber qué datos tenemos): respondemos en máximo 10 días hábiles.
+        Si necesitamos más tiempo, te avisamos y respondemos en máximo 5 días hábiles más.
+      </li>
+      <li>
+        <strong>Reclamos</strong> (corregir, borrar o revocar): respondemos en máximo 15 días
+        hábiles. Si necesitamos más tiempo, te avisamos y respondemos en máximo 8 días hábiles más.
+      </li>
+    </ul>
+
+    <h2>9. Autorización</h2>
+    <p>
+      Al aceptar esta política en el formulario de compra, al enviar una reseña, al pedir un código
+      de descuento o al escribirnos por WhatsApp, nos autorizas a tratar tus datos para las
+      finalidades descritas aquí, según el artículo 9 de la Ley 1581 de 2012.
+    </p>
+
+    <h2>10. Seguridad</h2>
+    <p>
+      Usamos conexiones cifradas (HTTPS) y limitamos el acceso a tus datos a las personas que los
+      necesitan para atender tu pedido.
+    </p>
+
+    <h2>11. Cambios a esta política</h2>
+    <p>
+      Si cambiamos esta política, publicaremos la nueva versión en esta página con su fecha. Si el
+      cambio afecta las finalidades del tratamiento, te lo informaremos antes de aplicarlo.
+    </p>
+    <p>
+      Consulta también nuestros <a href="/terminos/">Términos y Condiciones</a>.
     </p>
   </LegalPage>
 </BaseLayout>

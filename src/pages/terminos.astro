@@ -1,143 +1,215 @@
 ---
+/*
+ * Términos y Condiciones. Rechtlicher Rahmen: Ley 1480 de 2011 (Estatuto del Consumidor),
+ * v. a. Art. 46–51 (Verkauf auf Distanz, Retracto, Reversión del pago), und Decreto 1074 de 2015.
+ * Versandpreis und Gratis-Schwelle stehen bewusst nicht als Zahl hier: Sie kommen aus nexomar
+ * und erscheinen im Checkout, bevor bezahlt wird.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { EMAIL, FREE_SHIPPING_THRESHOLD, PHONE_DISPLAY } from '../scripts/config.js';
-import { formatCOP } from '../scripts/utils/format.js';
+import { EMAIL, PHONE_DISPLAY } from '../scripts/config.js';
 import LegalPage from '../sections/legal/LegalPage.astro';
 ---
 
 <BaseLayout
   title="Términos y Condiciones | ScentScape"
-  description="Términos y condiciones de compra en ScentScape: pedidos, pagos, envíos, derecho de retracto y garantía."
+  description="Términos y condiciones de compra en ScentScape: pedidos, pago en línea con Bold, envíos, derecho de retracto, reversión del pago y garantía."
 >
-  <LegalPage title="Términos y" accent="Condiciones" updated="Última actualización: abril de 2026">
+  <LegalPage
+    title="Términos y"
+    accent="Condiciones"
+    updated="Última actualización: noviembre de 2026"
+  >
     <h2>1. Sobre ScentScape</h2>
     <p>
-      ScentScape es una tienda de fragancias con sede en Medellín, Colombia, operada por Sara y
-      Brayan. Ofrecemos fragancias inspiradas en perfumes de marcas de lujo a precios accesibles. Al
-      realizar un pedido o contactarnos, el cliente acepta estos términos.
+      ScentScape es una tienda de perfumería con sede en Medellín, Colombia, operada por Sara y
+      Brayan. Vendemos perfumes originales de marcas nacionales e internacionales a través de
+      nuestro sitio web y de WhatsApp. Al realizar un pedido, el cliente declara haber leído y
+      aceptado estos términos.
     </p>
 
-    <h2>2. Proceso de compra y formación del contrato</h2>
+    <h2>2. Cómo comprar</h2>
     <p>
-      ScentScape opera exclusivamente a través de pedidos por WhatsApp. El proceso es el siguiente:
+      El cliente elige sus productos, los agrega a la bolsa y completa el formulario de compra con
+      sus datos de contacto y de entrega. Antes de confirmar, el resumen del pedido muestra los
+      productos, el valor del envío (o si se acuerda después), los descuentos aplicados y el total a
+      pagar en pesos colombianos (COP). Luego el cliente elige una de dos formas de pago:
     </p>
     <ul>
       <li>
-        El cliente selecciona productos en nuestro sitio web y completa el formulario de pedido, que
-        genera un mensaje precompuesto enviado a nuestro WhatsApp.
+        <strong>Pago en línea con Bold:</strong> el cliente paga en la ventana segura de Bold sin
+        salir del sitio. El contrato de compraventa queda celebrado cuando Bold aprueba el pago. La
+        confirmación aparece en pantalla y Bold envía además un comprobante.
       </li>
       <li>
-        El pedido no constituye un contrato de compraventa hasta que ScentScape lo confirme
-        expresamente por escrito vía WhatsApp.
-      </li>
-      <li>
-        La confirmación incluirá el detalle de los productos, el precio total en pesos colombianos
-        (COP) y las instrucciones de pago.
-      </li>
-      <li>
-        En caso de que algún producto no esté disponible, informaremos al cliente antes de confirmar
-        el pedido.
+        <strong>Pedido por WhatsApp:</strong> el formulario genera un mensaje a nuestro WhatsApp. En
+        este caso el contrato queda celebrado cuando ScentScape confirma el pedido por escrito. El
+        cliente paga según la forma de pago acordada: antes del envío o contra entrega.
       </li>
     </ul>
     <p>
-      Nos reservamos el derecho de rechazar cualquier pedido por razones de stock, error en el
-      precio publicado u otras circunstancias justificadas.
+      Si un producto no está disponible después de recibido el pedido, se lo informaremos al cliente
+      y le ofreceremos otro producto o la devolución total del dinero pagado, a su elección.
     </p>
 
-    <h2>3. Precios y medios de pago</h2>
+    <h2>3. Precios</h2>
     <p>
-      Todos los precios publicados en nuestro sitio web están expresados en pesos colombianos (COP)
-      e incluyen IVA cuando aplica. Los precios pueden cambiar sin previo aviso; el precio
-      definitivo es el confirmado vía WhatsApp en el momento del pedido.
+      Todos los precios están expresados en pesos colombianos (COP) e incluyen los impuestos que
+      apliquen. El precio que vale es el que aparece en el resumen del pedido al momento de pagar.
+      Si por un error evidente un precio publicado es claramente distinto al real, se lo
+      informaremos al cliente antes de despachar; si no está de acuerdo, le devolvemos el total
+      pagado.
     </p>
-    <h3>Medios de pago aceptados</h3>
+
+    <h2>4. Medios de pago</h2>
+    <h3>Pago en línea con Bold</h3>
+    <p>
+      Los pagos en línea los procesa Bold (bold.co), una plataforma de pagos colombiana. Se puede
+      pagar con tarjeta de crédito o débito, PSE, Nequi o Botón Bancolombia. ScentScape no recibe ni
+      guarda los datos de tu tarjeta ni de tu cuenta bancaria: los ingresas directamente en Bold.
+    </p>
+    <ul>
+      <li>
+        Si el pago es rechazado o no se completa, el pedido queda pendiente y el cliente puede
+        intentarlo de nuevo o pedir por WhatsApp.
+      </li>
+      <li>
+        Si el pago no se completa dentro de las 3 horas siguientes, el pedido se anula
+        automáticamente y no se cobra nada.
+      </li>
+      <li>
+        Algunos medios, como PSE, pueden tardar unos minutos en confirmar el pago. El pedido se
+        prepara cuando el pago queda aprobado.
+      </li>
+    </ul>
+    <h3>Pago coordinado por WhatsApp</h3>
     <ul>
       <li>Nequi</li>
-      <li>Bancolombia (transferencia o botón de pago)</li>
-      <li>Efectivo (para entregas locales en Medellín)</li>
-      <li>[Otros medios según disponibilidad — completar]</li>
+      <li>Transferencia Bancolombia</li>
+      <li>Efectivo, solo para entregas locales en Medellín</li>
+      <li>
+        Pago contra entrega: pagas cuando recibes tu pedido. Las condiciones se confirman por
+        WhatsApp al coordinar el envío.
+      </li>
     </ul>
-    <p>
-      El pago deberá realizarse según las indicaciones comunicadas por WhatsApp. El envío se
-      coordina una vez confirmado el pago.
-    </p>
 
-    <h2>4. Envíos</h2>
-    <p>
-      Realizamos envíos a todo Colombia a través de operadores logísticos. Los tiempos de entrega
-      estimados y los costos de envío se informan en el momento de confirmar el pedido por WhatsApp.
-    </p>
-    <p>
-      El envío es gratuito para pedidos que superen {formatCOP(FREE_SHIPPING_THRESHOLD)} COP. Para
-      pedidos por debajo de este valor, se cobrará un costo de envío que será informado al cliente
-      antes de confirmar el pedido.
-    </p>
-    <p>
-      ScentScape no se responsabiliza por demoras causadas por terceros (operadores logísticos,
-      situaciones de fuerza mayor) una vez el paquete haya sido despachado.
-    </p>
-
-    <h2>5. Derecho de retracto</h2>
-    <p>
-      De conformidad con el Artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor de
-      Colombia), el cliente tiene derecho a retractarse de la compra dentro de los cinco (5) días
-      hábiles siguientes a la entrega del producto, sin necesidad de justificación.
-    </p>
-    <h3>Condiciones para ejercer el retracto</h3>
+    <h2>5. Códigos de descuento y gift cards</h2>
     <ul>
       <li>
-        El producto debe estar en perfectas condiciones, sin uso y con su empaque o sello original
-        sin abrir.
+        Los códigos de descuento tienen las condiciones que se indican con cada código (vigencia,
+        monto mínimo, productos incluidos). No son acumulables entre sí, salvo que se indique lo
+        contrario.
       </li>
       <li>
-        Los perfumes cuyo precinto o sello de seguridad haya sido roto o manipulado no serán
-        aceptados por razones de higiene, conforme a las excepciones contempladas por la ley.
+        Las gift cards se activan cuando su pago queda aprobado. Su vigencia se indica al comprarla
+        y en la propia gift card. Se pueden usar en una o varias compras hasta agotar el saldo.
       </li>
       <li>
-        El cliente deberá notificar su intención de retracto por WhatsApp dentro del plazo indicado.
+        El saldo de una gift card no se puede cambiar por dinero en efectivo. Si se pierde el
+        código, escríbenos y lo revisamos con los datos de la compra.
+      </li>
+    </ul>
+
+    <h2>6. Envíos</h2>
+    <p>
+      Enviamos a todo Colombia a través de empresas de transporte. El costo del envío y, si aplica,
+      el valor de compra a partir del cual el envío es gratis se muestran en el resumen del pedido
+      antes de pagar. Cuando el envío se acuerda por WhatsApp, se informa su costo antes de
+      despachar.
+    </p>
+    <p>
+      Despachamos los pedidos pagados (o confirmados con pago contra entrega) lo antes posible e
+      informamos al cliente el tiempo estimado de entrega. Salvo que se acuerde otra cosa, el pedido
+      se entrega a más tardar dentro de los 30 días calendario siguientes a la compra, como lo exige
+      el Estatuto del Consumidor. Si no podemos cumplir, el cliente puede pedir la devolución total
+      de lo pagado.
+    </p>
+
+    <h2>7. Derecho de retracto</h2>
+    <p>
+      Según el artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor), en las compras a
+      distancia el cliente puede retractarse dentro de los cinco (5) días hábiles siguientes a la
+      entrega del producto, sin tener que justificarlo.
+    </p>
+    <h3>Condiciones</h3>
+    <ul>
+      <li>
+        El producto debe devolverse en el mismo estado en que se recibió: sin usar, con su empaque
+        original y con el sello de fábrica intacto.
       </li>
       <li>
-        Los gastos de devolución corren por cuenta del cliente, salvo que el producto presente un
-        defecto de fábrica.
+        Un perfume abierto o con el sello roto es un bien de uso personal, por lo que la ley lo
+        excluye del derecho de retracto.
+      </li>
+      <li>Para retractarte, escríbenos por WhatsApp o correo dentro de ese plazo.</li>
+      <li>
+        Los costos de transporte de la devolución corren por cuenta del cliente, salvo que el
+        producto tenga un defecto o no sea el que se pidió.
       </li>
     </ul>
     <p>
-      Una vez recibida y verificada la devolución, reembolsaremos el valor pagado en un plazo máximo
-      de 30 días calendario, por el mismo medio de pago utilizado.
+      Cuando recibamos y revisemos el producto, devolveremos todo el dinero pagado, sin descuentos
+      ni retenciones, en un plazo máximo de 30 días calendario. Lo pagado con Bold se devuelve por
+      el mismo medio de pago.
     </p>
 
-    <h2>6. Garantía y productos defectuosos</h2>
+    <h2>8. Reversión del pago</h2>
     <p>
-      Si el producto llega en condiciones diferentes a las pactadas (dañado, con fuga o incorrecto),
-      el cliente deberá notificarnos por WhatsApp dentro de las 48 horas siguientes a la recepción,
-      adjuntando evidencia fotográfica o en video. En ese caso, asumiremos los costos de reenvío y
-      reposición o reembolso, según corresponda.
+      Según el artículo 51 de la Ley 1480 de 2011, si pagaste con tarjeta, PSE u otro medio
+      electrónico, puedes pedir que se reverse el pago cuando:
     </p>
-
-    <h2>7. Propiedad intelectual</h2>
+    <ul>
+      <li>fuiste víctima de fraude o el pago se hizo sin tu autorización;</li>
+      <li>no recibiste el producto;</li>
+      <li>el producto no es el que pediste o tiene un defecto.</li>
+    </ul>
     <p>
-      Las fragancias de ScentScape son productos propios inspirados en aromas de marcas de lujo. No
-      somos representantes, distribuidores ni afiliados de ninguna marca de lujo mencionada como
-      referencia. Cualquier similitud de nombre o aroma tiene únicamente propósito informativo para
-      el consumidor.
+      Para pedirlo, escríbenos dentro de los cinco (5) días hábiles siguientes a cuando supiste del
+      fraude o recibiste el producto (o debiste recibirlo), y avisa en el mismo plazo a tu banco o a
+      la entidad del medio de pago. Si recibiste el producto, debes devolverlo en las mismas
+      condiciones en que llegó.
     </p>
 
-    <h2>8. Modificaciones</h2>
+    <h2>9. Garantía</h2>
     <p>
-      ScentScape se reserva el derecho de modificar estos términos en cualquier momento. Los cambios
-      serán publicados en esta página con indicación de la fecha de actualización. El uso continuado
-      del sitio web o la realización de un nuevo pedido implican la aceptación de los términos
-      vigentes.
+      Todos los productos tienen la garantía legal del Estatuto del Consumidor. Si un producto llega
+      dañado, con fugas o no es el que pediste, escríbenos con fotos o un video del paquete y del
+      producto. Para daños causados por el transporte te pedimos avisarnos dentro de las 48 horas
+      siguientes a la entrega, para poder reclamar a la transportadora. Esto no limita tu garantía
+      legal. Según el caso, cambiamos el producto, lo reparamos o devolvemos el dinero, y asumimos
+      los costos de envío.
     </p>
 
-    <h2>9. Contacto</h2>
-    <p>Para cualquier consulta relacionada con estos términos, puedes escribirnos a:</p>
+    <h2>10. Marcas</h2>
+    <p>
+      Los nombres, marcas y logotipos de los perfumes pertenecen a sus respectivos titulares y se
+      usan solo para identificar los productos que vendemos. ScentScape es un comercio independiente
+      y no es representante oficial de esas marcas.
+    </p>
+
+    <h2>11. Peticiones, quejas y reclamos</h2>
+    <p>
+      Puedes enviarnos cualquier petición, queja o reclamo por WhatsApp o correo (ver contacto). Te
+      responderemos en un plazo máximo de 15 días hábiles. Si no quedas conforme, puedes acudir a la
+      Superintendencia de Industria y Comercio (www.sic.gov.co).
+    </p>
+
+    <h2>12. Cambios a estos términos</h2>
+    <p>
+      Podemos actualizar estos términos. Los cambios se publican en esta página con su fecha. A cada
+      compra se le aplican los términos vigentes al momento de hacer el pedido.
+    </p>
+
+    <h2>13. Contacto</h2>
     <ul>
       <li>WhatsApp: {PHONE_DISPLAY}</li>
       <li>
         Correo: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
       </li>
+      <li>Ciudad: Medellín, Colombia</li>
     </ul>
+    <p>
+      Consulta también nuestra <a href="/privacidad/">Política de Privacidad</a>.
+    </p>
   </LegalPage>
 </BaseLayout>
 
