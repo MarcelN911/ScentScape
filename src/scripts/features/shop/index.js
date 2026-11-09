@@ -1,6 +1,7 @@
 /* Seite "Productos": Rad, Noten, Filter, Raster oder Index mit Vorschau. */
 import { SCENT_FAMILIES } from '../../../data/scent.js';
 import { renderActiveFilters } from './active-filters.js';
+import { bindAutoMore } from './auto-more.js';
 import { bindControls } from './controls.js';
 import { filterEntries } from './filter.js';
 import { initMarquee } from '../../effects/marquee.js';
@@ -49,6 +50,7 @@ function createShop(root) {
 
 function bindAll(shop, signal) {
   bindControls(shop, signal);
+  bindAutoMore(shop, signal);
   bindReturn(shop, signal);
   bindPreview(shop, signal);
   bindMobileFilters(shop.root, signal);
