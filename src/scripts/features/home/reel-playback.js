@@ -1,10 +1,13 @@
 /* Abspielen im Karussell: nur das vordere Video läuft, stumm, und nur wenn der Bereich sichtbar ist. */
 import { VIDEO_FALLBACK_MS } from '../../../data/home.js';
+import { attachSource, warmUp } from './reel-preload.js';
 import { videoOf } from './reel-view.js';
 
 const START_AT = 0.6;
 
 function playMuted(video) {
+  /* Ist man schneller da als das Vorladen, bekommt das Video hier seine Adresse */
+  attachSource(video);
   video.muted = true;
   if (video.ended) video.currentTime = START_AT;
   video.play().catch(() => {});
@@ -17,6 +20,8 @@ export function syncPlayback(parts, state) {
     if (shouldPlay) playMuted(video);
     else video.pause();
   });
+  /* Während eins läuft, puffert schon das nächste */
+  if (state.visible) warmUp(videoOf(parts, (state.index + 1) % parts.cards.length));
 }
 
 function showProgress(parts, video) {

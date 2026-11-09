@@ -9,7 +9,8 @@ import { VIDEOS } from '../../../data/home.js';
 import { easeOut, onScrollProgress, PINNED_RANGE } from '../../effects/scroll.js';
 import { clamp } from '../../utils/motion.js';
 import { bindVideoEvents, syncPlayback } from './reel-playback.js';
-import { findReelParts, renderReel } from './reel-view.js';
+import { preloadReel } from './reel-preload.js';
+import { findReelParts, renderReel, videoOf } from './reel-view.js';
 import { createStoryModal, STACKED_QUERY } from './story-modal.js';
 import { createVideoModal } from './video-modal.js';
 
@@ -123,6 +124,8 @@ export function initReel(signal) {
   section.addEventListener('click', (event) => handleClick(reel, event), { signal });
   bindVideoEvents(reel.parts, reel.state, () => select(reel, reel.state.index + 1), signal);
   bindSwipe(reel, signal);
+  const videos = reel.parts.cards.map((card, index) => videoOf(reel.parts, index));
+  preloadReel(section, videos, signal);
   select(reel, 0);
   return watchVisibility(reel);
 }
