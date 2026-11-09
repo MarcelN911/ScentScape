@@ -1,1 +1,0 @@
-var e=`6a0de7a797ebb49fffb11079`,t=`https://nexomar.co`,n=`573218101882`,r=5e5,i=5e4,a=5e6;export{e as a,i,r as n,n as o,a as r,t};

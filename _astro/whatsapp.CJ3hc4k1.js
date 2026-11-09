@@ -1,1 +1,0 @@
-import{o as e}from"./config.N7ULm52T.js";function t(t){return`https://wa.me/${e}?text=${encodeURIComponent(t)}`}function n(e){return`https://wa.me/?text=${encodeURIComponent(e)}`}export{t as n,n as t};
