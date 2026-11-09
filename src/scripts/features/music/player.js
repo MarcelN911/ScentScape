@@ -1,6 +1,6 @@
 /*
- * Bedienung des Players. Wer Musik nicht ausgeschaltet hat, hört sie ab dem ersten Klick oder Tastendruck
- * irgendwo auf der Seite (Browser erlauben Ton erst nach einer Nutzeraktion).
+ * Bedienung des Players. Wer Musik nicht ausgeschaltet hat, hört sie sofort, wenn der Browser es
+ * erlaubt, sonst ab dem ersten Klick oder Tipp irgendwo auf der Seite.
  */
 import * as player from './audio.js';
 import { markVolumeSupport, renderPlayer, renderTime, setListOpen } from './view.js';
@@ -41,8 +41,9 @@ function bindList(root) {
   root.querySelectorAll('[data-player-list-toggle]').forEach((button) => {
     button.addEventListener('click', () => setListOpen(root, !root.hasAttribute('data-list-open')));
   });
+  /* pointerdown statt click: iPhones melden Tipps auf leere Flächen nicht als click */
   document.addEventListener(
-    'click',
+    'pointerdown',
     (event) => root.contains(event.target) || setListOpen(root, false),
   );
   document.addEventListener(
@@ -54,17 +55,45 @@ function bindList(root) {
 /* Klicks rund um die Videos starten die Musik nicht: Sie würde sonst nach dem Video loslaufen */
 const NO_AUTOSTART = '[data-reel], [data-video-modal], [data-story-modal]';
 
-function startOnFirstInteraction(root, render) {
+/*
+ * Welche Aktionen Ton erlauben, ist je Gerät verschieden: Maus beim Drücken (pointerdown),
+ * Finger erst beim Loslassen (pointerup), Tastatur bei keydown. Deshalb auf alle drei hören.
+ * Wischen zum Scrollen zählt auf dem Handy nicht. Klappt der Start nicht, beim nächsten Tipp nochmal.
+ */
+const START_EVENTS = ['pointerdown', 'pointerup', 'keydown'];
+
+/* Maus: nur pointerdown zählt. Finger/Stift: nur pointerup. */
+function allowsSound(event) {
+  if (event.type === 'keydown') return true;
+  return (event.type === 'pointerdown') === (event.pointerType === 'mouse');
+}
+
+/* Klicks im Player selbst und rund um die Videos zählen nicht */
+const isIgnored = (root, event) =>
+  root.contains(event.target) || Boolean(event.target.closest?.(NO_AUTOSTART));
+
+/*
+ * Musik startet sofort beim Laden der Seite, wenn der Browser das erlaubt (manche tun es,
+ * z. B. bei Besuchern, die schon öfter Ton auf der Seite gehört haben). Sonst beim ersten Tipp.
+ */
+async function startMusic(root, render) {
   if (!player.wantsMusic()) return;
-  const start = (event) => {
-    if (root.contains(event.target) || event.target.closest?.(NO_AUTOSTART)) return;
-    removeEventListener('pointerdown', start, true);
-    removeEventListener('keydown', start, true);
-    if (!music.playing) player.play();
+  const started = await player.play();
+  render();
+  if (!started) startOnFirstInteraction(root, render);
+}
+
+function startOnFirstInteraction(root, render) {
+  const stop = () => START_EVENTS.forEach((type) => removeEventListener(type, start, true));
+  async function start(event) {
+    /* Schon an (z. B. über den Play-Knopf) oder bewusst ausgeschaltet: nicht mehr automatisch starten */
+    if (music.playing || !player.wantsMusic()) return stop();
+    if (isIgnored(root, event) || !allowsSound(event)) return;
+    const started = await player.play();
     render();
-  };
-  addEventListener('pointerdown', start, true);
-  addEventListener('keydown', start, true);
+    if (started) stop();
+  }
+  START_EVENTS.forEach((type) => addEventListener(type, start, true));
 }
 
 export function initMusicPlayer() {
@@ -75,9 +104,9 @@ export function initMusicPlayer() {
   bindSound(root, render);
   bindList(root);
   markVolumeSupport(root);
-  startOnFirstInteraction(root, render);
   /* Titelwechsel am Ende eines Songs oder Anhalten von außen: Anzeige neu zeichnen */
   player.onChange(render);
+  startMusic(root, render);
   setInterval(() => renderTime(root), 1000);
   render();
 }
