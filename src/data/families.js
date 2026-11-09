@@ -2,20 +2,16 @@
  * Die fünf Duftfamilien der Vorlage.
  * theme: Bühnenfarbe der Produktkarten (oro, rosa, vino)
  * glow: Farbe des Lichtscheins im Familien-Bereich der Startseite
- * featured: Slug des Parfums, das die Familie auf der Startseite zeigt
+ * featured: Slug des Parfums, das die Familie auf der Startseite bevorzugt zeigt
+ *   (seine "Foto sin fondo" aus dem Panel, siehe familyBottles in catalog/queries.js)
  * notes: typische Noten, wenn ein Produkt noch keine eigene Pyramide hat
  * accent: Farbe des Lichtscheins im Bereich "Familias olfativas" der Startseite
- * image: Flasche, die die Familie auf der Startseite zeigt (Cloudinary)
  * description: Text neben der Flasche
  */
-const CDN = 'https://res.cloudinary.com/dzxcpxny0/image/upload/';
-
 export const FAMILIES = [
   {
     id: 'Especiada',
     accent: '#F0BE91',
-    image: `${CDN}v1780259113/nexomar/products/gvkn8sgzyk89yobusnop.png`,
-    bottle: 'KHAMRAH',
     description:
       'Fragancias cálidas e intensas con notas como canela, pimienta, cardamomo o clavo. Transmiten carácter y sensualidad.',
     glow: '#f0be91',
@@ -28,8 +24,6 @@ export const FAMILIES = [
   {
     id: 'Floral',
     accent: '#E8A7B4',
-    image: `${CDN}v1780259870/nexomar/products/jg9lfcy0u9ijrprnft4u.png`,
-    bottle: 'AMETHYST',
     description:
       'La familia más clásica: rosa, jazmín, peonía o azahar. Aromas románticos, femeninos y luminosos.',
     glow: '#61031b',
@@ -42,8 +36,6 @@ export const FAMILIES = [
   {
     id: 'Amaderada',
     accent: '#531019',
-    image: `${CDN}v1780129567/nexomar/products/v2drbrjxce0sqi6gf0fh.png`,
-    bottle: 'AMBER OUD RUBY',
     description:
       'Notas de sándalo, cedro, vetiver o pachulí. Elegantes, profundas y de gran permanencia.',
     glow: '#d4af7d',
@@ -56,8 +48,6 @@ export const FAMILIES = [
   {
     id: 'Fresca',
     accent: '#F0BE91',
-    image: `${CDN}v1780129590/nexomar/products/lhwwxkongihno3wcmsjp.png`,
-    bottle: 'BOSS BOTTLED TONIC',
     description:
       'Cítricos, notas acuáticas y verdes como bergamota, limón o menta. Ligeras, limpias e ideales para el día.',
     glow: '#f0be91',
@@ -70,9 +60,6 @@ export const FAMILIES = [
   {
     id: 'Dulce',
     accent: '#E8A7B4',
-    /* Lokal gespeichert: das Bild wurde in Cloudinary gelöscht */
-    image: '/assets/img/familias/dulce.png',
-    bottle: 'CLOUD PINK',
     description:
       'También llamada gourmand: vainilla, caramelo, frutos rojos o praliné. Envolventes, cálidas y adictivas.',
     glow: '#f0be91',

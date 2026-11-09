@@ -13,6 +13,8 @@ function identityOf(raw) {
     brand: fields.readBrand(raw),
     category: raw.categoria ?? '',
     images: raw.imagenes ?? [],
+    /* Freigestelltes Foto (Panel: "Foto sin fondo"), nur für Sections der Startseite */
+    cutout: raw.imagenSinFondo || '',
     description: raw.descripcion ?? '',
     plainDescription: plainDescription(raw.descripcion),
     hasCoverPhoto: fields.readHasCoverPhoto(raw),
