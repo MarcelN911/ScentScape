@@ -21,16 +21,34 @@ function ratingOf(reviews) {
   return { '@type': 'AggregateRating', ratingValue: value, reviewCount: reviews.length };
 }
 
-export function productSchema(product, reviews) {
-  return JSON.stringify({
-    '@context': 'https://schema.org',
+function productOf(product, reviews) {
+  return {
     '@type': 'Product',
     name: product.name,
-    image: product.images,
+    image: product.images.map((image) => (image.startsWith('/') ? SITE_URL + image : image)),
     description: product.plainDescription || product.name,
     brand: product.brand ? { '@type': 'Brand', name: product.brand } : undefined,
     url: `${SITE_URL}/producto/${product.slug}/`,
     offers: offersOf(product),
     aggregateRating: ratingOf(reviews),
+  };
+}
+
+const crumb = ([name, item], index) => ({ '@type': 'ListItem', position: index + 1, name, item });
+
+/* Brotkrumen-Pfad: Google zeigt dann "Inicio › Perfumes › Name" statt der langen Adresse */
+function breadcrumbOf(product) {
+  const steps = [
+    ['Inicio', `${SITE_URL}/`],
+    ['Perfumes', `${SITE_URL}/productos/`],
+    [product.name, `${SITE_URL}/producto/${product.slug}/`],
+  ];
+  return { '@type': 'BreadcrumbList', itemListElement: steps.map(crumb) };
+}
+
+export function productSchema(product, reviews) {
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [productOf(product, reviews), breadcrumbOf(product)],
   });
 }

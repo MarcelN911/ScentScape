@@ -6,6 +6,7 @@ import { relatedTo } from '../../scripts/catalog/queries.js';
 import { reviewsForProduct } from '../../scripts/catalog/reviews.js';
 import { labelOf } from '../../scripts/catalog/theme.js';
 import { productSchema } from '../../scripts/seo/product-schema.js';
+import { productTitle, shortText } from '../../scripts/seo/meta-text.js';
 import { imageUrl } from '../../scripts/utils/image.js';
 import ProductBar from '../../components/product/ProductBar.astro';
 import ProductInfo from '../../sections/product/ProductInfo.astro';
@@ -24,11 +25,11 @@ const catalog = await getCatalog();
 const images = await getNoteImages();
 const reviews = reviewsForProduct(await getReviews(), product);
 const related = relatedTo(product, catalog);
-const summary = product.plainDescription.slice(0, 150) || `${product.name} en ScentScape.`;
+const summary = shortText(product.plainDescription, 155) || `${product.name} en ScentScape.`;
 ---
 
 <BaseLayout
-  title={`${product.name} — ${labelOf(product)} | ScentScape Medellín`}
+  title={productTitle(product.name, labelOf(product))}
   description={summary}
   image={imageUrl(product.images[0], 1200)}
 >
