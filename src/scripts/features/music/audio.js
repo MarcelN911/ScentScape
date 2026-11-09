@@ -50,10 +50,19 @@ function savePosition(index, time) {
 
 const saved = readPosition();
 
+/* Manche Browser (blockierte Website-Daten) werfen schon beim Zugriff auf sessionStorage einen Fehler */
+function session() {
+  try {
+    return sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
 export const music = {
   playing: false,
   muted: read('ss_music_muted', '0') === '1',
-  volume: Number(readJson(sessionStorage, VOLUME_KEY, DEFAULT_VOLUME)),
+  volume: Number(readJson(session(), VOLUME_KEY, DEFAULT_VOLUME)),
   index: saved.index,
   elapsed: saved.time,
 };
@@ -75,7 +84,9 @@ let element = null;
 /* Das Ohr hört Lautstärke nicht linear: quadriert klingt 50 % am Regler auch wie die Hälfte */
 const loudness = (percent) => (percent / 100) ** 2;
 
+/* iPhones ignorieren element.volume, deshalb zum Stummschalten zusätzlich element.muted */
 function applyVolume() {
+  element.muted = music.muted;
   element.volume = music.muted ? 0 : loudness(music.volume);
 }
 
@@ -103,26 +114,40 @@ function bindElement() {
   element.addEventListener('pause', onPause);
 }
 
+/* Nach einem Neuladen an der gemerkten Stelle weitermachen. Ein Titelwechsel setzt das auf 0. */
+let resumeAt = saved.time;
+
+function resume() {
+  if (resumeAt) element.currentTime = resumeAt;
+  resumeAt = 0;
+}
+
 function audio() {
   if (element) return element;
   element = new Audio(currentTrack().src);
   element.preload = 'none';
-  /* Nach einem Neuladen an der gemerkten Stelle weitermachen, sobald der Song geladen ist */
-  const resume = () => (element.currentTime = saved.time);
-  if (saved.time) element.addEventListener('loadedmetadata', resume, { once: true });
+  element.addEventListener('loadedmetadata', resume);
   bindElement();
   applyVolume();
   return element;
 }
 
-/* Abspielen; blockiert der Browser (noch keine Berührung der Seite), gilt es als pausiert */
+/*
+ * Abspielen. Gibt true zurück, wenn es geklappt hat.
+ * Blockiert der Browser (noch keine Berührung der Seite), gilt es als pausiert.
+ * Wird ein Start durch einen neuen abgelöst (schnell "Siguiente" getippt), läuft die Musik
+ * trotzdem: Dann ist das Element nicht pausiert und die Anzeige bleibt auf "sonando".
+ */
 function startAudio() {
   music.playing = true;
-  audio()
+  return audio()
     .play()
+    .then(() => true)
     .catch(() => {
+      if (!element.paused) return false;
       music.playing = false;
       notify();
+      return false;
     });
 }
 
@@ -132,7 +157,7 @@ let heldForVideo = false;
 export function play() {
   heldForVideo = false;
   save('ss_music', 1);
-  startAudio();
+  return startAudio();
 }
 
 export function pause() {
@@ -144,6 +169,7 @@ export function pause() {
 export function setTrack(index) {
   music.index = (index + TRACKS.length) % TRACKS.length;
   music.elapsed = 0;
+  resumeAt = 0;
   savePosition(music.index, 0);
   switching = music.playing;
   audio().src = currentTrack().src;
@@ -159,7 +185,7 @@ export function setMuted(muted) {
 
 export function setVolume(percent) {
   music.volume = percent;
-  writeJson(sessionStorage, VOLUME_KEY, percent);
+  writeJson(session(), VOLUME_KEY, percent);
   setMuted(false);
 }
 

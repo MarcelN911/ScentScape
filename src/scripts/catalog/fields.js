@@ -26,10 +26,20 @@ export function readGender(raw) {
   return GENDERS[toPlain(readGenders(raw)[0])] ?? 'U';
 }
 
+/* Panel: "Familias olfativas" landet in perfume.familias (Liste). Die erste bekannte zählt. */
 export function readFamily(raw) {
-  const value = raw.familia ?? raw.familiaOlfativa ?? variantOptions(raw, 'Familia')[0];
-  const match = FAMILIES.find((family) => toPlain(family.id) === toPlain(value));
-  return match?.id ?? null;
+  const values = [
+    ...(raw.perfume?.familias ?? []),
+    raw.familia,
+    raw.familiaOlfativa,
+    variantOptions(raw, 'Familia')[0],
+  ];
+  for (const value of values) {
+    const name = typeof value === 'object' ? value?.nombre : value;
+    const match = FAMILIES.find((family) => toPlain(family.id) === toPlain(name));
+    if (match) return match.id;
+  }
+  return null;
 }
 
 function toList(value) {
