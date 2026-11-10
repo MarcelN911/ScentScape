@@ -7,6 +7,7 @@
  */
 import { burgerCircle, circleClip, EASE_CIRCLE } from '../utils/burger-circle.js';
 import { prefersReducedMotion } from '../utils/motion.js';
+import { blockScroll } from '../utils/scroll-lock.js';
 
 /* Gleiche Zeiten wie das Menü (MobileMenu.astro): öffnen 0,9 s, schließen 0,75 s */
 const COVER_MS = 900;
@@ -41,17 +42,25 @@ function shrinkRim(curtain, circle, timing) {
   rim.animate(frames, timing);
 }
 
+/* Erst wenn der Kreis ganz weg ist, darf gescrollt werden. Abgebrochen (neuer Seitenwechsel)? Dann bleibt es gesperrt. */
 async function reveal(curtain) {
   curtain.dataset.mode = document.body.dataset.curtainMode ?? 'line';
   const circle = burgerCircle();
   const timing = { duration: REVEAL_MS, delay: HOLD_MS, easing: EASE_CIRCLE, fill: 'both' };
   if (curtain.dataset.mode !== 'none') shrinkRim(curtain, circle, timing);
-  await curtain.animate(clipFrames(circle, false), timing).finished;
+  const done = await curtain.animate(clipFrames(circle, false), timing).finished.then(
+    () => true,
+    () => false,
+  );
+  if (done) blockScroll('curtain', false);
 }
 
 /* Die Startseite hat ein eigenes Intro, dort ist der Vorhang beim ersten Laden sofort weg. */
 function revealFirstPage(curtain) {
-  if (document.body.dataset.curtainMode !== 'none') return reveal(curtain);
+  if (document.body.dataset.curtainMode !== 'none') {
+    blockScroll('curtain', true);
+    return reveal(curtain);
+  }
   curtain.animate(clipFrames(burgerCircle(), false), { duration: 1, fill: 'forwards' });
 }
 
@@ -68,6 +77,7 @@ function coverBeforeLoading(curtain, event) {
     reset(curtain);
     curtain.dataset.target = event.to.pathname === '/' ? 'home' : 'page';
     const timing = { duration: COVER_MS, easing: EASE_CIRCLE, fill: 'forwards' };
+    blockScroll('curtain', true);
     const cover = curtain.animate(clipFrames(burgerCircle(), true), timing).finished;
     await Promise.all([cover, loadPage()]);
   };

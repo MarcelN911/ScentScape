@@ -7,10 +7,13 @@
  * notes: typische Noten, wenn ein Produkt noch keine eigene Pyramide hat
  * accent: Farbe des Lichtscheins im Bereich "Familias olfativas" der Startseite
  * description: Text neben der Flasche
+ * nexomar: Familien aus dem nexomar-Panel (perfume.familias), die zu dieser Familie zählen.
+ *   nexomar kennt 16 Familien, die Seite 5. Hat ein Produkt mehrere, zählt die erste passende.
  */
 export const FAMILIES = [
   {
     id: 'Especiada',
+    nexomar: ['Especiada', 'Oriental'],
     accent: '#F0BE91',
     description:
       'Fragancias cálidas e intensas con notas como canela, pimienta, cardamomo o clavo. Transmiten carácter y sensualidad.',
@@ -23,6 +26,7 @@ export const FAMILIES = [
   },
   {
     id: 'Floral',
+    nexomar: ['Floral', 'Atalcada', 'Almizclada'],
     accent: '#E8A7B4',
     description:
       'La familia más clásica: rosa, jazmín, peonía o azahar. Aromas románticos, femeninos y luminosos.',
@@ -35,6 +39,7 @@ export const FAMILIES = [
   },
   {
     id: 'Amaderada',
+    nexomar: ['Amaderada', 'Chipre', 'Cuero', 'Ambarada'],
     accent: '#531019',
     description:
       'Notas de sándalo, cedro, vetiver o pachulí. Elegantes, profundas y de gran permanencia.',
@@ -47,6 +52,7 @@ export const FAMILIES = [
   },
   {
     id: 'Fresca',
+    nexomar: ['Fresca', 'Cítrica', 'Verde', 'Acuática', 'Aromática', 'Fougère'],
     accent: '#F0BE91',
     description:
       'Cítricos, notas acuáticas y verdes como bergamota, limón o menta. Ligeras, limpias e ideales para el día.',
@@ -59,6 +65,7 @@ export const FAMILIES = [
   },
   {
     id: 'Dulce',
+    nexomar: ['Dulce', 'Gourmand', 'Frutal'],
     accent: '#E8A7B4',
     description:
       'También llamada gourmand: vainilla, caramelo, frutos rojos o praliné. Envolventes, cálidas y adictivas.',

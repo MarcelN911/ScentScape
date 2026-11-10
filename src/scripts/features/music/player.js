@@ -56,16 +56,17 @@ function bindList(root) {
 const NO_AUTOSTART = '[data-reel], [data-video-modal], [data-story-modal]';
 
 /*
- * Welche Aktionen Ton erlauben, ist je Gerät verschieden: Maus beim Drücken (pointerdown),
- * Finger erst beim Loslassen (pointerup), Tastatur bei keydown. Deshalb auf alle drei hören.
+ * Welche Aktionen Ton erlauben, ist je Browser verschieden: Maus beim Drücken (pointerdown),
+ * Finger beim Loslassen (pointerup, touchend), dazu click und Tastendruck. Deshalb auf alle hören.
  * Wischen zum Scrollen zählt auf dem Handy nicht. Klappt der Start nicht, beim nächsten Tipp nochmal.
  */
-const START_EVENTS = ['pointerdown', 'pointerup', 'keydown'];
+const START_EVENTS = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
 
-/* Maus: nur pointerdown zählt. Finger/Stift: nur pointerup. */
+/* Maus: nur pointerdown zählt (pointerup danach wäre doppelt). Finger/Stift: nur pointerup. */
 function allowsSound(event) {
-  if (event.type === 'keydown') return true;
-  return (event.type === 'pointerdown') === (event.pointerType === 'mouse');
+  if (event.type === 'pointerdown') return event.pointerType === 'mouse';
+  if (event.type === 'pointerup') return event.pointerType !== 'mouse';
+  return true;
 }
 
 /* Klicks im Player selbst und rund um die Videos zählen nicht */
@@ -83,11 +84,16 @@ async function startMusic(root, render) {
   if (!started) startOnFirstInteraction(root, render);
 }
 
+/*
+ * Jeder Tipp versucht zu starten, bis ein Versuch wirklich klappt. Ein Tipp löst mehrere
+ * Ereignisse kurz hintereinander aus (pointerup, touchend, click): Jedes darf es versuchen,
+ * denn je nach Handy erlaubt nur eines davon Ton. Aufgehört wird erst, wenn Musik läuft
+ * oder der Besucher sie selbst ausgeschaltet hat.
+ */
 function startOnFirstInteraction(root, render) {
   const stop = () => START_EVENTS.forEach((type) => removeEventListener(type, start, true));
   async function start(event) {
-    /* Schon an (z. B. über den Play-Knopf) oder bewusst ausgeschaltet: nicht mehr automatisch starten */
-    if (music.playing || !player.wantsMusic()) return stop();
+    if (!player.wantsMusic()) return stop();
     if (isIgnored(root, event) || !allowsSound(event)) return;
     const started = await player.play();
     render();

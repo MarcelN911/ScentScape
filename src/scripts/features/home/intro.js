@@ -7,7 +7,7 @@
  */
 import { burgerCircle, circleClip, EASE_CIRCLE } from '../../utils/burger-circle.js';
 import { prefersReducedMotion } from '../../utils/motion.js';
-import { lockScroll } from '../../utils/scroll-lock.js';
+import { blockScroll } from '../../utils/scroll-lock.js';
 
 const HOLD = 3000;
 /* Gleiche Zeit wie beim Schließen des Menüs */
@@ -21,7 +21,7 @@ function cameFromOtherPage() {
 
 function finish(parts, state) {
   clearTimeout(state.timer);
-  lockScroll('intro', false);
+  blockScroll('intro', false);
   parts.video?.style.removeProperty('transform');
   parts.intro.classList.add('is-done');
   parts.hero?.classList.add('is-in');
@@ -60,7 +60,7 @@ export function initIntro(signal) {
   const parts = findParts(intro);
   const state = { closing: false, timer: 0 };
   if (prefersReducedMotion()) return finish(parts, state);
-  lockScroll('intro', true);
+  blockScroll('intro', true);
   parts.video?.style.setProperty('transform', VIDEO_ZOOM);
   lightUp(intro);
   state.timer = setTimeout(() => close(parts, state), HOLD);

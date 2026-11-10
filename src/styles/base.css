@@ -84,6 +84,26 @@ html.is-locked body {
   overscroll-behavior: none;
 }
 
+/* Intro der Startseite: schon gesperrt, bevor das JavaScript läuft (danach übernimmt scroll-lock.js) */
+html.js:has([data-intro]:not(.is-done)),
+html.js:has([data-intro]:not(.is-done)) body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/*
+ * Kein automatisches Hineinzoomen beim Antippen eines Feldes: Safari auf dem iPhone zoomt,
+ * sobald die Schrift im Feld kleiner als 16px ist. Gilt nur für Touch-Geräte, am Computer
+ * bleiben die Felder, wie sie gestaltet sind. Zoomen mit zwei Fingern geht weiterhin.
+ */
+@media (hover: none) and (pointer: coarse) {
+  input:not([type='checkbox'], [type='radio'], [type='range'], [type='button'], [type='submit']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

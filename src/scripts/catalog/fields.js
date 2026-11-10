@@ -26,7 +26,15 @@ export function readGender(raw) {
   return GENDERS[toPlain(readGenders(raw)[0])] ?? 'U';
 }
 
-/* Panel: "Familias olfativas" landet in perfume.familias (Liste). Die erste bekannte zählt. */
+/* Welche der 5 Familien der Seite zu einem Namen aus nexomar gehört (families.js › nexomar) */
+function familyOf(value) {
+  const name = toPlain(typeof value === 'object' ? value?.nombre : value);
+  return FAMILIES.find((family) =>
+    [family.id, ...family.nexomar].some((alias) => toPlain(alias) === name),
+  );
+}
+
+/* Panel: "Familias olfativas" landet in perfume.familias (Liste). Die erste passende zählt. */
 export function readFamily(raw) {
   const values = [
     ...(raw.perfume?.familias ?? []),
@@ -34,12 +42,7 @@ export function readFamily(raw) {
     raw.familiaOlfativa,
     variantOptions(raw, 'Familia')[0],
   ];
-  for (const value of values) {
-    const name = typeof value === 'object' ? value?.nombre : value;
-    const match = FAMILIES.find((family) => toPlain(family.id) === toPlain(name));
-    if (match) return match.id;
-  }
-  return null;
+  return values.map(familyOf).find(Boolean)?.id ?? null;
 }
 
 function toList(value) {
