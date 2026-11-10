@@ -239,6 +239,16 @@ import VolumeSlider from './VolumeSlider.astro';
     display: none;
   }
 
+  /*
+   * Handys und Tablets: kein Lautstärke-Regler. Dort gelten die Tasten am Gerät, iPhones
+   * ignorieren eine Lautstärke der Webseite ganz. Stummschalten geht über den Knopf im Player.
+   */
+  @media (hover: none) and (pointer: coarse) {
+    .player__volume {
+      display: none;
+    }
+  }
+
   @keyframes wait-pulse {
     0% {
       box-shadow: 0 0 0 0 rgb(var(--peach-rgb) / 0.55);
