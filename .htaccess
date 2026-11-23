@@ -22,6 +22,8 @@ RewriteRule ^privacidad\.html$ /privacidad/ [R=301,L,NE]
 RewriteRule ^formulario\.html$ /test-olfativo/ [R=301,L,NE]
 
 # Alte Produktseiten
+RewriteCond %{QUERY_STRING} (^|&)id=6b045c1b9b45800b6a296d24(&|$)
+RewriteRule ^producto\.html$ /producto/emper-stallion-53/? [R=301,L]
 RewriteCond %{QUERY_STRING} (^|&)id=6af615249b45800b6a296d22(&|$)
 RewriteRule ^producto\.html$ /producto/myslf-le-parfum/? [R=301,L]
 RewriteCond %{QUERY_STRING} (^|&)id=6af611589b45800b6a296d20(&|$)
