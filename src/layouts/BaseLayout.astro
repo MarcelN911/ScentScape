@@ -10,6 +10,7 @@ import Header from '../components/layout/Header.astro';
 import MobileMenu from '../components/layout/MobileMenu.astro';
 import MusicPlayer from '../components/layout/MusicPlayer.astro';
 import ScrollProgress from '../components/layout/ScrollProgress.astro';
+import SearchDrawer from '../components/search/SearchDrawer.astro';
 import Toast from '../components/layout/Toast.astro';
 import '../styles/global.css';
 
@@ -81,6 +82,7 @@ const ogImage = new URL(image, Astro.site);
         <Toast />
         <CartDrawer />
         <WishlistDrawer />
+        <SearchDrawer />
         {header && <PromoModal />}
         <MusicPlayer />
         <Curtain />
