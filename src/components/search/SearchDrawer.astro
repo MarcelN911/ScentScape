@@ -1,0 +1,248 @@
+---
+/*
+ * Suche im Header. Öffnen über data-action="open-search" (Lupe im Header).
+ * Desktop: Seitenleiste von rechts wie Bolsa und Favoritos.
+ * Handy (bis 767px): Vollbild-Fenster, das von oben einblendet.
+ * Die Treffer baut scripts/features/search-drawer.js aus der Vorlage <template data-search-item>.
+ * Enter schickt das Formular ab und öffnet die Seite "Productos" mit allen Treffern (?q=…).
+ */
+import Drawer from '../ui/Drawer.astro';
+import Icon from '../ui/Icon.astro';
+---
+
+<Drawer name="search" label="Buscar perfumes" eyebrow="ScentScape · Buscar">
+  <Fragment slot="title">
+    Busca tu <em>perfume</em>
+  </Fragment>
+
+  <form class="search-field" action="/productos/" method="get" role="search">
+    <Icon name="search" size={18} strokeWidth={1.5} />
+    <input
+      type="search"
+      name="q"
+      placeholder="Marca o nombre, p. ej. Lattafa Khamrah"
+      aria-label="Buscar por marca o nombre"
+      autocomplete="off"
+      enterkeyhint="search"
+      data-search-input
+    />
+  </form>
+
+  <div class="drawer__list">
+    <p class="search-heading" data-search-heading aria-live="polite">
+      Los más buscados
+    </p>
+    <ul class="search-list" data-search-list></ul>
+    <div class="search-empty" data-search-empty hidden>
+      <p>
+        No encontramos “<span data-search-query></span>”
+      </p>
+      <small>Prueba solo con la marca o con una parte del nombre.</small>
+    </div>
+  </div>
+
+  <a class="search-all" href="/productos/" data-search-all hidden>
+    Ver todos los resultados →
+  </a>
+
+  <template data-search-item>
+    <li>
+      <a class="search-item" data-search-link>
+        <img class="search-item__image" data-search-image alt="" loading="lazy" />
+        <span class="search-item__info">
+          <span class="search-item__brand" data-search-brand></span>
+          <span class="search-item__name" data-search-name></span>
+          <span class="search-item__price" data-search-price></span>
+        </span>
+      </a>
+    </li>
+  </template>
+</Drawer>
+
+<style>
+  .search-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 28px 18px;
+    padding: 0 20px;
+    height: 54px;
+    border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    border-radius: 27px;
+    background: rgb(var(--sand-rgb) / 0.06);
+    color: var(--peach);
+    transition: border-color 0.3s;
+  }
+
+  .search-field:focus-within {
+    border-color: var(--peach);
+  }
+
+  .search-field input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    background: none;
+    color: var(--cream);
+    font: 300 16px var(--font-sans);
+    outline: none;
+  }
+
+  /* Das blaue ✕ des Browsers passt nicht zum Design */
+  .search-field input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .search-heading {
+    margin: 4px 0 6px;
+    color: var(--peach);
+    font: 400 10px var(--font-sans);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .search-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .search-item {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgb(var(--peach-rgb) / 0.12);
+    color: var(--cream);
+    animation: fade-in 0.4s var(--ease);
+  }
+
+  .search-item__image {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: rgb(var(--sand-rgb) / 0.08);
+    object-fit: cover;
+  }
+
+  .search-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .search-item__brand {
+    color: var(--peach);
+    font: 400 9px var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .search-item__name {
+    overflow: hidden;
+    font: 400 19px/1.15 var(--font-serif);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+
+  .search-item:hover .search-item__name {
+    color: var(--sand);
+  }
+
+  .search-item__price {
+    color: rgb(var(--cream-rgb) / 0.7);
+    font: 400 13px var(--font-sans);
+  }
+
+  .search-empty {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .search-empty[hidden] {
+    display: none;
+  }
+
+  .search-empty p {
+    margin: 0 0 10px;
+    font: 400 22px var(--font-serif);
+  }
+
+  .search-empty small {
+    color: rgb(var(--cream-rgb) / 0.6);
+    font: 300 13px/1.5 var(--font-sans);
+  }
+
+  .search-all {
+    margin: 0 28px max(24px, env(safe-area-inset-bottom));
+    padding: 16px 0 0;
+    border-top: 1px solid rgb(var(--peach-rgb) / 0.16);
+    color: var(--sand);
+    font: 500 11px var(--font-sans);
+    letter-spacing: 3px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .search-all[hidden] {
+    display: none;
+  }
+
+  /*
+   * Handy: statt Seitenleiste ein Vollbild-Fenster, das von oben weich einblendet.
+   * Die Grundform kommt aus Drawer.astro, hier wird nur Breite und Bewegung ersetzt.
+   */
+  @media (max-width: 767px) {
+    :global(.drawer-root[data-drawer='search'] .drawer) {
+      width: 100vw;
+      border-left: 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-24px);
+      transition:
+        transform 0.5s var(--ease),
+        opacity 0.4s,
+        visibility 0s 0.5s;
+    }
+
+    :global(.drawer-root[data-drawer='search'][data-open] .drawer) {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition:
+        transform 0.5s var(--ease),
+        opacity 0.4s;
+    }
+
+    :global(.drawer-root[data-drawer='search'] .drawer__head) {
+      padding: max(22px, env(safe-area-inset-top)) 20px 16px;
+    }
+
+    :global(.drawer-root[data-drawer='search'] .drawer__title) {
+      font-size: 30px;
+    }
+
+    :global(.drawer-root[data-drawer='search'] .drawer .drawer__list) {
+      padding: 0 20px;
+    }
+
+    .search-field {
+      margin: 0 20px 16px;
+    }
+
+    .search-all {
+      margin-inline: 20px;
+    }
+  }
+</style>
+
+<script>
+  import { onFirstPage } from '../../scripts/core/lifecycle.js';
+  import { initSearchDrawer } from '../../scripts/features/search-drawer.js';
+
+  onFirstPage(initSearchDrawer);
+</script>

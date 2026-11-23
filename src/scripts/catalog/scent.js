@@ -34,11 +34,23 @@ function matchFamilies(text) {
   );
 }
 
-/** Bis zu drei Familien: zuerst aus den Noten, dann aus Tags und Varianten, zuletzt aus der Beschreibung. */
+/* Familien aus dem nexomar-Panel ("Floral", "Cítrica" …), Name wie in SCENT_FAMILIES */
+function panelFamilies(raw) {
+  const names = (raw.perfume?.familias ?? []).map((value) =>
+    typeof value === 'object' ? value?.nombre : value,
+  );
+  return matchFamilies(toPlain(names.join(' ')));
+}
+
+/**
+ * Bis zu drei Familien: zuerst die aus dem nexomar-Panel (die wichtigste),
+ * dann aus den Noten, dann aus Tags und Varianten, zuletzt aus der Beschreibung.
+ */
 export function readScentFamilies(raw, ingredients) {
+  const fromPanel = panelFamilies(raw);
   const fromNotes = ingredients.map(familyOfIngredient).filter(Boolean);
   const fromTags = matchFamilies(familyKeywords(raw));
-  const found = new Set([...fromNotes, ...fromTags]);
+  const found = new Set([...fromPanel, ...fromNotes, ...fromTags]);
   if (!found.size) matchFamilies(toPlain(raw.descripcion)).forEach((name) => found.add(name));
   return [...found].slice(0, 3);
 }

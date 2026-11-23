@@ -15,9 +15,14 @@ import ServicesDropdown from './ServicesDropdown.astro';
     )}
   </nav>
   <div class="site-header__actions">
-    <a class="site-header__icon" href="/productos/" aria-label="Buscar">
+    <button
+      class="site-header__icon"
+      type="button"
+      data-action="open-search"
+      aria-label="Buscar perfumes"
+    >
       <Icon name="search" size={18} strokeWidth={1.5} />
-    </a>
+    </button>
     <button
       class="site-header__fav"
       type="button"
@@ -35,7 +40,7 @@ import ServicesDropdown from './ServicesDropdown.astro';
       aria-label="Abrir bolsa"
     >
       <Icon name="bag" size={16} strokeWidth={1.6} />
-      Bolsa{' '}
+      <span class="site-header__bag-text">Bolsa</span>
       <span class="site-header__count" data-cart-count>
         0
       </span>
@@ -204,8 +209,21 @@ import ServicesDropdown from './ServicesDropdown.astro';
     }
 
     /* Die Favoriten erreicht man auf dem Handy über das Burger-Menü */
-    .site-header__icon,
     .site-header__fav {
+      display: none;
+    }
+
+    /* Suche bekommt auf dem Handy einen runden Rahmen wie der Burger-Knopf */
+    .site-header__icon {
+      border: 1px solid rgb(var(--peach-rgb) / 0.35);
+    }
+
+    /* Platz für die Lupe: "Bolsa" zeigt hier nur Icon und Zahl */
+    .site-header__bag {
+      padding: 0 14px;
+    }
+
+    .site-header__bag-text {
       display: none;
     }
   }

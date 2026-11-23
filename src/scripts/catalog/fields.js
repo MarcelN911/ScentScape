@@ -26,11 +26,17 @@ export function readGender(raw) {
   return GENDERS[toPlain(readGenders(raw)[0])] ?? 'U';
 }
 
+/* Ohne Akzente und ohne -a/-o am Ende: "Fresco" und "Fresca" zählen gleich */
+function familyKey(value) {
+  return toPlain(value).replace(/[ao]$/, '');
+}
+
 /* Welche der 5 Familien der Seite zu einem Namen aus nexomar gehört (families.js › nexomar) */
 function familyOf(value) {
-  const name = toPlain(typeof value === 'object' ? value?.nombre : value);
+  const name = familyKey(typeof value === 'object' ? value?.nombre : value);
+  if (!name) return undefined;
   return FAMILIES.find((family) =>
-    [family.id, ...family.nexomar].some((alias) => toPlain(alias) === name),
+    [family.id, ...family.nexomar].some((alias) => familyKey(alias) === name),
   );
 }
 
